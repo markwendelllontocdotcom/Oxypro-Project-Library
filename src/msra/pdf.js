@@ -127,6 +127,12 @@ function msBuildPdf(jsPDF, log, proj, fonts, logo, rev) {
 async function msSavePdf(print) {
   await loadScript(LIBS.jspdf); await loadScript(MS_LIBS.autotable);
   const doc = msBuildPdf(window.jspdf.jsPDF, MSV.log, msProj(), MS_FONT_B64, MS_LOGO, MSV.log.rev);
-  const ok = await saveFile(msFileBase() + (print ? ' - Print' : '') + '.pdf', doc.output('blob'));
+  const blob = doc.output('blob');
+  if (print && GH) {   // a normal website may open the PDF in a new tab, where the browser prints it
+    const url = URL.createObjectURL(blob), w = window.open(url, '_blank');
+    setTimeout(() => URL.revokeObjectURL(url), 600000);
+    if (w) { toast('The PDF opened in a new tab: print it from there (A4 landscape, actual size).', 7000); return; }
+  }
+  const ok = await saveFile(msFileBase() + (print ? ' - Print' : '') + '.pdf', blob);
   if (ok && print) toast('Open the PDF and print it: A4 landscape, actual size.', 7000);
 }

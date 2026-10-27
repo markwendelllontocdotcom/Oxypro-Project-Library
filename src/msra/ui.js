@@ -2,6 +2,9 @@
 const MS_LOGO = 'data:image/png;base64,__MSRA_LOGO__';
 const MS_FONT_B64 = { r: '__OPENSANS_R__', b: '__OPENSANS_B__' };
 const MSV = { no: null, log: null, base: '', dirty: false, tab: 'SUM', mode: 'view', state: 'idle', err: '', remote: null, unsub: null, rm: null, mslFilter: 'all', busy: '', menu: false };
+// who may save: editors in Claude; anyone in the GitHub edition (saved in their browser)
+const msCanSave = () => GH || canWrite();
+const MS_WHERE = GH ? 'this browser' : 'the library';
 const msProj = () => S.projects.get(MSV.no) || { no: MSV.no, name: '' };
 const msName = () => { const p = msProj(); return `${p.no} ${p.name || ''}`.trim(); };
 const msFileBase = () => { const p = msProj(); return safeName([p.code || p.no, p.name || 'Untitled project', 'Method Statement Log', 'Rev ' + ((MSV.log && MSV.log.rev) || '00')].join(' - ')); };
@@ -45,10 +48,10 @@ function closeMsra(force) {
   renderAll(); window.scrollTo(0, 0);
 }
 function msAskLeave() {
-  const w = canWrite();
+  const w = msCanSave();
   openModal(`<div class="dialog dialog-sm">
     <div class="dialog-head"><h2>Unsaved changes</h2></div>
-    <div class="dialog-body"><p style="margin:0">${w ? 'Save the changes to this MSRA Log before going back to the library?' : 'Your changes to this MSRA Log are not saved in the library (only editors can save). Download it with Save as first if you need it.'}</p></div>
+    <div class="dialog-body"><p style="margin:0">${w ? `Save the changes to this MSRA Log in ${MS_WHERE} before going back to the library?` : 'Your changes to this MSRA Log are not saved in the library (only editors can save). Download it with Save as first if you need it.'}</p></div>
     <div class="dialog-foot"><button type="button" class="btn" data-close>Stay here</button><button type="button" class="btn${w ? '' : ' btn-primary'}" id="ms-leave-discard">Discard changes</button>${w ? '<button type="button" class="btn btn-primary" id="ms-leave-save">Save and go back</button>' : ''}</div>
   </div>`);
   $('#ms-leave-discard').addEventListener('click', () => { closeModal(); closeMsra(true); });
@@ -64,7 +67,7 @@ function renderMs() {
 function msRenderActions() {
   const el = $('#ms-actions'); if (!el) return;
   if (MSV.state !== 'ready') { el.innerHTML = ''; return; }
-  const w = canWrite(), e = MSV.mode === 'edit';
+  const w = msCanSave(), e = MSV.mode === 'edit';
   el.innerHTML = `<div class="seg" role="group" aria-label="Mode"><button type="button" aria-pressed="${!e}" data-ms-act="mode-view">View</button><button type="button" aria-pressed="${e}" data-ms-act="mode-edit">Edit</button></div>
     <button type="button" class="btn" data-ms-act="msl-up" title="Upload the planner's Material Submittal Log (Excel)">${MSV.log.msl ? 'Replace MSL' : 'Upload MSL'}</button>
     <div class="viewmenu ms-saveas"><button type="button" class="btn" data-ms-act="saveas" aria-haspopup="menu" aria-expanded="${MSV.menu}">Save as<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
@@ -73,7 +76,7 @@ function msRenderActions() {
         <button type="button" class="menu-item" role="menuitem" data-ms-act="save-pdf"><span>PDF (.pdf)<small>Summary and each discipline log, A4 landscape</small></span></button>
       </div></div>
     <button type="button" class="btn" data-ms-act="print" title="Makes a print-ready PDF (A4 landscape) to open and print">Print</button>
-    ${w ? `<button type="button" class="btn${MSV.dirty ? ' btn-primary' : ''}" data-ms-act="save"${MSV.dirty && !MSV.busy ? '' : ' disabled'}>${MSV.busy === 'save' ? 'Saving…' : MSV.dirty ? 'Save to library' : 'Saved'}</button>` : ''}`;
+    ${w ? `<button type="button" class="btn${MSV.dirty ? ' btn-primary' : ''}" data-ms-act="save"${MSV.dirty && !MSV.busy ? '' : ' disabled'}>${MSV.busy === 'save' ? 'Saving…' : MSV.dirty ? (GH ? 'Save in browser' : 'Save to library') : 'Saved'}</button>` : ''}`;
 }
 function msRenderBody() {
   const el = $('#ms-body'); if (!el) return;
@@ -93,11 +96,11 @@ function msRenderBody() {
 }
 function msNoticeHTML() {
   if (MSV.remote) return `<div class="ms-notice"><span>Another editor saved this log${MSV.remote.updatedAt ? ' at ' + esc(new Date(MSV.remote.updatedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })) : ''}. Saving now replaces their version with yours.</span><button type="button" class="btn btn-sm" data-ms-act="load-remote">Load their version</button></div>`;
-  if (!canWrite() && MSV.dirty) return `<div class="ms-notice"><span>Only the library's editors can save. Use Save as to keep your changes in a file.</span></div>`;
+  if (!msCanSave() && MSV.dirty) return `<div class="ms-notice"><span>Only the library's editors can save. Use Save as to keep your changes in a file.</span></div>`;
   return '';
 }
 function msStartHTML() {
-  const p = msProj(), w = canWrite();
+  const p = msProj(), w = msCanSave();
   const card = (how, title, text, tag) => `<button type="button" class="ms-start-card" data-ms-act="start" data-how="${how}"${tag ? ' data-rec="1"' : ''}><span class="ms-sc-t">${esc(title)}${tag ? `<span class="tag tag-rec">${esc(tag)}</span>` : ''}</span><span class="ms-sc-d">${esc(text)}</span></button>`;
   const ni = MS_STD.items.filter(x => x[1] === 'I').length, nt = MS_STD.items.length - ni;
   return `<div class="ms-start">
@@ -108,7 +111,7 @@ function msStartHTML() {
       ${card('msl', 'Standard list and the project\'s MSL', 'Upload the planner\'s Material Submittal Log (Excel). Its materials are linked to the method statements; you see which method statements no material needs and which materials no method statement covers.')}
       ${card('empty', 'Empty log', 'Starts with no method statements. Add them discipline by discipline.')}
     </div>
-    ${w ? '' : '<p class="hint">Only the library\'s editors can save the log to the library. You can still make it and download it with Save as.</p>'}
+    ${GH ? '<p class="hint">GitHub edition: the log is saved in this browser on this device. Use Save as for Excel or PDF files to keep or share.</p>' : w ? '' : '<p class="hint">Only the library\'s editors can save the log to the library. You can still make it and download it with Save as.</p>'}
   </div>`;
 }
 
@@ -197,7 +200,7 @@ function msSumTable(head, rows, tot, section) {
     <tr class="ms-sum-tot"><td colspan="2" class="c">TOTAL</td>${cell(tot.total)}${MS_COUNTED.map(k => `<td class="c st-${msCls(k)}">${tot[k]}</td>`).join('')}${cell(section ? tot.toSubSection : tot.toSubOverall)}<td></td></tr></tbody></table>`;
 }
 function msSummaryHTML() {
-  const log = MSV.log, w = canWrite();
+  const log = MSV.log, w = msCanSave();
   const block = (st) => { const rows = MS_DISC.map(d => ({ code: d.code, label: d.sum, c: msCounts(msItemsOf(log, d.code, st)) })); return { rows, tot: msCounts(log.items.filter(it => !st || it.s === st)) }; };
   const o = block(''), I = block('I'), T = block('T');
   const pv = (log.block.find(r => /^project$/i.test(r.label.trim())) || log.block[0] || { value: '' }).value;
@@ -210,8 +213,8 @@ function msSummaryHTML() {
   </div></div>
   <div class="ms-facts">
     <p>${o.tot.total} method statements: ${I.tot.total} installation and ${T.tot.total} testing & commissioning. ${o.tot.sub} with a final status, ${o.tot.A + o.tot.B} approved (A or B).${od ? ` <b class="ms-red">${od} overdue</b> (planned date passed, not submitted).` : ''}${soon ? ` ${soon} due within 7 days.` : ''} ${o.tot.planned < o.tot.total ? `${o.tot.total - o.tot.planned} without a planned submission date.` : ''}</p>
-    <p class="hint">${log.updatedAt ? `Saved in the library ${esc(new Date(log.updatedAt).toLocaleString([], { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' }))}.` : 'Not saved in the library yet.'} ${log.msl ? `MSL: ${esc(log.msl.file)} (${log.msl.items.length} materials).` : 'No MSL uploaded.'}</p>
-    ${w && log.updatedAt ? (MSV.rm === 'LOG' ? `<div class="confirm"><span>Delete the MSRA Log of ${esc(msName())} from the library? This cannot be undone. Download it first with Save as if you may need it.</span><div class="btns"><button type="button" class="btn btn-sm btn-danger-solid" data-ms-act="del-yes">Delete log</button><button type="button" class="btn btn-sm" data-ms-act="rm-no">Cancel</button></div></div>` : '<div><button type="button" class="btn btn-sm btn-ghost btn-danger" data-ms-act="del">Delete this log</button></div>') : ''}
+    <p class="hint">${log.updatedAt ? `Saved in ${MS_WHERE} ${esc(new Date(log.updatedAt).toLocaleString([], { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' }))}.` : `Not saved in ${MS_WHERE} yet.`} ${log.msl ? `MSL: ${esc(log.msl.file)} (${log.msl.items.length} materials).` : 'No MSL uploaded.'}</p>
+    ${w && log.updatedAt ? (MSV.rm === 'LOG' ? `<div class="confirm"><span>Delete the MSRA Log of ${esc(msName())} from ${MS_WHERE}? This cannot be undone. Download it first with Save as if you may need it.</span><div class="btns"><button type="button" class="btn btn-sm btn-danger-solid" data-ms-act="del-yes">Delete log</button><button type="button" class="btn btn-sm" data-ms-act="rm-no">Cancel</button></div></div>` : '<div><button type="button" class="btn btn-sm btn-ghost btn-danger" data-ms-act="del">Delete this log</button></div>') : ''}
   </div>`;
 }
 /* the MSL Ref sheet */
@@ -340,10 +343,11 @@ function msStart(how) {
   MSV.base = ''; MSV.dirty = true; MSV.state = 'ready'; MSV.tab = how === 'empty' ? 'MEC' : 'SUM'; MSV.mode = how === 'empty' ? 'edit' : 'view';
   renderMs();
   if (how === 'msl') { $('#file-msl').value = ''; $('#file-msl').click(); }
-  toast(how === 'empty' ? 'Empty log started. Add method statements, then Save to library.' : `Log started with ${MSV.log.items.length} method statements. Save to library to keep it.`, 5000);
+  const sv = GH ? 'Save in browser' : 'Save to library';
+  toast(how === 'empty' ? `Empty log started. Add method statements, then ${sv}.` : `Log started with ${MSV.log.items.length} method statements. ${sv} to keep it.`, 5000);
 }
 async function msSave() {
-  if (!canWrite() || !MSV.log || MSV.busy) return false;
+  if (!msCanSave() || !MSV.log || MSV.busy) return false;
   const log = MSV.log, now = new Date().toISOString();
   const doc = JSON.parse(JSON.stringify({ ...log, no: MSV.no, updatedAt: now, createdAt: log.createdAt || now }));
   const size = new Blob([JSON.stringify(doc)]).size;
@@ -354,17 +358,17 @@ async function msSave() {
     log.updatedAt = now; log.createdAt = doc.createdAt;
     await DB.collection('mslogmeta').doc(MSV.no).set({ no: MSV.no, n: log.items.length, updatedAt: now });
     MSV.base = JSON.stringify(log); MSV.dirty = false; MSV.remote = null;
-    toast('MSRA Log saved to the library');
+    toast(`MSRA Log saved in ${MS_WHERE}`);
     return true;
   } catch (e) { toast(writeError(e), 6000); return false; }
   finally { MSV.busy = ''; msRenderActions(); if (MSV.tab === 'SUM') msRenderBody(); else { const n = $('#ms-body .ms-notice'); if (n && !MSV.remote) n.remove(); } }
 }
 async function msDelete() {
-  if (!canWrite()) return;
+  if (!msCanSave()) return;
   try {
     await DB.collection('mslogs').doc(MSV.no).delete();
     await DB.collection('mslogmeta').doc(MSV.no).delete();
-    toast(`The MSRA Log of ${msName()} was deleted`);
+    toast(`The MSRA Log of ${msName()} was deleted from ${MS_WHERE}`);
     MSV.dirty = false; closeMsra(true);
   } catch (e) { toast(writeError(e), 6000); }
 }
@@ -503,7 +507,7 @@ function bindMsra() {
       const all = [...document.querySelectorAll('#ms-body [role="tab"]')], i = all.indexOf(tab), n = all[(i + (e.key === 'ArrowRight' ? 1 : -1) + all.length) % all.length];
       e.preventDefault(); n.click(); const s = document.querySelector(`#ms-body [data-ms-tab="${n.dataset.msTab}"]`); if (s) s.focus();
     }
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's' && S.view === 'msra') { e.preventDefault(); if (MSV.dirty && canWrite()) msSave(); }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's' && S.view === 'msra') { e.preventDefault(); if (MSV.dirty && msCanSave()) msSave(); }
   });
   document.addEventListener('click', e => { if (MSV.menu && !e.target.closest('.ms-saveas')) { MSV.menu = false; const m = document.querySelector('.ms-saveas .menu'); if (m) m.hidden = true; } });
   $('#file-msl').addEventListener('change', onMslFile);

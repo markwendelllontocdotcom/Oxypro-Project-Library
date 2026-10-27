@@ -111,6 +111,10 @@ button,input,select,textarea{font:inherit;color:inherit}
 .menu-item[aria-checked="true"] .tick{visibility:visible}
 .tagline{background:var(--red);color:var(--on-red)}
 .tagline-in{font:600 13px/1.25 var(--f-cond);letter-spacing:.16em;text-transform:uppercase;padding-block:7px}
+.edition{background:var(--info-soft);color:var(--fg-2);border-bottom:1px solid var(--line)}
+.edition-in{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;padding-block:8px;font-size:13.5px}
+.edition-in b{color:var(--info)}
+.edition-in a{color:var(--info);font-weight:600}
 @media (max-width:640px){
   .logo{height:36px}
   .app-title{border-left:0;padding-left:0;flex-basis:100%}
@@ -481,6 +485,7 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
   </div>
 </header>
 <div class="tagline"><div class="band-in tagline-in">The complete solution for building services</div></div>
+<div class="edition" id="edition" hidden><div class="band-in edition-in"></div></div>
 
 <main id="view-library">
   <div class="band-in">
@@ -555,7 +560,7 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.10.2 (27 Oct 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.11.0 (27 Oct 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -618,7 +623,11 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.10.2';
+const APP_VERSION = '1.11.0';
+/* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
+const GH = window.__OPL_EDITION === 'github';
+const SNAP_DATE = String(window.__OPL_SNAPSHOT || '');
+const CLAUDE_URL = 'https://claude.ai/artifact/T3U712ufURSuMQTfsGDkMy';
 const CM = 96 / 2.54;          // CSS px per cm
 const PT = 2.54 / 72;          // cm per pt
 // Oxypro Project Presentation Sheet (A4 landscape), positions in cm, from the 2.0 template
@@ -662,7 +671,7 @@ const joinAnd = a => a.length <= 1 ? (a[0] || '') : a.slice(0, -1).join(', ') + 
 const numOf = no => { const m = String(no).match(/\d+/); return m ? parseInt(m[0], 10) : 0; };
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const today = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
-const blobUrl = id => '/_blob/' + encodeURIComponent(id);
+const blobUrl = id => GH ? 'photos/' + encodeURIComponent(id) + '.jpg' : '/_blob/' + encodeURIComponent(id);
 const safeName = s => String(s || '').replace(/[\\/:*?"<>|]+/g, '-').replace(/\s+/g, ' ').trim().slice(0, 120);
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const isNum = v => /^-?\d[\d,]*(\.\d+)?$/.test(String(v == null ? '' : v).trim());
@@ -2671,6 +2680,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.11.0', '27 Oct 2026', 'GitHub edition: the library as a website outside Claude, with a copy of the projects and photos; MSRA Logs are saved in the browser.'],
   ['1.10.2', '27 Oct 2026', 'This About page (About in the header and in the footer).'],
   ['1.10.1', '27 Oct 2026', 'The PROJECT LIBRARY title goes back to the library list from any page.'],
   ['1.10.0', '27 Oct 2026', 'MSRA Log: each project\'s Method Statement Log in the Oxypro template (standard list of 72, the project\'s MSL or an empty log), edited and saved in the library, saved as Excel or PDF and printed, in Open Sans.'],
@@ -2690,7 +2700,7 @@ function openAbout() {
     <div class="dialog-body about">
       <div class="about-card">
         <img class="logo logo-l" src="${logoSrc(false)}" alt="Oxypro"><img class="logo logo-d" src="${logoSrc(true)}" alt="Oxypro">
-        <div><div class="about-name">Oxypro Project Library</div><div class="about-ver">Version ${APP_VERSION} · 27 Oct 2026${n ? ` · ${n} projects` : ''}</div>
+        <div><div class="about-name">Oxypro Project Library</div><div class="about-ver">Version ${APP_VERSION} · 27 Oct 2026${GH ? ` · GitHub edition, projects as of ${esc(SNAP_DATE)}` : ''}${n ? ` · ${n} projects` : ''}</div>
           <p class="about-tag">One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, the Project Quality Plan hand-off to PQP Maker and each project's Method Statement Log.</p></div>
       </div>
       <section><h3>What it does</h3>
@@ -2711,9 +2721,11 @@ function openAbout() {
         </ol></section>
       <section><h3>Your data</h3>
         <ul>
-          <li>Projects, photos and MSRA Logs are kept in this shared library in Claude. Everyone with the link sees the same, up-to-date list.</li>
+${GH ? `<li>This is the GitHub edition: the projects and photos are a copy of the library as of ${esc(SNAP_DATE)} and cannot be changed here. The live library, where editors add and change projects, is <a href="${CLAUDE_URL}" target="_blank" rel="noopener">in Claude</a>.</li>
+          <li>MSRA Logs you save here stay in this browser on this device only. Use Save as to keep them as Excel or PDF files, or to pass them on.</li>
+          <li>Files you make (PDF, PowerPoint, Excel, PQP files) are downloaded to your device; Print opens the PDF for printing.</li>` : `<li>Projects, photos and MSRA Logs are kept in this shared library in Claude. Everyone with the link sees the same, up-to-date list.</li>
           <li>Only the library's owner and editors can add or change projects, photos and MSRA Logs${w ? ' (you can)' : ' (you can view, make presentations and download files)'}.</li>
-          <li>Files you make (PDF, PowerPoint, Excel, PQP files) are downloaded to your device. Printing is done from the downloaded PDF, as Claude cannot open the print window.</li>
+          <li>Files you make (PDF, PowerPoint, Excel, PQP files) are downloaded to your device. Printing is done from the downloaded PDF, as Claude cannot open the print window.</li>`}
           <li>Open in PQP Maker passes the project's text details to PQP Maker in its link; the cover photo goes by copy and paste. Nothing else leaves the library.</li>
         </ul></section>
       <section><h3>Related</h3>
@@ -2757,6 +2769,11 @@ function bindGlobal() {
 /* ---------- boot ---------- */
 async function boot() {
   applyView(lsGet('viewTheme') || 'auto');
+  if (GH) {
+    const e = $('#edition'); e.hidden = false;
+    e.firstElementChild.innerHTML = `<span><b>GitHub edition</b> · projects and photos as of ${esc(SNAP_DATE)} · read-only; MSRA Logs are saved in this browser</span><a href="${CLAUDE_URL}" target="_blank" rel="noopener">Open the live library in Claude</a>`;
+    $('#version').textContent += ' · GitHub edition';
+  }
   bindLibrary(); bindPres(); bindShow(); bindGlobal(); bindView(); bindMsra(); renderAll();
   const C = window.claude;
   if (!C || typeof C.use !== 'function') { S.dbState = 'unavailable'; renderAll(); return; }
