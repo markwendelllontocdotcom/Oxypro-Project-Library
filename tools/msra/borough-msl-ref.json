@@ -1,0 +1,972 @@
+[
+{
+"k": "MEC-01",
+"d": "MEC",
+"sn": 1,
+"desc": "PRE-INSULATED DUCT",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A9&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A9&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A9&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A9&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A9&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A9&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A9&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-02",
+"d": "MEC",
+"sn": 2,
+"desc": "GI DUCT",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A10&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A10&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A10&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A10&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A10&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A10&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A10&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-03",
+"d": "MEC",
+"sn": 3,
+"desc": "FIRE RATED DUCTWORK",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A11&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A11&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A11&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A11&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A11&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A11&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A11&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-04",
+"d": "MEC",
+"sn": 4,
+"desc": "BLACK STEEL DUCTWORK - RETAIL KITCHEN EXTRACT",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A12&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A12&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A12&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A12&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A12&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A12&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A12&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-05",
+"d": "MEC",
+"sn": 5,
+"desc": "DUCT INSULATION",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A13&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A13&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A13&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A13&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A13&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A13&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A13&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-06",
+"d": "MEC",
+"sn": 6,
+"desc": "FLEXIBLE DUCT",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A14&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A14&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A14&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A14&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A14&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A14&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A14&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-07",
+"d": "MEC",
+"sn": 7,
+"desc": "FLEXIBLE DUCT CONNECTOR",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A15&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A15&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A15&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A15&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A15&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A15&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A15&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-08",
+"d": "MEC",
+"sn": 8,
+"desc": "ADHESIVE & SEALANT",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A16&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A16&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A16&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A16&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A16&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A16&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A16&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-09",
+"d": "MEC",
+"sn": 9,
+"desc": "ACOUSTIC DUCT LINER / ACOUSTIC LINING",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A17&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A17&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A17&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A17&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A17&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A17&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A17&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-10",
+"d": "MEC",
+"sn": 10,
+"desc": "ALUMINIUM CLADDING",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A18&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A18&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A18&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A18&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A18&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A18&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A18&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-11",
+"d": "MEC",
+"sn": 11,
+"desc": "CHILLED WATER PIPES",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A19&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A19&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A19&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A19&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A19&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A19&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A19&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-12",
+"d": "MEC",
+"sn": 12,
+"desc": "CHILLED WATER PIPE FITTINGS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A20&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A20&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A20&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A20&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A20&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A20&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A20&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-13",
+"d": "MEC",
+"sn": 13,
+"desc": "CHILLED WATER PIPES INSULATION (WITH VAPOUR BARRIER)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A21&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A21&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A21&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A21&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A21&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A21&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A21&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-14",
+"d": "MEC",
+"sn": 14,
+"desc": "CHW PIPE SUPPORTS & HANGERS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A22&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A22&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A22&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A22&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A22&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A22&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A22&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-15",
+"d": "MEC",
+"sn": 15,
+"desc": "FLEXIBLE PIPE CONNECTOR",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A23&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A23&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A23&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A23&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A23&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A23&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A23&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-16",
+"d": "MEC",
+"sn": 16,
+"desc": "FAHU",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A24&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A24&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A24&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A24&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A24&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A24&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A24&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-17",
+"d": "MEC",
+"sn": 17,
+"desc": "FCU",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A25&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A25&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A25&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A25&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A25&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A25&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A25&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-18",
+"d": "MEC",
+"sn": 18,
+"desc": "THERMOSTATS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A26&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A26&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A26&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A26&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A26&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A26&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A26&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-19",
+"d": "MEC",
+"sn": 19,
+"desc": "PICV VALVE PACKAGES - FCU (SECONDARY SIDE)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A27&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A27&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A27&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A27&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A27&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A27&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A27&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-20",
+"d": "MEC",
+"sn": 20,
+"desc": "ENERGY VALVE / PICV PACKAGE FOR FAHU",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A28&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A28&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A28&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A28&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A28&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A28&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A28&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-21",
+"d": "MEC",
+"sn": 21,
+"desc": "CHILLED WATER VALVES (ISOLATION / DRV / NRV / STRAINER)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A29&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A29&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A29&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A29&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A29&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A29&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A29&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-22",
+"d": "MEC",
+"sn": 22,
+"desc": "AUTOMATIC AIR VENT (CHILLED WATER)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A30&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A30&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A30&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A30&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A30&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A30&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A30&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-23",
+"d": "MEC",
+"sn": 23,
+"desc": "CHILLED WATER PUMPS (HORIZONTAL SPLIT CASE WITH VFD)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A31&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A31&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A31&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A31&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A31&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A31&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A31&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-24",
+"d": "MEC",
+"sn": 24,
+"desc": "CHILLED WATER PRESSURIZATION UNIT",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A32&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A32&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A32&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A32&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A32&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A32&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A32&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-25",
+"d": "MEC",
+"sn": 25,
+"desc": "CHEMICAL DOSING UNIT (MANUAL & AUTOMATIC)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A33&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A33&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A33&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A33&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A33&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A33&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A33&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-26",
+"d": "MEC",
+"sn": 26,
+"desc": "PRESSURE GAUGES & TEMPERATURE TRANSMITTERS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A34&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A34&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A34&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A34&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A34&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A34&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A34&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-27",
+"d": "MEC",
+"sn": 27,
+"desc": "VIBRATION ISOLATORS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A35&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A35&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A35&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A35&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A35&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A35&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A35&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-28",
+"d": "MEC",
+"sn": 28,
+"desc": "VENTILATION FANS (PRESSURIZATION / GARBAGE / BASEMENT EXTRACT)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A36&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A36&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A36&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A36&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A36&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A36&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A36&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-29",
+"d": "MEC",
+"sn": 29,
+"desc": "SMOKE EXTRACT & MAKE-UP AIR FANS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A37&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A37&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A37&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A37&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A37&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A37&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A37&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-30",
+"d": "MEC",
+"sn": 30,
+"desc": "CO SENSORS & CO CONTROL PANEL",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A38&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A38&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A38&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A38&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A38&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A38&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A38&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-31",
+"d": "MEC",
+"sn": 31,
+"desc": "AIR OUTLETS (DIFFUSERS, REGISTERS & GRILLES)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A39&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A39&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A39&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A39&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A39&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A39&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A39&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-32",
+"d": "MEC",
+"sn": 32,
+"desc": "DAMPERS (VCD / FD / SMFD / MOTORIZED)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A40&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A40&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A40&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A40&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A40&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A40&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A40&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-33",
+"d": "MEC",
+"sn": 33,
+"desc": "SOUND ATTENUATOR",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A41&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A41&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A41&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A41&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A41&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A41&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A41&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-34",
+"d": "MEC",
+"sn": 34,
+"desc": "AIR CURTAIN",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A42&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A42&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A42&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A42&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A42&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A42&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A42&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-35",
+"d": "MEC",
+"sn": 35,
+"desc": "LOUVERS (FANS & FAHU)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A43&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A43&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A43&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A43&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A43&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A43&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A43&\"*\")",
+"rem": null
+},
+{
+"k": "MEC-36",
+"d": "MEC",
+"sn": 36,
+"desc": "DX SPLIT UNITS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A44&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A44&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A44&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A44&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A44&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A44&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A44&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-01",
+"d": "PLU",
+"sn": 1,
+"desc": "uPVC DRAINAGE PIPES & FITTINGS (SOIL, WASTE, VENT & RAINWATER) - ABOVE GROUND",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A45&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A45&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A45&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A45&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A45&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A45&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A45&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-02",
+"d": "PLU",
+"sn": 2,
+"desc": "ACOUSTIC DRAINAGE PIPES & FITTINGS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A46&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A46&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A46&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A46&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A46&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A46&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A46&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-03",
+"d": "PLU",
+"sn": 3,
+"desc": "uPVC DRAINAGE PIPES & FITTINGS - BELOW GROUND",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A47&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A47&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A47&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A47&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A47&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A47&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A47&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-04",
+"d": "PLU",
+"sn": 4,
+"desc": "HDPE DRAINAGE PIPES & FITTINGS (STACK DIVERSION & RETAIL KITCHEN)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A48&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A48&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A48&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A48&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A48&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A48&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A48&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-05",
+"d": "PLU",
+"sn": 5,
+"desc": "uPVC PRESSURE PIPES & FITTINGS (CLASS E / PN25 RISERS)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A49&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A49&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A49&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A49&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A49&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A49&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A49&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-06",
+"d": "PLU",
+"sn": 6,
+"desc": "uPVC CONDENSATE DRAIN PIPES & FITTINGS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A50&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A50&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A50&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A50&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A50&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A50&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A50&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-07",
+"d": "PLU",
+"sn": 7,
+"desc": "DRAINAGE ACCESSORIES (BALCONY DRAIN, FLOOR TRAP, CLEAN OUT, ROOF OUTLET, VENT COWL, TRENCH & PLANTER DRAIN)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A51&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A51&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A51&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A51&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A51&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A51&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A51&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-08",
+"d": "PLU",
+"sn": 8,
+"desc": "uPVC FABRICATED ITEMS (CATCH BASIN)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A52&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A52&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A52&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A52&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A52&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A52&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A52&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-09",
+"d": "PLU",
+"sn": 9,
+"desc": "MANHOLE COVERS & GRATINGS (DUCTILE IRON)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A53&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A53&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A53&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A53&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A53&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A53&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A53&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-10",
+"d": "PLU",
+"sn": 10,
+"desc": "GRP CONDENSATE DRAIN TANK & GRP LINING",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A54&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A54&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A54&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A54&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A54&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A54&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A54&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-11",
+"d": "PLU",
+"sn": 11,
+"desc": "GREASE TRAP",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A55&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A55&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A55&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A55&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A55&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A55&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A55&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-12",
+"d": "PLU",
+"sn": 12,
+"desc": "PPR PIPES & FITTINGS (PN20)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A56&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A56&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A56&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A56&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A56&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A56&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A56&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-13",
+"d": "PLU",
+"sn": 13,
+"desc": "PLUMBING PIPE INSULATION",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A57&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A57&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A57&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A57&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A57&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A57&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A57&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-14",
+"d": "PLU",
+"sn": 14,
+"desc": "HDPE PIPES & FITTINGS - WATER SUPPLY (UNDERGROUND MAIN)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A58&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A58&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A58&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A58&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A58&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A58&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A58&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-15",
+"d": "PLU",
+"sn": 15,
+"desc": "PEX PIPES & FITTINGS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A59&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A59&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A59&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A59&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A59&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A59&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A59&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-16",
+"d": "PLU",
+"sn": 16,
+"desc": "PLUMBING PIPE SUPPORTS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A60&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A60&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A60&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A60&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A60&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A60&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A60&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-17",
+"d": "PLU",
+"sn": 17,
+"desc": "PLUMBING VALVES (BALL / GATE - WRAS)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A61&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A61&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A61&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A61&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A61&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A61&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A61&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-18",
+"d": "PLU",
+"sn": 18,
+"desc": "WATER HAMMER ARRESTOR, SOLENOID VALVE & AUTOMATIC AIR VENT",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A62&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A62&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A62&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A62&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A62&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A62&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A62&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-19",
+"d": "PLU",
+"sn": 19,
+"desc": "PLUMBING ANGLE VALVES",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A63&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A63&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A63&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A63&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A63&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A63&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A63&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-20",
+"d": "PLU",
+"sn": 20,
+"desc": "BIB TAP & FLOAT VALVE",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A64&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A64&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A64&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A64&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A64&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A64&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A64&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-21",
+"d": "PLU",
+"sn": 21,
+"desc": "ELECTRIC WATER HEATER",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A65&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A65&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A65&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A65&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A65&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A65&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A65&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-22",
+"d": "PLU",
+"sn": 22,
+"desc": "PLUMBING PUMPS (TRANSFER / BOOSTER / SUBMERSIBLE)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A66&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A66&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A66&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A66&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A66&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A66&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A66&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-23",
+"d": "PLU",
+"sn": 23,
+"desc": "GRP SECTIONAL WATER TANK",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A67&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A67&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A67&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A67&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A67&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A67&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A67&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-24",
+"d": "PLU",
+"sn": 24,
+"desc": "PRESSURE REDUCING VALVES (PRV)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A68&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A68&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A68&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A68&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A68&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A68&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A68&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-25",
+"d": "PLU",
+"sn": 25,
+"desc": "FABRICATED PUDDLE FLANGE",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A69&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A69&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A69&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A69&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A69&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A69&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A69&\"*\")",
+"rem": null
+},
+{
+"k": "PLU-26",
+"d": "PLU",
+"sn": 26,
+"desc": "WATER TREATMENT / CHLORINATION SYSTEM",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A70&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A70&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A70&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A70&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A70&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A70&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A70&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-01",
+"d": "ELE",
+"sn": 1,
+"desc": "GI BACK BOX",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A71&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A71&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A71&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A71&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A71&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A71&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A71&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-02",
+"d": "ELE",
+"sn": 2,
+"desc": "CABLE TRAY, TRUNKING & ACCESSORIES",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A72&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A72&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A72&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A72&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A72&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A72&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A72&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-03",
+"d": "ELE",
+"sn": 3,
+"desc": "PVC & LSF CONDUITS & ACCESSORIES",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A73&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A73&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A73&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A73&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A73&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A73&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A73&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-04",
+"d": "ELE",
+"sn": 4,
+"desc": "UPVC CABLE DUCT & JRC MANHOLE",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A74&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A74&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A74&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A74&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A74&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A74&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A74&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-05",
+"d": "ELE",
+"sn": 5,
+"desc": "EARTHING & LIGHTNING PROTECTION SYSTEM",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A75&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A75&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A75&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A75&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A75&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A75&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A75&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-06",
+"d": "ELE",
+"sn": 6,
+"desc": "LV CABLES & WIRES (XLPE/SWA/PVC, PVC & LSZH)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A76&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A76&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A76&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A76&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A76&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A76&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A76&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-07",
+"d": "ELE",
+"sn": 7,
+"desc": "FIRE RATED POWER CABLES (FP-400)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A77&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A77&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A77&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A77&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A77&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A77&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A77&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-08",
+"d": "ELE",
+"sn": 8,
+"desc": "CABLE GLANDS & LUGS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A78&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A78&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A78&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A78&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A78&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A78&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A78&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-09",
+"d": "ELE",
+"sn": 9,
+"desc": "ISOLATORS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A79&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A79&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A79&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A79&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A79&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A79&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A79&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-10",
+"d": "ELE",
+"sn": 10,
+"desc": "CEILING ROSE",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A80&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A80&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A80&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A80&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A80&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A80&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A80&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-11",
+"d": "ELE",
+"sn": 11,
+"desc": "DIESEL GENERATOR",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A81&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A81&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A81&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A81&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A81&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A81&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A81&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-12",
+"d": "ELE",
+"sn": 12,
+"desc": "CAPACITOR BANK",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A82&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A82&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A82&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A82&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A82&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A82&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A82&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-13",
+"d": "ELE",
+"sn": 13,
+"desc": "WIRING ACCESSORIES (SWITCHES, SOCKETS, FCU, DP SWITCHES - SMART SWITCHES)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A83&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A83&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A83&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A83&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A83&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A83&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A83&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-14",
+"d": "ELE",
+"sn": 14,
+"desc": "BUS BAR TRUNKING",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A84&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A84&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A84&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A84&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A84&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A84&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A84&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-15",
+"d": "ELE",
+"sn": 15,
+"desc": "FLOOR BOX",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A85&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A85&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A85&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A85&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A85&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A85&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A85&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-16",
+"d": "ELE",
+"sn": 16,
+"desc": "LV SWITCHGEAR (LV PANEL / EMDB / ESMDB / ATS / SMDB / MCC / DB / EDB)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A86&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A86&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A86&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A86&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A86&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A86&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A86&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-17",
+"d": "ELE",
+"sn": 17,
+"desc": "LIGHTING CONTROL SYSTEM (MOTION SENSOR / PHOTOCELL)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A87&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A87&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A87&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A87&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A87&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A87&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A87&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-18",
+"d": "ELE",
+"sn": 18,
+"desc": "FIRE ALARM & VOICE EVACUATION SYSTEM",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A88&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A88&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A88&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A88&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A88&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A88&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A88&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-19",
+"d": "ELE",
+"sn": 19,
+"desc": "FIRE ALARM & EMERGENCY LIGHTING CABLES",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A89&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A89&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A89&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A89&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A89&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A89&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A89&\"*\")",
+"rem": null
+},
+{
+"k": "ELE-20",
+"d": "ELE",
+"sn": 20,
+"desc": "CENTRAL BATTERY EMERGENCY & EXIT LIGHTING SYSTEM",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A90&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A90&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A90&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A90&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A90&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A90&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A90&\"*\")",
+"rem": null
+},
+{
+"k": "ELV-01",
+"d": "ELV",
+"sn": 1,
+"desc": "STRUCTURED CABLING & TELEPHONE / DATA SYSTEM (RACK, ODF, HCP/RCP/SCP/ONU, CAT6 OUTLETS)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A91&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A91&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A91&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A91&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A91&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A91&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A91&\"*\")",
+"rem": null
+},
+{
+"k": "ELV-02",
+"d": "ELV",
+"sn": 2,
+"desc": "CCTV SYSTEM (IP - SIRA)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A92&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A92&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A92&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A92&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A92&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A92&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A92&\"*\")",
+"rem": null
+},
+{
+"k": "ELV-03",
+"d": "ELV",
+"sn": 3,
+"desc": "VIDEO INTERCOM SYSTEM",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A93&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A93&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A93&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A93&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A93&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A93&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A93&\"*\")",
+"rem": null
+},
+{
+"k": "ELV-04",
+"d": "ELV",
+"sn": 4,
+"desc": "ACCESS CONTROL SYSTEM",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A94&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A94&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A94&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A94&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A94&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A94&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A94&\"*\")",
+"rem": null
+},
+{
+"k": "ELV-05",
+"d": "ELV",
+"sn": 5,
+"desc": "GATE BARRIER SYSTEM",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A95&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A95&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A95&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A95&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A95&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A95&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A95&\"*\")",
+"rem": null
+},
+{
+"k": "ELV-06",
+"d": "ELV",
+"sn": 6,
+"desc": "BACKGROUND MUSIC SYSTEM",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A96&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A96&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A96&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A96&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A96&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A96&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A96&\"*\")",
+"rem": null
+},
+{
+"k": "FF-01",
+"d": "FF",
+"sn": 1,
+"desc": "FIRE FIGHTING PIPES & FITTINGS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A97&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A97&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A97&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A97&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A97&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A97&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A97&\"*\")",
+"rem": null
+},
+{
+"k": "FF-02",
+"d": "FF",
+"sn": 2,
+"desc": "FIRE FIGHTING PIPE HANGERS & SUPPORTS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A98&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A98&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A98&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A98&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A98&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A98&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A98&\"*\")",
+"rem": null
+},
+{
+"k": "FF-03",
+"d": "FF",
+"sn": 3,
+"desc": "FIRE PROTECTION SYSTEM (FIRE EXTINGUISHER / FIRE HOSE REEL / SPRINKLERS / VALVES)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A99&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A99&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A99&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A99&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A99&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A99&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A99&\"*\")",
+"rem": null
+},
+{
+"k": "FF-04",
+"d": "FF",
+"sn": 4,
+"desc": "FIRE PUMP SETS (ELECTRIC / DIESEL / JOCKEY)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A100&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A100&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A100&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A100&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A100&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A100&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A100&\"*\")",
+"rem": null
+},
+{
+"k": "FF-05",
+"d": "FF",
+"sn": 5,
+"desc": "CLEAN AGENT FM-200 FIRE SUPPRESSION SYSTEM",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A101&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A101&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A101&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A101&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A101&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A101&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A101&\"*\")",
+"rem": null
+},
+{
+"k": "FF-06",
+"d": "FF",
+"sn": 6,
+"desc": "FOAM DELUGE SYSTEM (GENERATOR ROOM)",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A102&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A102&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A102&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A102&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A102&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A102&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A102&\"*\")",
+"rem": null
+},
+{
+"k": "LPG-01",
+"d": "LPG",
+"sn": 1,
+"desc": "LPG SYSTEM",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A103&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A103&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A103&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A103&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A103&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A103&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A103&\"*\")",
+"rem": null
+},
+{
+"k": "MEP-01",
+"d": "MEP",
+"sn": 1,
+"desc": "MEP IDENTIFICATION LABELS",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A104&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A104&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A104&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A104&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A104&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A104&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A104&\"*\")",
+"rem": null
+},
+{
+"k": "MEP-02",
+"d": "MEP",
+"sn": 2,
+"desc": "FIRE STOPPING SYSTEMS FOR MEP SERVICES",
+"lead": null,
+"date": null,
+"g": "=COUNTIF(MEC!$P$15:$P$479,\"*\"&$A105&\"*\")+COUNTIF(PLU!$P$15:$P$485,\"*\"&$A105&\"*\")+COUNTIF(ELE!$P$15:$P$488,\"*\"&$A105&\"*\")+COUNTIF(ELV!$P$15:$P$495,\"*\"&$A105&\"*\")+COUNTIF(FF!$P$15:$P$497,\"*\"&$A105&\"*\")+COUNTIF(LPG!$P$15:$P$500,\"*\"&$A105&\"*\")+COUNTIF(MEP!$P$15:$P$501,\"*\"&$A105&\"*\")",
+"rem": null
+}
+]

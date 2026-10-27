@@ -1,0 +1,722 @@
+[
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of GI & Pre-Insulated Ductwork (incl. Flexible Duct, Flexible Duct Connectors, Adhesive & Sealant)",
+"m": "MEC-01 PRE-INSULATED DUCT; MEC-02 GI DUCT; MEC-06 FLEXIBLE DUCT; MEC-07 FLEXIBLE DUCT CONNECTOR; MEC-08 ADHESIVE & SEALANT",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of Fire Rated Ductwork & Black Steel Kitchen Extract Ductwork",
+"m": "MEC-03 FIRE RATED DUCTWORK; MEC-04 BLACK STEEL DUCTWORK - RETAIL KITCHEN EXTRACT",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of Duct Insulation, Acoustic Duct Liner & Aluminium Cladding",
+"m": "MEC-05 DUCT INSULATION; MEC-09 ACOUSTIC DUCT LINER / ACOUSTIC LINING; MEC-10 ALUMINIUM CLADDING",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of Chilled Water Pipes, Fittings, Supports & Flexible Pipe Connectors",
+"m": "MEC-11 CHILLED WATER PIPES; MEC-12 CHILLED WATER PIPE FITTINGS; MEC-14 CHW PIPE SUPPORTS & HANGERS; MEC-15 FLEXIBLE PIPE CONNECTOR",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of Chilled Water Pipe Insulation (with Vapour Barrier)",
+"m": "MEC-13 CHILLED WATER PIPES INSULATION (WITH VAPOUR BARRIER)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of Chilled Water Valves, Automatic Air Vents, Pressure Gauges & Temperature Transmitters",
+"m": "MEC-21 CHILLED WATER VALVES (ISOLATION / DRV / NRV / STRAINER); MEC-22 AUTOMATIC AIR VENT (CHILLED WATER); MEC-26 PRESSURE GAUGES & TEMPERATURE TRANSMITTERS",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of PICV Valve Packages (FCU) & Energy Valve / PICV Packages (FAHU)",
+"m": "MEC-19 PICV VALVE PACKAGES - FCU (SECONDARY SIDE); MEC-20 ENERGY VALVE / PICV PACKAGE FOR FAHU",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of FAHU",
+"m": "MEC-16 FAHU",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of FCU & Thermostats",
+"m": "MEC-17 FCU; MEC-18 THERMOSTATS",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of Chilled Water Pumps (with VFD) & Vibration Isolators",
+"m": "MEC-23 CHILLED WATER PUMPS (HORIZONTAL SPLIT CASE WITH VFD); MEC-27 VIBRATION ISOLATORS",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of Chilled Water Pressurization Unit & Chemical Dosing Unit",
+"m": "MEC-24 CHILLED WATER PRESSURIZATION UNIT; MEC-25 CHEMICAL DOSING UNIT (MANUAL & AUTOMATIC)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of Ventilation Fans (Pressurization / Garbage / Basement Extract) & CO Sensors / CO Control Panel",
+"m": "MEC-28 VENTILATION FANS (PRESSURIZATION / GARBAGE / BASEMENT EXTRACT); MEC-30 CO SENSORS & CO CONTROL PANEL",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of Smoke Extract & Make-Up Air Fans",
+"m": "MEC-29 SMOKE EXTRACT & MAKE-UP AIR FANS",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of Air Outlets (Diffusers, Registers & Grilles) & Dampers (VCD / FD / SMFD / Motorized)",
+"m": "MEC-31 AIR OUTLETS (DIFFUSERS, REGISTERS & GRILLES); MEC-32 DAMPERS (VCD / FD / SMFD / MOTORIZED)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of Sound Attenuators, Louvers & Air Curtains",
+"m": "MEC-33 SOUND ATTENUATOR; MEC-34 AIR CURTAIN; MEC-35 LOUVERS (FANS & FAHU)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "I",
+"t": "Installation of DX Split Units",
+"m": "MEC-36 DX SPLIT UNITS",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "T",
+"t": "Testing & Commissioning of Ductwork System (Air Leakage Test)",
+"m": "MEC-01 PRE-INSULATED DUCT; MEC-02 GI DUCT; MEC-03 FIRE RATED DUCTWORK; MEC-04 BLACK STEEL DUCTWORK - RETAIL KITCHEN EXTRACT; MEC-06 FLEXIBLE DUCT; MEC-07 FLEXIBLE DUCT CONNECTOR",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "T",
+"t": "Testing, Flushing & Chemical Cleaning of Chilled Water Piping System",
+"m": "MEC-11 CHILLED WATER PIPES; MEC-12 CHILLED WATER PIPE FITTINGS; MEC-14 CHW PIPE SUPPORTS & HANGERS; MEC-15 FLEXIBLE PIPE CONNECTOR; MEC-21 CHILLED WATER VALVES (ISOLATION / DRV / NRV / STRAINER); MEC-22 AUTOMATIC AIR VENT (CHILLED WATER); MEC-25 CHEMICAL DOSING UNIT (MANUAL & AUTOMATIC); MEC-26 PRESSURE GAUGES & TEMPERATURE TRANSMITTERS",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "T",
+"t": "Testing & Commissioning of Chilled Water Pumps & Pressurization Unit",
+"m": "MEC-23 CHILLED WATER PUMPS (HORIZONTAL SPLIT CASE WITH VFD); MEC-24 CHILLED WATER PRESSURIZATION UNIT; MEC-27 VIBRATION ISOLATORS",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "T",
+"t": "Testing & Commissioning of FAHU, FCU & DX Split Units (incl. PICV / Energy Valves & Thermostats)",
+"m": "MEC-16 FAHU; MEC-17 FCU; MEC-18 THERMOSTATS; MEC-19 PICV VALVE PACKAGES - FCU (SECONDARY SIDE); MEC-20 ENERGY VALVE / PICV PACKAGE FOR FAHU; MEC-36 DX SPLIT UNITS",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "T",
+"t": "Testing & Commissioning of Ventilation & Smoke Extract Fans (incl. CO Control System)",
+"m": "MEC-28 VENTILATION FANS (PRESSURIZATION / GARBAGE / BASEMENT EXTRACT); MEC-29 SMOKE EXTRACT & MAKE-UP AIR FANS; MEC-30 CO SENSORS & CO CONTROL PANEL",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEC",
+"s": "T",
+"t": "Testing, Adjusting & Balancing (TAB) of Air Distribution System",
+"m": "MEC-31 AIR OUTLETS (DIFFUSERS, REGISTERS & GRILLES); MEC-32 DAMPERS (VCD / FD / SMFD / MOTORIZED); MEC-33 SOUND ATTENUATOR; MEC-34 AIR CURTAIN; MEC-35 LOUVERS (FANS & FAHU)",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "I",
+"t": "Installation of uPVC Above Ground Drainage Pipes & Fittings (Soil, Waste, Vent, Rainwater, Acoustic & Condensate)",
+"m": "PLU-01 uPVC DRAINAGE PIPES & FITTINGS (SOIL, WASTE, VENT & RAINWATER) - ABOVE GROUND; PLU-02 ACOUSTIC DRAINAGE PIPES & FITTINGS; PLU-06 uPVC CONDENSATE DRAIN PIPES & FITTINGS",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "I",
+"t": "Installation of Below Ground uPVC Drainage, Catch Basins, Manhole Covers & Gratings",
+"m": "PLU-03 uPVC DRAINAGE PIPES & FITTINGS - BELOW GROUND; PLU-08 uPVC FABRICATED ITEMS (CATCH BASIN); PLU-09 MANHOLE COVERS & GRATINGS (DUCTILE IRON)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "I",
+"t": "Installation of HDPE Drainage Pipes & Fittings (Stack Diversion & Retail Kitchen)",
+"m": "PLU-04 HDPE DRAINAGE PIPES & FITTINGS (STACK DIVERSION & RETAIL KITCHEN)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "I",
+"t": "Installation of Drainage Accessories (Balcony Drain, Floor Trap, Clean Out, Roof Outlet, Vent Cowl, Trench & Planter Drain)",
+"m": "PLU-07 DRAINAGE ACCESSORIES (BALCONY DRAIN, FLOOR TRAP, CLEAN OUT, ROOF OUTLET, VENT COWL, TRENCH & PLANTER DRAIN)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "I",
+"t": "Installation of GRP Condensate Drain Tank, GRP Lining & Grease Trap",
+"m": "PLU-10 GRP CONDENSATE DRAIN TANK & GRP LINING; PLU-11 GREASE TRAP",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "I",
+"t": "Installation of PPR (PN20) & PEX Pipes & Fittings",
+"m": "PLU-12 PPR PIPES & FITTINGS (PN20); PLU-15 PEX PIPES & FITTINGS",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "I",
+"t": "Installation of uPVC Pressure Pipes (PN25 Risers) & HDPE Water Supply Pipes (Underground Main)",
+"m": "PLU-05 uPVC PRESSURE PIPES & FITTINGS (CLASS E / PN25 RISERS); PLU-14 HDPE PIPES & FITTINGS - WATER SUPPLY (UNDERGROUND MAIN)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "I",
+"t": "Installation of Plumbing Pipe Supports, Pipe Insulation",
+"m": "PLU-13 PLUMBING PIPE INSULATION; PLU-16 PLUMBING PIPE SUPPORTS; PLU-25 FABRICATED PUDDLE FLANGE",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "I",
+"t": "Installation of Plumbing Valves & Accessories (Ball / Gate, Angle Valves, Bib Tap, Float Valve, PRV, Water Hammer Arrestor, Solenoid Valve & Air Vent)",
+"m": "PLU-17 PLUMBING VALVES (BALL / GATE - WRAS); PLU-18 WATER HAMMER ARRESTOR, SOLENOID VALVE & AUTOMATIC AIR VENT; PLU-19 PLUMBING ANGLE VALVES; PLU-20 BIB TAP & FLOAT VALVE; PLU-24 PRESSURE REDUCING VALVES (PRV)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "I",
+"t": "Installation of Electric Water Heaters",
+"m": "PLU-21 ELECTRIC WATER HEATER",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "I",
+"t": "Installation of Plumbing Pumps (Transfer / Booster / Submersible)",
+"m": "PLU-22 PLUMBING PUMPS (TRANSFER / BOOSTER / SUBMERSIBLE)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "I",
+"t": "Assembly & Installation of GRP Sectional Water Tank & Water Treatment / Chlorination System",
+"m": "PLU-23 GRP SECTIONAL WATER TANK; PLU-26 WATER TREATMENT / CHLORINATION SYSTEM",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "T",
+"t": "Testing of Drainage System (Above & Below Ground)",
+"m": "PLU-01 uPVC DRAINAGE PIPES & FITTINGS (SOIL, WASTE, VENT & RAINWATER) - ABOVE GROUND; PLU-02 ACOUSTIC DRAINAGE PIPES & FITTINGS; PLU-03 uPVC DRAINAGE PIPES & FITTINGS - BELOW GROUND; PLU-04 HDPE DRAINAGE PIPES & FITTINGS (STACK DIVERSION & RETAIL KITCHEN); PLU-06 uPVC CONDENSATE DRAIN PIPES & FITTINGS; PLU-07 DRAINAGE ACCESSORIES (BALCONY DRAIN, FLOOR TRAP, CLEAN OUT, ROOF OUTLET, VENT COWL, TRENCH & PLANTER DRAIN); PLU-08 uPVC FABRICATED ITEMS (CATCH BASIN); PLU-09 MANHOLE COVERS & GRATINGS (DUCTILE IRON)",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "T",
+"t": "Testing of GRP Condensate Drain Tank & Grease Trap",
+"m": "PLU-10 GRP CONDENSATE DRAIN TANK & GRP LINING; PLU-11 GREASE TRAP",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "T",
+"t": "Testing, Flushing & Disinfection of Water Supply System",
+"m": "PLU-05 uPVC PRESSURE PIPES & FITTINGS (CLASS E / PN25 RISERS); PLU-12 PPR PIPES & FITTINGS (PN20); PLU-14 HDPE PIPES & FITTINGS - WATER SUPPLY (UNDERGROUND MAIN); PLU-15 PEX PIPES & FITTINGS; PLU-17 PLUMBING VALVES (BALL / GATE - WRAS); PLU-18 WATER HAMMER ARRESTOR, SOLENOID VALVE & AUTOMATIC AIR VENT; PLU-19 PLUMBING ANGLE VALVES; PLU-20 BIB TAP & FLOAT VALVE; PLU-24 PRESSURE REDUCING VALVES (PRV); PLU-26 WATER TREATMENT / CHLORINATION SYSTEM",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "PLU",
+"s": "T",
+"t": "Testing & Commissioning of Plumbing Pumps, GRP Water Tanks & Electric Water Heaters",
+"m": "PLU-21 ELECTRIC WATER HEATER; PLU-22 PLUMBING PUMPS (TRANSFER / BOOSTER / SUBMERSIBLE); PLU-23 GRP SECTIONAL WATER TANK",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELE",
+"s": "I",
+"t": "Installation of Electrical Containment (GI Back Boxes, Cable Tray, Trunking, PVC & LSF Conduits & Floor Boxes)",
+"m": "ELE-01 GI BACK BOX; ELE-02 CABLE TRAY, TRUNKING & ACCESSORIES; ELE-03 PVC & LSF CONDUITS & ACCESSORIES; ELE-15 FLOOR BOX",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELE",
+"s": "I",
+"t": "Installation of uPVC Cable Duct & Construction of JRC Manhole",
+"m": "ELE-04 UPVC CABLE DUCT & JRC MANHOLE",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELE",
+"s": "I",
+"t": "Installation of Earthing & Lightning Protection System",
+"m": "ELE-05 EARTHING & LIGHTNING PROTECTION SYSTEM",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELE",
+"s": "I",
+"t": "Installation of LV Cables & Wires, Fire Rated Power Cables (FP-400) & Cable Termination (Glands & Lugs)",
+"m": "ELE-06 LV CABLES & WIRES (XLPE/SWA/PVC, PVC & LSZH); ELE-07 FIRE RATED POWER CABLES (FP-400); ELE-08 CABLE GLANDS & LUGS",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELE",
+"s": "I",
+"t": "Installation of Wiring Accessories ",
+"m": "ELE-09 ISOLATORS; ELE-10 CEILING ROSE; ELE-13 WIRING ACCESSORIES (SWITCHES, SOCKETS, FCU, DP SWITCHES - SMART SWITCHES); ELE-17 LIGHTING CONTROL SYSTEM (MOTION SENSOR / PHOTOCELL)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELE",
+"s": "I",
+"t": "Installation of LV Switchgear (LV Panel / EMDB / ESMDB / ATS / SMDB / MCC / DB / EDB), Bus Bar Trunking & Capacitor Bank",
+"m": "ELE-12 CAPACITOR BANK; ELE-14 BUS BAR TRUNKING; ELE-16 LV SWITCHGEAR (LV PANEL / EMDB / ESMDB / ATS / SMDB / MCC / DB / EDB)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELE",
+"s": "I",
+"t": "Installation of Diesel Generator",
+"m": "ELE-11 DIESEL GENERATOR",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELE",
+"s": "I",
+"t": "Installation of Fire Alarm & Voice Evacuation System (incl. Fire Alarm Cables)",
+"m": "ELE-18 FIRE ALARM & VOICE EVACUATION SYSTEM; ELE-19 FIRE ALARM & EMERGENCY LIGHTING CABLES",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELE",
+"s": "I",
+"t": "Installation of Central Battery Emergency & Exit Lighting System",
+"m": "ELE-20 CENTRAL BATTERY EMERGENCY & EXIT LIGHTING SYSTEM; ELE-19 FIRE ALARM & EMERGENCY LIGHTING CABLES",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELE",
+"s": "T",
+"t": "Testing of LV Cables, Wiring, Accessories & Lighting Controls (IR & Continuity)",
+"m": "ELE-06 LV CABLES & WIRES (XLPE/SWA/PVC, PVC & LSZH); ELE-07 FIRE RATED POWER CABLES (FP-400); ELE-08 CABLE GLANDS & LUGS; ELE-09 ISOLATORS; ELE-10 CEILING ROSE; ELE-13 WIRING ACCESSORIES (SWITCHES, SOCKETS, FCU, DP SWITCHES - SMART SWITCHES); ELE-17 LIGHTING CONTROL SYSTEM (MOTION SENSOR / PHOTOCELL)",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELE",
+"s": "T",
+"t": "Testing of Earthing & Lightning Protection System",
+"m": "ELE-05 EARTHING & LIGHTNING PROTECTION SYSTEM",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELE",
+"s": "T",
+"t": "Testing & Commissioning of LV Switchgear, Bus Bar Trunking & Capacitor Bank",
+"m": "ELE-12 CAPACITOR BANK; ELE-14 BUS BAR TRUNKING; ELE-16 LV SWITCHGEAR (LV PANEL / EMDB / ESMDB / ATS / SMDB / MCC / DB / EDB)",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELE",
+"s": "T",
+"t": "Testing & Commissioning of Diesel Generator",
+"m": "ELE-11 DIESEL GENERATOR",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELE",
+"s": "T",
+"t": "Testing & Commissioning of Fire Alarm & Voice Evacuation System",
+"m": "ELE-18 FIRE ALARM & VOICE EVACUATION SYSTEM; ELE-19 FIRE ALARM & EMERGENCY LIGHTING CABLES",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELE",
+"s": "T",
+"t": "Testing & Commissioning of Central Battery Emergency & Exit Lighting System",
+"m": "ELE-20 CENTRAL BATTERY EMERGENCY & EXIT LIGHTING SYSTEM",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELV",
+"s": "I",
+"t": "Installation of Structured Cabling & Telephone / Data System (Rack, ODF, HCP/RCP/SCP/ONU, CAT6 Outlets)",
+"m": "ELV-01 STRUCTURED CABLING & TELEPHONE / DATA SYSTEM (RACK, ODF, HCP/RCP/SCP/ONU, CAT6 OUTLETS)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELV",
+"s": "I",
+"t": "Installation of CCTV (IP - SIRA), Access Control & Gate Barrier Systems",
+"m": "ELV-02 CCTV SYSTEM (IP - SIRA); ELV-04 ACCESS CONTROL SYSTEM; ELV-05 GATE BARRIER SYSTEM",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELV",
+"s": "I",
+"t": "Installation of Video Intercom & Background Music Systems",
+"m": "ELV-03 VIDEO INTERCOM SYSTEM; ELV-06 BACKGROUND MUSIC SYSTEM",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELV",
+"s": "T",
+"t": "Testing & Commissioning of Structured Cabling & Telephone / Data System",
+"m": "ELV-01 STRUCTURED CABLING & TELEPHONE / DATA SYSTEM (RACK, ODF, HCP/RCP/SCP/ONU, CAT6 OUTLETS)",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELV",
+"s": "T",
+"t": "Testing & Commissioning of CCTV, Access Control & Gate Barrier Systems",
+"m": "ELV-02 CCTV SYSTEM (IP - SIRA); ELV-04 ACCESS CONTROL SYSTEM; ELV-05 GATE BARRIER SYSTEM",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "ELV",
+"s": "T",
+"t": "Testing & Commissioning of Video Intercom & Background Music Systems",
+"m": "ELV-03 VIDEO INTERCOM SYSTEM; ELV-06 BACKGROUND MUSIC SYSTEM",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "FF",
+"s": "I",
+"t": "Installation of Fire Fighting Pipes, Fittings, Hangers & Supports",
+"m": "FF-01 FIRE FIGHTING PIPES & FITTINGS; FF-02 FIRE FIGHTING PIPE HANGERS & SUPPORTS",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "FF",
+"s": "I",
+"t": "Installation of Fire Protection System (Fire Extinguisher / Fire Hose Reel / Sprinklers / Valves)",
+"m": "FF-03 FIRE PROTECTION SYSTEM (FIRE EXTINGUISHER / FIRE HOSE REEL / SPRINKLERS / VALVES)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "FF",
+"s": "I",
+"t": "Installation of Fire Pump Sets (Electric / Diesel / Jockey)",
+"m": "FF-04 FIRE PUMP SETS (ELECTRIC / DIESEL / JOCKEY)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "FF",
+"s": "I",
+"t": "Installation of Clean Agent FM-200 Fire Suppression & Foam Deluge Systems",
+"m": "FF-05 CLEAN AGENT FM-200 FIRE SUPPRESSION SYSTEM; FF-06 FOAM DELUGE SYSTEM (GENERATOR ROOM)",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "FF",
+"s": "T",
+"t": "Hydrostatic Testing & Flushing of Fire Fighting Piping System",
+"m": "FF-01 FIRE FIGHTING PIPES & FITTINGS; FF-02 FIRE FIGHTING PIPE HANGERS & SUPPORTS; FF-03 FIRE PROTECTION SYSTEM (FIRE EXTINGUISHER / FIRE HOSE REEL / SPRINKLERS / VALVES)",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "FF",
+"s": "T",
+"t": "Testing & Commissioning of Fire Pump Sets",
+"m": "FF-04 FIRE PUMP SETS (ELECTRIC / DIESEL / JOCKEY)",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "FF",
+"s": "T",
+"t": "Testing & Commissioning of Clean Agent FM-200 & Foam Deluge Systems",
+"m": "FF-05 CLEAN AGENT FM-200 FIRE SUPPRESSION SYSTEM; FF-06 FOAM DELUGE SYSTEM (GENERATOR ROOM)",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "LPG",
+"s": "I",
+"t": "Installation of LPG System",
+"m": "LPG-01 LPG SYSTEM",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "LPG",
+"s": "T",
+"t": "Testing & Commissioning of LPG System",
+"m": "LPG-01 LPG SYSTEM",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEP",
+"s": "I",
+"t": "Installation of MEP Identification Labels",
+"m": "MEP-01 MEP IDENTIFICATION LABELS",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEP",
+"s": "I",
+"t": "Installation of Fire Stopping Systems for MEP Services",
+"m": "MEP-02 FIRE STOPPING SYSTEMS FOR MEP SERVICES",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEP",
+"s": "I",
+"t": "Installation of MEP Sleeves and Puddle Flanges",
+"m": "MEP-02 FIRE STOPPING SYSTEMS FOR MEP SERVICES",
+"q": "First Material",
+"b": null,
+"ref": null,
+"rem": null
+},
+{
+"d": "MEP",
+"s": "T",
+"t": "Integrated Systems Testing (IST) of Fire & Life Safety Systems",
+"m": "ELE-18 FIRE ALARM & VOICE EVACUATION SYSTEM; ELE-11 DIESEL GENERATOR; FF-04 FIRE PUMP SETS (ELECTRIC / DIESEL / JOCKEY); MEC-29 SMOKE EXTRACT & MAKE-UP AIR FANS; MEC-28 VENTILATION FANS (PRESSURIZATION / GARBAGE / BASEMENT EXTRACT)",
+"q": "Last Material",
+"b": null,
+"ref": null,
+"rem": null
+}
+]
