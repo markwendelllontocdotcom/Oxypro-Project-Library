@@ -6,7 +6,7 @@ One shared library of Oxypro Electromechanical's projects: project details and p
 **Version:** 1.11.0 (27 Oct 2026)
 **Developed by** Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.
 
-This repository holds the source code and history. The app runs as a Claude artifact: its project list, photos and MSRA Logs live in the artifact's shared database and storage.
+This repository holds the source code and the GitHub edition website. The app runs as a Claude artifact: its project list, photos and MSRA Logs live in the artifact's shared database and storage.
 
 ## GitHub edition
 
@@ -48,11 +48,6 @@ This repository holds the source code and history. The app runs as a Claude arti
 | `docs/` | The GitHub edition website: `index.html`, `photos/`, `.nojekyll` (built by `build.py`) |
 | `src/github/runtime.js` | The GitHub edition's stand-in for Claude's runtime: snapshot projects, MSRA Logs in the browser, downloads |
 | `github/snapshot.json` | The projects copied from the live library for the GitHub edition |
-| `notes/project-notes.md` | Working notes: decisions, data layout, version history |
-| `history/patches/` | The scripts that made each version from 1.1.0 to 1.11.0 (kept for history; they patch `src/library.html` in order) |
-| `tests/msra/` | Node tests for the MSRA Log: MSL matching, the Excel workbook and the PDF |
-| `tests/browser/` | Playwright scripts that ran the page with a mocked Claude runtime (paths point at the development machine; adjust before use) |
-| `tools/msra/` | The standard list and The Borough MSL Ref as extracted from "Method Statement Log - The Borough R0.xlsx" |
 
 ## Build and publish
 
@@ -69,16 +64,6 @@ Shared data in the artifact's database:
 - `mslogs/<project no.>`: the whole MSRA Log; `mslogmeta/<project no.>`: `{no, n, updatedAt}` for the project list
 
 Libraries are loaded from cdnjs when first needed: jsPDF 2.5.1, PptxGenJS 3.12.0, SheetJS 0.18.5, ExcelJS 4.4.0 and jsPDF-AutoTable 3.8.4. Page fonts: Barlow and Barlow Condensed (Google Fonts).
-
-## Tests
-
-```
-cd tests/msra
-npm install exceljs@4.4.0 xlsx@0.18.5 jspdf@2.5.1 jspdf-autotable@3.8.4
-node test-core.js "The Borough_Material_Submittal_Log.xlsx"   # every material should be covered
-node test-xlsx.js "The Borough_Material_Submittal_Log.xlsx"   # writes test.xlsx
-node test-pdf.js                                              # writes test.pdf
-```
 
 ## Credits
 
