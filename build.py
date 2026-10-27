@@ -2,6 +2,10 @@ import json, os
 here=os.path.dirname(os.path.abspath(__file__))
 a=json.load(open(os.path.join(here,'build','assets.json')))
 s=open(os.path.join(here,'src','library.html')).read()
+ic=json.load(open(os.path.join(here,'build','app-icon.json')))
+for k,v in {'__APP_ICON32__':ic['icon32'],'__APP_ICON128__':ic['icon128'],'__APP_ICON180__':ic['icon180']}.items():
+    assert k in s, k
+    s=s.replace(k,v)
 for k,v in {'__LOGO_LIGHT__':a['logoLight'],'__LOGO_DARK__':a['logoDark'],'__CALADEA__':a['caladea'],'__CARLITO__':a['carlito'],'__CARLITOB__':a['carlitoBold']}.items():
     assert k in s, k
     s=s.replace(k,v)
@@ -34,13 +38,19 @@ if os.path.exists(snap_path):
     # a full document, with the same base styles Claude wraps artifacts in ([hidden] really hides, UTF-8)
     page=page.replace('<title>Oxypro Project Library</title>\n','',1)
     page=('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
-          '<title>Oxypro Project Library</title>\n<meta name="description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, PQP Maker and Method Statement Logs (GitHub edition).">\n'
+          '<title>Oxypro Project Library</title>\n<link rel="icon" href="favicon.ico" sizes="any">\n<link rel="apple-touch-icon" href="apple-touch-icon.png">\n<meta name="theme-color" content="#D81F27">\n<meta name="description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, PQP Maker and Method Statement Logs (GitHub edition).">\n'
           '<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}'
           'body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>\n'
           '</head>\n<body>\n'+page+'\n</body>\n</html>\n')
     site=os.path.join(here,'docs'); os.makedirs(os.path.join(site,'photos'),exist_ok=True)   # GitHub Pages serves main /docs
     open(os.path.join(site,'index.html'),'w').write(page)
     open(os.path.join(site,'.nojekyll'),'w').write('')
+    from PIL import Image
+    ico=Image.open(os.path.join(here,'build','app-icon-512.png')).convert('RGBA')
+    ico.save(os.path.join(site,'favicon.ico'),sizes=[(16,16),(32,32),(48,48),(64,64)])
+    ico.resize((180,180),Image.LANCZOS).save(os.path.join(site,'apple-touch-icon.png'))
+    ico.resize((192,192),Image.LANCZOS).save(os.path.join(site,'icon-192.png'))
+    ico.save(os.path.join(site,'icon-512.png'))
     used=set(x['id'] for p in snap['projects'].values() for x in (p.get('photos') or []) if x)
     for f in os.listdir(os.path.join(site,'photos')):
         if f[:-4] not in used: os.remove(os.path.join(site,'photos',f))

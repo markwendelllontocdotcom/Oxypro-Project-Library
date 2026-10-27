@@ -1,4 +1,6 @@
 <title>Oxypro Project Library</title>
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,__APP_ICON32__">
+<link rel="apple-touch-icon" href="data:image/png;base64,__APP_ICON180__">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -373,6 +375,7 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 .about{display:flex;flex-direction:column;gap:20px;font-size:14.5px;line-height:1.55}
 .about-card{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--line)}
 .about-card .logo{height:52px}
+.about-icon{width:64px;height:64px;flex:none}
 .about-name{font:600 26px/1.05 var(--f-cond);letter-spacing:.03em;text-transform:uppercase}
 .about-ver{color:var(--muted);font-size:13.5px;margin-top:3px}
 .about-tag{margin:6px 0 0;color:var(--fg-2);max-width:62ch}
@@ -560,7 +563,7 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.11.0 (27 Oct 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.11.1 (27 Oct 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -623,7 +626,7 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.11.0';
+const APP_VERSION = '1.11.1';
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
 const SNAP_DATE = String(window.__OPL_SNAPSHOT || '');
@@ -2680,6 +2683,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.11.1', '27 Oct 2026', 'App icon: the yellow folder with the Oxypro mark, for the page, the shortcut and the GitHub edition.'],
   ['1.11.0', '27 Oct 2026', 'GitHub edition: the library as a website outside Claude, with a copy of the projects and photos; MSRA Logs are saved in the browser.'],
   ['1.10.2', '27 Oct 2026', 'This About page (About in the header and in the footer).'],
   ['1.10.1', '27 Oct 2026', 'The PROJECT LIBRARY title goes back to the library list from any page.'],
@@ -2699,7 +2703,7 @@ function openAbout() {
     <div class="dialog-head"><h2 id="about-title">About</h2><button type="button" class="btn btn-ghost btn-sm" data-close>Close</button></div>
     <div class="dialog-body about">
       <div class="about-card">
-        <img class="logo logo-l" src="${logoSrc(false)}" alt="Oxypro"><img class="logo logo-d" src="${logoSrc(true)}" alt="Oxypro">
+        <img class="about-icon" src="data:image/png;base64,__APP_ICON128__" alt="" width="64" height="64">
         <div><div class="about-name">Oxypro Project Library</div><div class="about-ver">Version ${APP_VERSION} · 27 Oct 2026${GH ? ` · GitHub edition, projects as of ${esc(SNAP_DATE)}` : ''}${n ? ` · ${n} projects` : ''}</div>
           <p class="about-tag">One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, the Project Quality Plan hand-off to PQP Maker and each project's Method Statement Log.</p></div>
       </div>
