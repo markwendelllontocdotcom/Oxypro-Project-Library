@@ -37,14 +37,36 @@ if os.path.exists(snap_path):
     page=s.replace(marker,'<script>\n'+rt+'\n</script>\n'+marker)
     # a full document, with the same base styles Claude wraps artifacts in ([hidden] really hides, UTF-8)
     page=page.replace('<title>Oxypro Project Library</title>\n','',1)
+    # icons and the link preview (chat apps, social sites): file names with ?v=<version>, so a new icon is fetched
+    # again instead of a copy kept for the old address
+    import re
+    ver=re.search(r"APP_VERSION = '([^']+)'",s).group(1)
+    GH_SITE='https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/'
+    DESC='Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP and Method Statement Logs) and HSE Plans.'
+    def meta_head(icons, url):
+        return (f'<link rel="icon" href="{icons}favicon.ico?v={ver}" sizes="any">\n<link rel="apple-touch-icon" href="{icons}apple-touch-icon.png?v={ver}">\n'
+                f'<meta name="theme-color" content="#D81F27">\n<meta name="description" content="{DESC}">\n'
+                f'<meta property="og:type" content="website">\n<meta property="og:site_name" content="Oxypro Project Library">\n'
+                f'<meta property="og:title" content="Oxypro Project Library">\n<meta property="og:description" content="{DESC}">\n'
+                f'<meta property="og:url" content="{url}">\n<meta property="og:image" content="{GH_SITE}docs/icon-512.png?v={ver}">\n'
+                f'<meta property="og:image:width" content="512">\n<meta property="og:image:height" content="512">\n<meta property="og:image:alt" content="Oxypro Library logo">\n'
+                f'<meta name="twitter:card" content="summary">\n<meta name="twitter:image" content="{GH_SITE}docs/icon-512.png?v={ver}">\n')
     page=('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
-          '<title>Oxypro Project Library</title>\n<link rel="icon" href="favicon.ico" sizes="any">\n<link rel="apple-touch-icon" href="apple-touch-icon.png">\n<meta name="theme-color" content="#D81F27">\n<meta name="description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, PQP Maker and Method Statement Logs (GitHub edition).">\n'
+          '<title>Oxypro Project Library</title>\n'+meta_head('', GH_SITE+'docs/')+
           '<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}'
           'body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>\n'
           '</head>\n<body>\n'+page+'\n</body>\n</html>\n')
     site=os.path.join(here,'docs'); os.makedirs(os.path.join(site,'photos'),exist_ok=True)   # GitHub Pages serves main /docs
     open(os.path.join(site,'index.html'),'w').write(page)
     open(os.path.join(site,'.nojekyll'),'w').write('')
+    # the start page at the repository root (GitHub Pages publishes main /): sends visitors to docs/ with the hash
+    open(os.path.join(here,'index.html'),'w').write('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+        '<title>Oxypro Project Library</title>\n'+meta_head('docs/', GH_SITE)+
+        '<!-- GitHub Pages set to the repository root serves this page: the Library itself is in docs/ (the hash is kept) -->\n'
+        "<script>location.replace('docs/' + location.search + location.hash);</script>\n"
+        '<noscript><meta http-equiv="refresh" content="0; url=docs/"></noscript>\n'
+        '<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#111;color:#eee;font:16px system-ui,sans-serif}a{color:#ff5a5f}</style>\n'
+        '</head>\n<body><p><a href="docs/">Open the Oxypro Project Library</a></p></body>\n</html>\n')
     from PIL import Image
     ico=Image.open(os.path.join(here,'build','app-icon-512.png')).convert('RGBA')
     shutil.copy(os.path.join(here,'build','favicon.ico'),os.path.join(site,'favicon.ico'))   # the book alone at 16-32 px, the full logo at 48-64 px
