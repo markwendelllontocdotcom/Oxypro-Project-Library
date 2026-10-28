@@ -380,7 +380,7 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 .about{display:flex;flex-direction:column;gap:20px;font-size:14.5px;line-height:1.55}
 .about-card{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--line)}
 .about-card .logo{height:52px}
-.about-icon{width:64px;height:64px;flex:none}
+.about-icon{width:64px;height:64px;flex:none;border-radius:12px}
 .about-name{font:600 26px/1.05 var(--f-cond);letter-spacing:.03em;text-transform:uppercase}
 .about-ver{color:var(--muted);font-size:13.5px;margin-top:3px}
 .about-tag{margin:6px 0 0;color:var(--fg-2);max-width:62ch}
@@ -631,7 +631,7 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.12.0';
+const APP_VERSION = '1.12.2';
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
 const SNAP_DATE = String(window.__OPL_SNAPSHOT || '');
@@ -1378,8 +1378,10 @@ function openPqp(no) {
 /* ---------- Send to HSE Plan Maker ---------- */
 // HSE Plan Maker reads the same project file as PQP Maker (format pqp-maker-project) under Import project, with the
 // cover photo inside the file. Its own fields: the Lead Consultant and the MEP Consultant when it is a different firm.
-const HSE_URL = 'https://markwendelllontocdotcom.github.io/MEP-HSE-Plan-Maker/';
-const HSE_LIVE = false;   // true once HSE Plan Maker is online: Open in HSE Plan Maker then opens it with the project in its link
+// Open in HSE Plan Maker sends the text in the link, as for PQP Maker: the Claude desktop app hands links to the system
+// browser, so a link must stay short. The cover photo goes by the clipboard and HSE Plan Maker (1.0.7) asks for a paste.
+const HSE_URL = 'https://markwendelllontocdotcom.github.io/HSE-Plan-Maker/';
+const HSE_LIVE = true;    // false: Save HSE Plan file only
 const HSE_LEFT = ['the Document No., Revision and Date', 'Our Role and Disciplines', 'the HSE organization (Projects Director, Project Manager, HSE Manager and team)', 'the client and consultant logos'];
 function hseData(p) {
   const q = pqpData(p).pr, pr = {}, rows = [], put = (k, label, v) => { pr[k] = v; rows.push([label, v]); };
@@ -1397,24 +1399,16 @@ function hseData(p) {
   return { pr, rows };
 }
 const hseFileName = p => safeName([pqpData(p).pr.P02 || p.no, p.name || 'Untitled project', 'HSE Plan details'].filter(Boolean).join(' - ')) + '.json';
-async function hseProject(p, slot, forLink) {
+async function hseProject(p, slot) {
   const { pr } = hseData(p);
-  if (slot >= 0) {
-    try {
-      const c = await pqpCanvas(p, slot);
-      if (c) {
-        // in a link the photo travels in the address, so it is kept smaller there
-        let cv = c;
-        if (forLink && Math.max(c.width, c.height) > 1400) { const k = 1400 / Math.max(c.width, c.height); cv = document.createElement('canvas'); cv.width = Math.round(c.width * k); cv.height = Math.round(c.height * k); cv.getContext('2d').drawImage(c, 0, 0, cv.width, cv.height); }
-        pr.R10 = { name: `${safeName(p.name || p.no)} - Cover Photo.jpg`, type: 'image/jpeg', dataUrl: cv.toDataURL('image/jpeg', forLink ? 0.8 : 0.86), w: cv.width, h: cv.height };
-      }
-    } catch (e) { /* no photo: HSE Plan Maker shows the photo box */ }
-  }
+  if (slot >= 0) { try { const ph = await pqpPhoto(p, slot); if (ph) pr.R10 = ph; } catch (e) { /* no photo: HSE Plan Maker shows the photo box */ } }
   return { format: 'pqp-maker-project', version: 1, app: 'Oxypro Project Library ' + APP_VERSION, saved: new Date().toISOString(), source: { library: p.no, for: 'HSE Plan Maker' }, project: pr };
 }
-// The project travels to HSE Plan Maker after # in the address (never sent to a server), as for PQP Maker
-async function hseLink(p, slot) {
-  const raw = new TextEncoder().encode(JSON.stringify(await hseProject(p, slot, true)));
+// The project travels to HSE Plan Maker after # in the address (never sent to a server), as for PQP Maker: the text
+// details only; with a photo chosen the link says so (photo: 'clipboard') and the photo is copied when it is opened
+async function hseLink(p, withPhoto) {
+  const raw = new TextEncoder().encode(JSON.stringify({ format: 'pqp-maker-project', version: 1, app: 'Oxypro Project Library ' + APP_VERSION,
+    source: { library: p.no, for: 'HSE Plan Maker', ...(withPhoto ? { photo: 'clipboard' } : {}) }, project: hseData(p).pr }));
   if (window.CompressionStream) {
     try { return HSE_URL + '#library=' + b64u(new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer())); }
     catch (e) { /* plain JSON below */ }
@@ -1454,11 +1448,14 @@ function openHse(no) {
     $('#hse-ph-cell').textContent = i < 0 ? 'None (the plan shows the photo box)' : photoName(i);
     const what = slot >= 0 ? 'these details and the cover photo' : 'these details';
     $('#hse-how').innerHTML = HSE_LIVE
-      ? `<strong>Open in HSE Plan Maker</strong> starts the HSE Plan with ${what} in a new tab. <strong>Save HSE Plan file</strong> keeps them as ${file}: in HSE Plan Maker choose <strong>Import project</strong> and pick the file.`
+      ? (slot >= 0
+        ? `<strong>Open in HSE Plan Maker</strong> starts the HSE Plan with these details in a new tab and copies the cover photo: HSE Plan Maker then asks you to paste it (Ctrl+V). <strong>Save HSE Plan file</strong> keeps everything, cover photo included, as ${file}: in HSE Plan Maker choose <strong>Import project</strong> and pick the file.`
+        : `<strong>Open in HSE Plan Maker</strong> starts the HSE Plan with these details in a new tab. <strong>Save HSE Plan file</strong> keeps them as ${file}: in HSE Plan Maker choose <strong>Import project</strong> and pick the file.`)
       : `<strong>Save HSE Plan file</strong> keeps ${what} as ${file}. In HSE Plan Maker choose <strong>Import project</strong>, then <strong>Project Library or PQP Maker file</strong>, then pick the file: the HSE Plan starts with these details.`;
     if (!HSE_LIVE) return;
     const a = $('#hse-open'); a.removeAttribute('href'); a.setAttribute('aria-disabled', 'true');
-    hseLink(p, slot).then(url => { if (slot !== i) return; const a2 = $('#hse-open'); if (a2) { a2.href = url; a2.removeAttribute('aria-disabled'); } }).catch(() => {});
+    hseLink(p, slot >= 0).then(url => { if (slot !== i) return; const a2 = $('#hse-open'); if (a2) { a2.href = url; a2.removeAttribute('aria-disabled'); } }).catch(() => {});
+    if (slot >= 0) pqpPng(p, slot).catch(() => {});   // ready for the clipboard when Open is clicked
   };
   setPhoto(slot);
   document.querySelector('.hse-ph').addEventListener('click', e => { const b = e.target.closest('[data-hse-ph]'); if (b) setPhoto(+b.dataset.hsePh); });
@@ -1471,7 +1468,14 @@ function openHse(no) {
   });
   if (HSE_LIVE) $('#hse-open').addEventListener('click', e => {
     if (!e.currentTarget.getAttribute('href')) { e.preventDefault(); toast('One moment: the project is being prepared.'); return; }
-    toast(`HSE Plan Maker opens in a new tab with ${name}`); setTimeout(closeModal, 50);
+    if (slot < 0) { toast(`HSE Plan Maker opens in a new tab with ${name}`); setTimeout(closeModal, 50); return; }
+    // copy now, while the click still counts: the clipboard takes the photo as it is ready
+    const fail = () => toast(`HSE Plan Maker opens in a new tab with ${name}. The cover photo could not be copied: use Save HSE Plan file, or add the photo in HSE Plan Maker.`, 8000);
+    try {
+      navigator.clipboard.write([new ClipboardItem({ 'image/png': pqpPng(p, slot) })])
+        .then(() => toast(`HSE Plan Maker opens in a new tab with ${name}. The cover photo is copied: paste it there with Ctrl+V.`, 7000), fail);
+    } catch (err) { fail(); }
+    setTimeout(closeModal, 50);
   });
 }
 
@@ -2826,6 +2830,8 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.12.2', '29 Oct 2026', 'New app icon: the Oxypro Library open book, for the page, the shortcuts and the GitHub edition.'],
+  ['1.12.1', '29 Oct 2026', 'HSE Plan Maker is online: HSE > Open in HSE Plan Maker opens it with the project and copies the cover photo for pasting there.'],
   ['1.12.0', '29 Oct 2026', 'QA/QC and HSE on each project: QA/QC opens a menu with PQP details and file and the MSRA Log; HSE sends the project and a cover photo of your choice (the main photo, another library photo or none) to HSE Plan Maker.'],
   ['1.11.1', '27 Oct 2026', 'App icon: the yellow folder with the Oxypro mark, for the page, the shortcut and the GitHub edition.'],
   ['1.11.0', '27 Oct 2026', 'GitHub edition: the library as a website outside Claude, with a copy of the projects and photos; MSRA Logs are saved in the browser.'],
@@ -2865,7 +2871,7 @@ function openAbout() {
           <li>For a presentation, tick the projects and choose <b>Make presentation</b>, or use <b>New presentation sheet</b> on one project. Adjust photos and text, then <b>View / Present</b>, <b>Download PDF</b> or <b>Download PowerPoint</b>.</li>
           <li>For a PQP, open the project, choose <b>QA/QC</b> and then <b>PQP details and file</b>, pick the cover photo, then <b>Open in PQP Maker</b>.</li>
           <li>For the Method Statement Log, choose <b>QA/QC</b> and then <b>Create MSRA Log</b> (or <b>Open MSRA Log</b>). Use <b>Edit</b> to change it, <b>Save to library</b> to keep it, <b>Save as</b> for Excel or PDF and <b>Print</b> for a print-ready PDF.</li>
-          <li>For an HSE Plan, choose <b>HSE</b>, keep the main photo or pick another one (or no photo), then <b>Save HSE Plan file</b>. In HSE Plan Maker choose <b>Import project</b> and pick the file.</li>
+          <li>For an HSE Plan, choose <b>HSE</b>, keep the main photo or pick another one (or no photo), then <b>Open in HSE Plan Maker</b> and paste the photo there with Ctrl+V. Or <b>Save HSE Plan file</b>, then in HSE Plan Maker choose <b>Import project</b> and pick the file.</li>
           <li>Click <b>Project Library</b> at the top to come back to the list from any page. <b>View</b> switches between Light, Dark and Auto.</li>
         </ol></section>
       <section><h3>Your data</h3>
@@ -2875,7 +2881,7 @@ ${GH ? `<li>This is the GitHub edition: the projects and photos are a copy of th
           <li>Files you make (PDF, PowerPoint, Excel, PQP files) are downloaded to your device; Print opens the PDF for printing.</li>` : `<li>Projects, photos and MSRA Logs are kept in this shared library in Claude. Everyone with the link sees the same, up-to-date list.</li>
           <li>Only the library's owner and editors can add or change projects, photos and MSRA Logs${w ? ' (you can)' : ' (you can view, make presentations and download files)'}.</li>
           <li>Files you make (PDF, PowerPoint, Excel, PQP files) are downloaded to your device. Printing is done from the downloaded PDF, as Claude cannot open the print window.</li>`}
-          <li>Open in PQP Maker passes the project's text details to PQP Maker in its link; the cover photo goes by copy and paste. The HSE Plan file holds the project's details and the cover photo you chose. Nothing else leaves the library.</li>
+          <li>Open in PQP Maker and Open in HSE Plan Maker pass the project's text details in their link; the cover photo goes by copy and paste. The HSE Plan file holds the project's details and the cover photo you chose. Nothing else leaves the library.</li>
         </ul></section>
       <section><h3>Related</h3>
         <ul>

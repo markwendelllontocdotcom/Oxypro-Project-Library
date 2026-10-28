@@ -3,7 +3,7 @@
 One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, QA/QC (the Project Quality Plan hand-off to PQP Maker and each project's Method Statement Log) and HSE (the hand-off to HSE Plan Maker).
 
 **Use the app:** [Oxypro Project Library on Claude](https://claude.ai/artifact/T3U712ufURSuMQTfsGDkMy) (shared as "Anyone with the link")
-**Version:** 1.12.0 (29 Oct 2026)
+**Version:** 1.12.2 (29 Oct 2026)
 **Developed by** Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.
 
 This repository holds the source code and the GitHub edition website. The app runs as a Claude artifact: its project list, photos and MSRA Logs live in the artifact's shared database and storage.
@@ -26,11 +26,11 @@ This repository holds the source code and the GitHub edition website. The app ru
 - **Presentations:** select one or more projects for a top sheet (four designs), an Oxypro Project Presentation Sheet per project and a summary page, as PDF or PowerPoint. View / Present runs them full screen first.
 - **QA/QC:** a menu on each project with **PQP details and file** and the **MSRA Log**.
 - **PQP details and file:** opens [PQP Maker](https://markwendelllontocdotcom.github.io/MEP-PQP-Maker/) with the project's PQP already created (the cover photo goes by copy and paste), or saves a PQP file.
-- **HSE:** sends the project's details to HSE Plan Maker for the Project HSE Plan, with the main photo, another library photo or no photo as the cover. **Save HSE Plan file** saves them as `<code> - <name> - HSE Plan details.json`; in HSE Plan Maker choose Import project and pick the file. When HSE Plan Maker is online (`HSE_LIVE` in `src/library.html`), **Open in HSE Plan Maker** opens it with the project and the photo in the link.
+- **HSE:** sends the project's details to HSE Plan Maker for the Project HSE Plan, with the main photo, another library photo or no photo as the cover. **Save HSE Plan file** saves them as `<code> - <name> - HSE Plan details.json`; in HSE Plan Maker choose Import project and pick the file. **Open in HSE Plan Maker** opens [HSE Plan Maker](https://markwendelllontocdotcom.github.io/HSE-Plan-Maker/) with the project in its link and copies the cover photo: HSE Plan Maker asks you to paste it (Ctrl+V), as PQP Maker does.
 - **MSRA Log:** each project's Method Statement Submittal Log in the Oxypro template (The Borough): Summary, seven discipline logs (MEC, PLU, ELE, ELV, FF, LPG, MEP), the planner's MSL and the master list. Start from the standard list of 72 method statements, the project's MSL or an empty log; edit, save to the library, save as Excel or PDF and print. Set in Open Sans.
 - **Master List:** add projects, import from the Projects Master List (Excel) and export the whole list in the same layout.
 - **View:** Light, Dark or Auto. The PROJECT LIBRARY title goes back to the list from any page. About explains the app and lists the changes.
-- **Icon:** a yellow folder with the Oxypro mark, used for the browser tab, the home-screen shortcut and About.
+- **Icon:** the Oxypro Library open book, used for the browser tab, the home-screen shortcut and About (the book alone at 16 to 32 px, where the words cannot be read).
 
 ## Who can do what
 
@@ -46,7 +46,7 @@ This repository holds the source code and the GitHub edition website. The app ru
 | `src/msra/` | The MSRA Log: `core.js` (standard list, counts, MSL reading and matching), `xlsx.js` (Excel in the template layout, ExcelJS), `pdf.js` (PDF, jsPDF + AutoTable), `ui.js` (the page), `msra.css` |
 | `build.py` | Builds `dist/Oxypro Project Library.html` (Claude) and `docs/` (GitHub edition): inlines the logos, fonts, MSRA code and the MSRA standard |
 | `build/assets.json` | Logos (light and dark) and the sheet fonts Caladea and Carlito, base64 |
-| `build/app-icon-512.png`, `build/app-icon.json` | The app icon (512 px) and its 32, 128 and 180 px versions, base64 |
+| `build/app-icon-512.png`, `build/app-icon.json`, `build/favicon.ico` | The app icon (512 px), its 32, 128 and 180 px versions (base64) and the website's favicon |
 | `build/msra-assets.json` | The MSRA standard (72 method statements and The Borough's material list), the Oxypro logo used in the log and Open Sans (regular and bold), base64 |
 | `dist/` | The built page, as published to Claude |
 | `docs/` | The GitHub edition website: `index.html`, `photos/`, `.nojekyll` and the icons `favicon.ico`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png` (built by `build.py`) |

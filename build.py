@@ -47,7 +47,7 @@ if os.path.exists(snap_path):
     open(os.path.join(site,'.nojekyll'),'w').write('')
     from PIL import Image
     ico=Image.open(os.path.join(here,'build','app-icon-512.png')).convert('RGBA')
-    ico.save(os.path.join(site,'favicon.ico'),sizes=[(16,16),(32,32),(48,48),(64,64)])
+    shutil.copy(os.path.join(here,'build','favicon.ico'),os.path.join(site,'favicon.ico'))   # the book alone at 16-32 px, the full logo at 48-64 px
     ico.resize((180,180),Image.LANCZOS).save(os.path.join(site,'apple-touch-icon.png'))
     ico.resize((192,192),Image.LANCZOS).save(os.path.join(site,'icon-192.png'))
     ico.save(os.path.join(site,'icon-512.png'))
