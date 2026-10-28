@@ -16,7 +16,7 @@ This repository holds the source code and the GitHub edition website. The app ru
 - Presentations (PDF, PowerPoint), Export to Excel, QA/QC (PQP details and file, the MSRA Log) and HSE all work. MSRA Logs are saved in the visitor's browser on that device; Save as gives the Excel or PDF to keep or share. Print opens the PDF in a new tab.
 - `src/github/runtime.js` stands in for Claude's runtime (`window.claude`); the page code is the same as the Claude edition.
 
-**To put it online with GitHub Pages:** Settings → Pages → Build and deployment: Source "Deploy from a branch", Branch `main`, folder `/docs` → Save. The address is `https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/`. GitHub Pages needs a public repository on a free account (a paid plan for a private one), and the website itself can be opened by anyone who has its address.
+**To put it online with GitHub Pages:** Settings → Pages → Build and deployment: Source "Deploy from a branch", Branch `main`, folder `/docs` → Save. The address is `https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/`. GitHub Pages needs a public repository on a free account (a paid plan for a private one). The website itself can be opened by anyone who has its address.
 
 **To refresh the copy:** read the live projects, add new photos to `github/photos/<asset id>.jpg`, update `github/snapshot.json`, run `python3 build.py` and push.
 
