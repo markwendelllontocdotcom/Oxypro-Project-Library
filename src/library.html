@@ -217,6 +217,11 @@ input[type="checkbox"]{accent-color:var(--red);width:18px;height:18px;margin:0;c
 .r-year{font-variant-numeric:tabular-nums;white-space:nowrap}
 .dl dd.none{color:var(--faint)}
 .d-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.d-actions .btn .bi{width:16px;height:16px;flex:none}
+.qmenu{position:relative;display:inline-flex}
+.qmenu .menu{left:0;right:auto;min-width:272px}
+.qmenu .menu-item{padding:10px 12px}
+.qmenu .menu-item b{font-weight:600}
 a.btn[aria-disabled]{opacity:.6;cursor:progress}
 .d-section{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:10px}
 .d-section h3{margin:0;font:600 14px var(--f-cond);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -626,7 +631,7 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.11.1';
+const APP_VERSION = '1.12.0';
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
 const SNAP_DATE = String(window.__OPL_SNAPSHOT || '');
@@ -664,7 +669,10 @@ const GLYPH = {
   building: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5l8-2v18M12 8l8 2v11M3 21h18M7 8h2M7 12h2M7 16h2M15 13h2M15 17h2"/></svg>',
   plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
   photo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg>',
-  back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>'
+  back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+  qaqc: '<svg class="bi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 13l2 2 4-4"/></svg>',
+  hse: '<svg class="bi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.6-3 8.3-7 10-4-1.7-7-5.4-7-10V6z"/><path d="M12 8v8M8 12h8"/></svg>',
+  chev: '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'
 };
 
 /* ---------- helpers ---------- */
@@ -940,8 +948,8 @@ function renderDetail() {
         <button type="button" class="btn btn-primary" data-act="present">New presentation sheet</button>
         <button type="button" class="btn" data-act="toggle-sel">${sel ? 'Remove from selection' : 'Add to selection'}</button>
         ${w ? '<button type="button" class="btn" data-act="edit">Edit</button>' : ''}
-        <button type="button" class="btn" data-act="pqp" title="Open the PQP in PQP Maker, or save it as a PQP file">PQP details and file</button>
-        ${msButtonHTML(p)}
+        ${qaqcHTML(p)}
+        <button type="button" class="btn" data-act="hse" title="HSE Plan: send this project to HSE Plan Maker">${GLYPH.hse}HSE</button>
       </div>
       <dl class="dl">
         ${dRow('Project code', p.code)}${dRow('Level / floors', p.levels)}${dRow('Area', p.area)}${dRow('Year', p.year)}
@@ -954,6 +962,39 @@ function renderDetail() {
       ${w ? `<div class="d-section">${del || '<div><button type="button" class="btn btn-sm btn-ghost btn-danger" data-act="del">Delete project</button></div>'}</div>` : ''}
     </div>`;
   if (!PQP_READY.has(pqpKey(p))) preparePqp(p);
+}
+/* QA/QC on a project: a menu with the PQP and the MSRA Log */
+function qaqcHTML(p) {
+  return `<div class="qmenu"><button type="button" class="btn" id="btn-qaqc" data-act="qaqc" aria-haspopup="menu" aria-expanded="false" aria-controls="qaqc-menu">${GLYPH.qaqc}QA/QC${GLYPH.chev}</button>
+    <div class="menu" id="qaqc-menu" role="menu" aria-label="QA/QC" hidden>
+      <button type="button" class="menu-item" role="menuitem" data-act="pqp"><span><b>PQP details and file</b><small>Project Quality Plan in PQP Maker, or a PQP file</small></span></button>
+      ${msMenuItemHTML(p)}
+    </div></div>`;
+}
+function closeQaqc(focus) {
+  const m = $('#qaqc-menu'), b = $('#btn-qaqc'); if (!m || m.hidden) return;
+  m.hidden = true; b.setAttribute('aria-expanded', 'false'); if (focus) b.focus();
+}
+function toggleQaqc() {
+  const m = $('#qaqc-menu'), b = $('#btn-qaqc'); if (!m) return;
+  if (!m.hidden) return closeQaqc();
+  m.hidden = false; b.setAttribute('aria-expanded', 'true');
+  // keep the menu on the screen: it opens to the right of the button, or as far left as it needs
+  const w = m.parentElement.getBoundingClientRect(), vw = document.documentElement.clientWidth, pad = 12;
+  let left = 0; if (w.left + m.offsetWidth > vw - pad) left = Math.max(pad - w.left, vw - pad - m.offsetWidth - w.left);
+  m.style.left = left + 'px'; m.style.right = 'auto';
+  m.querySelector('.menu-item').focus();
+}
+function bindQaqc() {
+  $('#detail').addEventListener('keydown', e => {
+    const m = $('#qaqc-menu'); if (!m || m.hidden || !m.contains(document.activeElement)) return;
+    const list = [...m.querySelectorAll('.menu-item')], i = list.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown') { e.preventDefault(); list[(i + 1) % list.length].focus(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); list[(i - 1 + list.length) % list.length].focus(); }
+    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); closeQaqc(true); }
+    else if (e.key === 'Tab') closeQaqc();
+  });
+  document.addEventListener('click', e => { if (!e.target.closest('.qmenu')) closeQaqc(); });
 }
 function renderSelbar() {
   const n = S.selected.size, bar = $('#selbar');
@@ -1017,8 +1058,10 @@ async function handleAct(act) {
     case 'present': if (p) openPres([p.no]); return;
     case 'toggle-sel': if (p) { S.selected.has(p.no) ? S.selected.delete(p.no) : S.selected.add(p.no); renderList(); renderDetail(); renderSelbar(); } return;
     case 'edit': if (p) openEdit(p.no); return;
-    case 'pqp': if (p) openPqp(p.no); return;
-    case 'msra': if (p) openMsra(p.no); return;
+    case 'qaqc': return toggleQaqc();
+    case 'pqp': closeQaqc(); if (p) openPqp(p.no); return;
+    case 'msra': closeQaqc(); if (p) openMsra(p.no); return;
+    case 'hse': if (p) openHse(p.no); return;
     case 'del': S.delConfirm = S.active; return renderDetail();
     case 'del-no': S.delConfirm = null; return renderDetail();
     case 'del-yes': return deleteProject(S.delConfirm);
@@ -1329,6 +1372,106 @@ function openPqp(no) {
         .then(() => toast(`PQP Maker opens in a new tab with ${name}. The cover photo is copied: paste it there with Ctrl+V.`, 7000), fail);
     } catch (err) { fail(); }
     setTimeout(closeModal, 50);
+  });
+}
+
+/* ---------- Send to HSE Plan Maker ---------- */
+// HSE Plan Maker reads the same project file as PQP Maker (format pqp-maker-project) under Import project, with the
+// cover photo inside the file. Its own fields: the Lead Consultant and the MEP Consultant when it is a different firm.
+const HSE_URL = 'https://markwendelllontocdotcom.github.io/MEP-HSE-Plan-Maker/';
+const HSE_LIVE = false;   // true once HSE Plan Maker is online: Open in HSE Plan Maker then opens it with the project in its link
+const HSE_LEFT = ['the Document No., Revision and Date', 'Our Role and Disciplines', 'the HSE organization (Projects Director, Project Manager, HSE Manager and team)', 'the client and consultant logos'];
+function hseData(p) {
+  const q = pqpData(p).pr, pr = {}, rows = [], put = (k, label, v) => { pr[k] = v; rows.push([label, v]); };
+  if (q.P01) put('P01', 'Project Name', q.P01);
+  if (q.P02) put('P02', 'Project Code & Project Number', q.P02);
+  if (q.P04) put('P04', 'Location / Emirate', q.P04);
+  if (q.P05) put('P05', 'Plot No. / Address', q.P05);
+  if (q.P07) put('P07', 'Scope of MEP Works (summary)', q.P07);
+  if (q.P13) put('P13', 'Building Configuration / Description', q.P13);
+  if (q.R01) put('R01', 'Client / Employer', q.R01);
+  const lead = realName(p.leadConsultant).slice(0, 200), mep = realName(p.mepConsultant).slice(0, 200);
+  if (lead) { put('R02', 'Lead Consultant', lead); if (mep && mep.toLowerCase() !== lead.toLowerCase()) put('R02m', 'MEP Consultant', mep); }
+  else if (mep) put('R02', 'Lead Consultant', mep);
+  if (q.R03) put('R03', 'Main Contractor', q.R03);
+  return { pr, rows };
+}
+const hseFileName = p => safeName([pqpData(p).pr.P02 || p.no, p.name || 'Untitled project', 'HSE Plan details'].filter(Boolean).join(' - ')) + '.json';
+async function hseProject(p, slot, forLink) {
+  const { pr } = hseData(p);
+  if (slot >= 0) {
+    try {
+      const c = await pqpCanvas(p, slot);
+      if (c) {
+        // in a link the photo travels in the address, so it is kept smaller there
+        let cv = c;
+        if (forLink && Math.max(c.width, c.height) > 1400) { const k = 1400 / Math.max(c.width, c.height); cv = document.createElement('canvas'); cv.width = Math.round(c.width * k); cv.height = Math.round(c.height * k); cv.getContext('2d').drawImage(c, 0, 0, cv.width, cv.height); }
+        pr.R10 = { name: `${safeName(p.name || p.no)} - Cover Photo.jpg`, type: 'image/jpeg', dataUrl: cv.toDataURL('image/jpeg', forLink ? 0.8 : 0.86), w: cv.width, h: cv.height };
+      }
+    } catch (e) { /* no photo: HSE Plan Maker shows the photo box */ }
+  }
+  return { format: 'pqp-maker-project', version: 1, app: 'Oxypro Project Library ' + APP_VERSION, saved: new Date().toISOString(), source: { library: p.no, for: 'HSE Plan Maker' }, project: pr };
+}
+// The project travels to HSE Plan Maker after # in the address (never sent to a server), as for PQP Maker
+async function hseLink(p, slot) {
+  const raw = new TextEncoder().encode(JSON.stringify(await hseProject(p, slot, true)));
+  if (window.CompressionStream) {
+    try { return HSE_URL + '#library=' + b64u(new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer())); }
+    catch (e) { /* plain JSON below */ }
+  }
+  return HSE_URL + '#library-json=' + b64u(raw);
+}
+function openHse(no) {
+  const p = S.projects.get(no); if (!p) return;
+  const { rows } = hseData(p), phs = photosOf(p);
+  let slot = phs.findIndex(Boolean);   // the main photo when there is one
+  const photoName = i => i < 0 ? 'No photo' : i === 0 ? 'Main photo' : SLOT_NAMES[i];
+  const cell = v => esc(String(v)).replace(/\n/g, '<br>');
+  const tiles = phs.map((x, i) => x ? `<button type="button" class="ptile" data-hse-ph="${i}" aria-pressed="${i === slot}" aria-label="Use ${i === 0 ? 'the main photo' : SLOT_NAMES[i].toLowerCase()}"><img src="${esc(blobUrl(x.id))}" alt="" style="object-position:${+x.x || 50}% ${+x.y || 50}%"><span class="pt-cap">${i === 0 ? 'Main photo' : esc(SLOT_NAMES[i])}</span></button>` : '').join('')
+    + `<button type="button" class="ptile" data-hse-ph="-1" aria-pressed="${slot < 0}">No photo<small>The plan shows the photo box</small></button>`;
+  openModal(`<div class="dialog">
+    <div class="dialog-head"><h2>Send ${esc(p.no)} to HSE Plan Maker</h2><button type="button" class="btn btn-ghost btn-sm" data-close>Close</button></div>
+    <div class="dialog-body">
+      <div class="field"><span class="flabel">Cover photo for the HSE Plan</span>
+        <p class="d-note" style="margin:0">${slot >= 0 ? 'Use the main photo, or choose another photo of this project from the library.' : 'This project has no photos in the library yet.'}</p>
+        <div class="ptiles hse-ph" role="group" aria-label="Cover photo">${tiles}</div></div>
+      <p style="margin:0" id="hse-how"></p>
+      <div class="imp-table"><table><thead><tr><th>HSE Plan Maker field</th><th>From the Library</th></tr></thead><tbody>
+        ${rows.map(([l, v]) => `<tr><td>${esc(l)}</td><td>${cell(v)}</td></tr>`).join('')}
+        <tr><td>Cover Photo</td><td id="hse-ph-cell"></td></tr>
+      </tbody></table></div>
+      <p class="d-note" style="margin:0">Left for you to fill in HSE Plan Maker: ${esc(joinAnd(HSE_LEFT))}. The plan starts as Rev 01 of the company HSE Plan.</p>
+      <p class="err" id="hse-err" hidden></p>
+    </div>
+    <div class="dialog-foot">${HSE_LIVE
+      ? '<button type="button" class="btn" id="hse-go">Save HSE Plan file</button><a class="btn btn-primary" id="hse-open" target="_blank" rel="noopener" aria-disabled="true">Open in HSE Plan Maker</a>'
+      : '<button type="button" class="btn btn-primary" id="hse-go">Save HSE Plan file</button>'}</div>
+  </div>`);
+  const file = `<strong>${esc(hseFileName(p))}</strong>`, name = `${p.no} ${p.name || ''}`.trim();
+  const setPhoto = i => {
+    slot = i;
+    document.querySelectorAll('[data-hse-ph]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.hsePh === i)));
+    $('#hse-ph-cell').textContent = i < 0 ? 'None (the plan shows the photo box)' : photoName(i);
+    const what = slot >= 0 ? 'these details and the cover photo' : 'these details';
+    $('#hse-how').innerHTML = HSE_LIVE
+      ? `<strong>Open in HSE Plan Maker</strong> starts the HSE Plan with ${what} in a new tab. <strong>Save HSE Plan file</strong> keeps them as ${file}: in HSE Plan Maker choose <strong>Import project</strong> and pick the file.`
+      : `<strong>Save HSE Plan file</strong> keeps ${what} as ${file}. In HSE Plan Maker choose <strong>Import project</strong>, then <strong>Project Library or PQP Maker file</strong>, then pick the file: the HSE Plan starts with these details.`;
+    if (!HSE_LIVE) return;
+    const a = $('#hse-open'); a.removeAttribute('href'); a.setAttribute('aria-disabled', 'true');
+    hseLink(p, slot).then(url => { if (slot !== i) return; const a2 = $('#hse-open'); if (a2) { a2.href = url; a2.removeAttribute('aria-disabled'); } }).catch(() => {});
+  };
+  setPhoto(slot);
+  document.querySelector('.hse-ph').addEventListener('click', e => { const b = e.target.closest('[data-hse-ph]'); if (b) setPhoto(+b.dataset.hsePh); });
+  $('#hse-go').addEventListener('click', async () => {
+    const btn = $('#hse-go'), label = btn.textContent; btn.disabled = true; btn.textContent = 'Preparing…';
+    try {
+      const ok = await saveFile(hseFileName(p), new Blob([JSON.stringify(await hseProject(p, slot), null, 1)], { type: 'application/json' }));
+      if (ok) closeModal(); else { btn.disabled = false; btn.textContent = label; }
+    } catch (e) { const er = $('#hse-err'); er.textContent = 'The file could not be made: ' + ((e && e.message) || e); er.hidden = false; btn.disabled = false; btn.textContent = label; }
+  });
+  if (HSE_LIVE) $('#hse-open').addEventListener('click', e => {
+    if (!e.currentTarget.getAttribute('href')) { e.preventDefault(); toast('One moment: the project is being prepared.'); return; }
+    toast(`HSE Plan Maker opens in a new tab with ${name}`); setTimeout(closeModal, 50);
   });
 }
 
@@ -2683,6 +2826,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.12.0', '29 Oct 2026', 'QA/QC and HSE on each project: QA/QC opens a menu with PQP details and file and the MSRA Log; HSE sends the project and a cover photo of your choice (the main photo, another library photo or none) to HSE Plan Maker.'],
   ['1.11.1', '27 Oct 2026', 'App icon: the yellow folder with the Oxypro mark, for the page, the shortcut and the GitHub edition.'],
   ['1.11.0', '27 Oct 2026', 'GitHub edition: the library as a website outside Claude, with a copy of the projects and photos; MSRA Logs are saved in the browser.'],
   ['1.10.2', '27 Oct 2026', 'This About page (About in the header and in the footer).'],
@@ -2704,23 +2848,24 @@ function openAbout() {
     <div class="dialog-body about">
       <div class="about-card">
         <img class="about-icon" src="data:image/png;base64,__APP_ICON128__" alt="" width="64" height="64">
-        <div><div class="about-name">Oxypro Project Library</div><div class="about-ver">Version ${APP_VERSION} · 27 Oct 2026${GH ? ` · GitHub edition, projects as of ${esc(SNAP_DATE)}` : ''}${n ? ` · ${n} projects` : ''}</div>
-          <p class="about-tag">One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, the Project Quality Plan hand-off to PQP Maker and each project's Method Statement Log.</p></div>
+        <div><div class="about-name">Oxypro Project Library</div><div class="about-ver">Version ${APP_VERSION} · 29 Oct 2026${GH ? ` · GitHub edition, projects as of ${esc(SNAP_DATE)}` : ''}${n ? ` · ${n} projects` : ''}</div>
+          <p class="about-tag">One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, QA/QC (the PQP hand-off to PQP Maker and each project's Method Statement Log) and HSE (the hand-off to HSE Plan Maker).</p></div>
       </div>
       <section><h3>What it does</h3>
         <ul>
           <li><b>Projects:</b> search and filter by emirate, status and sector; each project shows its details from the Projects Master List and up to five photos.</li>
           <li><b>Presentations:</b> select one or more projects for a top sheet, an Oxypro Project Presentation Sheet per project and a summary page, as PDF or PowerPoint; View / Present runs them full screen first.</li>
-          <li><b>PQP details and file:</b> opens PQP Maker with the project's PQP already created, or saves a PQP file.</li>
-          <li><b>MSRA Log:</b> the project's Method Statement Submittal Log in the Oxypro template, with the Summary, seven discipline logs and the planner's MSL, saved as Excel or PDF.</li>
+          <li><b>QA/QC:</b> <b>PQP details and file</b> opens PQP Maker with the project's PQP already created, or saves a PQP file. <b>MSRA Log</b> is the project's Method Statement Submittal Log in the Oxypro template, with the Summary, seven discipline logs and the planner's MSL, saved as Excel or PDF.</li>
+          <li><b>HSE:</b> sends the project's details and a cover photo of your choice to HSE Plan Maker for the Project HSE Plan.</li>
           <li><b>Master List:</b> add projects, import from the Projects Master List (Excel) and export the whole list in the same layout.</li>
         </ul></section>
       <section><h3>How to use it</h3>
         <ol>
           <li>Find a project with the search box or the filters and click it to see its details and photos.</li>
           <li>For a presentation, tick the projects and choose <b>Make presentation</b>, or use <b>New presentation sheet</b> on one project. Adjust photos and text, then <b>View / Present</b>, <b>Download PDF</b> or <b>Download PowerPoint</b>.</li>
-          <li>For a PQP, open the project and choose <b>PQP details and file</b>, pick the cover photo, then <b>Open in PQP Maker</b>.</li>
-          <li>For the Method Statement Log, choose <b>Create MSRA Log</b> (or <b>Open MSRA Log</b>). Use <b>Edit</b> to change it, <b>Save to library</b> to keep it, <b>Save as</b> for Excel or PDF and <b>Print</b> for a print-ready PDF.</li>
+          <li>For a PQP, open the project, choose <b>QA/QC</b> and then <b>PQP details and file</b>, pick the cover photo, then <b>Open in PQP Maker</b>.</li>
+          <li>For the Method Statement Log, choose <b>QA/QC</b> and then <b>Create MSRA Log</b> (or <b>Open MSRA Log</b>). Use <b>Edit</b> to change it, <b>Save to library</b> to keep it, <b>Save as</b> for Excel or PDF and <b>Print</b> for a print-ready PDF.</li>
+          <li>For an HSE Plan, choose <b>HSE</b>, keep the main photo or pick another one (or no photo), then <b>Save HSE Plan file</b>. In HSE Plan Maker choose <b>Import project</b> and pick the file.</li>
           <li>Click <b>Project Library</b> at the top to come back to the list from any page. <b>View</b> switches between Light, Dark and Auto.</li>
         </ol></section>
       <section><h3>Your data</h3>
@@ -2730,11 +2875,12 @@ ${GH ? `<li>This is the GitHub edition: the projects and photos are a copy of th
           <li>Files you make (PDF, PowerPoint, Excel, PQP files) are downloaded to your device; Print opens the PDF for printing.</li>` : `<li>Projects, photos and MSRA Logs are kept in this shared library in Claude. Everyone with the link sees the same, up-to-date list.</li>
           <li>Only the library's owner and editors can add or change projects, photos and MSRA Logs${w ? ' (you can)' : ' (you can view, make presentations and download files)'}.</li>
           <li>Files you make (PDF, PowerPoint, Excel, PQP files) are downloaded to your device. Printing is done from the downloaded PDF, as Claude cannot open the print window.</li>`}
-          <li>Open in PQP Maker passes the project's text details to PQP Maker in its link; the cover photo goes by copy and paste. Nothing else leaves the library.</li>
+          <li>Open in PQP Maker passes the project's text details to PQP Maker in its link; the cover photo goes by copy and paste. The HSE Plan file holds the project's details and the cover photo you chose. Nothing else leaves the library.</li>
         </ul></section>
       <section><h3>Related</h3>
         <ul>
           <li><a href="${PQP_URL}" target="_blank" rel="noopener">PQP Maker</a>: Project Quality Plans in the Oxypro template (opens in a new tab).</li>
+          <li>${HSE_LIVE ? `<a href="${HSE_URL}" target="_blank" rel="noopener">HSE Plan Maker</a>` : 'HSE Plan Maker'}: Project HSE Plans in the Oxypro format, the same layout as the PQP${HSE_LIVE ? ' (opens in a new tab)' : ''}.</li>
           <li>Projects Master List (Excel): the source of the project details, imported and exported here.</li>
         </ul></section>
       <section><h3>What's new</h3>
@@ -2757,6 +2903,7 @@ function goHome() {
 }
 function bindGlobal() {
   $('#home-link').addEventListener('click', goHome);
+  bindQaqc();
   $('#btn-about').addEventListener('click', openAbout);
   $('#foot-about').addEventListener('click', openAbout);
   $('#modal').addEventListener('click', e => { if (e.target.id === 'modal' || e.target.closest('[data-close]')) closeModal(); });

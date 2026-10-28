@@ -12,9 +12,9 @@ const msFontsReady = (() => { let pr = null; return () => pr || (pr = (async () 
   try { for (const [w, k] of [['400', 'r'], ['700', 'b']]) { const f = new FontFace('Open Sans', b64ToBuf(MS_FONT_B64[k]), { weight: w }); await f.load(); document.fonts.add(f); } } catch (e) { /* the page falls back to the system font */ }
 })()); })();
 
-function msButtonHTML(p) {
+function msMenuItemHTML(p) {
   const has = S.msMeta && S.msMeta.has(p.no);
-  return `<button type="button" class="btn" data-act="msra" title="${has ? 'Open this project\'s Method Statement Log' : 'Create the Method Statement Log for this project'}">${has ? 'Open MSRA Log' : 'Create MSRA Log'}</button>`;
+  return `<button type="button" class="menu-item" role="menuitem" data-act="msra"><span><b>${has ? 'Open MSRA Log' : 'Create MSRA Log'}</b><small>${has ? 'This project\'s Method Statement Submittal Log' : 'Method Statement Submittal Log for this project'}</small></span></button>`;
 }
 function msSetDirty() { if (!MSV.dirty) { MSV.dirty = true; msRenderActions(); } }
 function msCloseSub() { if (MSV.unsub) { try { MSV.unsub(); } catch (e) { /* gone */ } MSV.unsub = null; } }

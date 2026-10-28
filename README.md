@@ -1,9 +1,9 @@
 # Oxypro Project Library
 
-One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, the Project Quality Plan hand-off to PQP Maker and each project's Method Statement Log.
+One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, QA/QC (the Project Quality Plan hand-off to PQP Maker and each project's Method Statement Log) and HSE (the hand-off to HSE Plan Maker).
 
 **Use the app:** [Oxypro Project Library on Claude](https://claude.ai/artifact/T3U712ufURSuMQTfsGDkMy) (shared as "Anyone with the link")
-**Version:** 1.11.1 (27 Oct 2026)
+**Version:** 1.12.0 (29 Oct 2026)
 **Developed by** Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.
 
 This repository holds the source code and the GitHub edition website. The app runs as a Claude artifact: its project list, photos and MSRA Logs live in the artifact's shared database and storage.
@@ -13,7 +13,7 @@ This repository holds the source code and the GitHub edition website. The app ru
 `docs/` is the same Library as a plain website that runs without Claude, for GitHub Pages:
 
 - The projects and photos are a copy of the library as of 27 Oct 2026 (`github/snapshot.json`, `docs/photos/`). They are read-only here: no Add, Import, Edit or photo upload. Changes are made in the Claude library and copied here with a new snapshot.
-- Presentations (PDF, PowerPoint), Export to Excel, PQP details and file and the MSRA Log all work. MSRA Logs are saved in the visitor's browser on that device; Save as gives the Excel or PDF to keep or share. Print opens the PDF in a new tab.
+- Presentations (PDF, PowerPoint), Export to Excel, QA/QC (PQP details and file, the MSRA Log) and HSE all work. MSRA Logs are saved in the visitor's browser on that device; Save as gives the Excel or PDF to keep or share. Print opens the PDF in a new tab.
 - `src/github/runtime.js` stands in for Claude's runtime (`window.claude`); the page code is the same as the Claude edition.
 
 **To put it online with GitHub Pages:** Settings → Pages → Build and deployment: Source "Deploy from a branch", Branch `main`, folder `/docs` → Save. The address is `https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/`. GitHub Pages needs a public repository on a free account (a paid plan for a private one), and the website itself can be opened by anyone who has its address.
@@ -24,7 +24,9 @@ This repository holds the source code and the GitHub edition website. The app ru
 
 - **Projects:** search and filter by emirate, status and sector. Each project shows its details from the Projects Master List and up to five photos.
 - **Presentations:** select one or more projects for a top sheet (four designs), an Oxypro Project Presentation Sheet per project and a summary page, as PDF or PowerPoint. View / Present runs them full screen first.
+- **QA/QC:** a menu on each project with **PQP details and file** and the **MSRA Log**.
 - **PQP details and file:** opens [PQP Maker](https://markwendelllontocdotcom.github.io/MEP-PQP-Maker/) with the project's PQP already created (the cover photo goes by copy and paste), or saves a PQP file.
+- **HSE:** sends the project's details to HSE Plan Maker for the Project HSE Plan, with the main photo, another library photo or no photo as the cover. **Save HSE Plan file** saves them as `<code> - <name> - HSE Plan details.json`; in HSE Plan Maker choose Import project and pick the file. When HSE Plan Maker is online (`HSE_LIVE` in `src/library.html`), **Open in HSE Plan Maker** opens it with the project and the photo in the link.
 - **MSRA Log:** each project's Method Statement Submittal Log in the Oxypro template (The Borough): Summary, seven discipline logs (MEC, PLU, ELE, ELV, FF, LPG, MEP), the planner's MSL and the master list. Start from the standard list of 72 method statements, the project's MSL or an empty log; edit, save to the library, save as Excel or PDF and print. Set in Open Sans.
 - **Master List:** add projects, import from the Projects Master List (Excel) and export the whole list in the same layout.
 - **View:** Light, Dark or Auto. The PROJECT LIBRARY title goes back to the list from any page. About explains the app and lists the changes.

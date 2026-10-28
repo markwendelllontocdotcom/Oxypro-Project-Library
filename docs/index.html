@@ -229,6 +229,11 @@ input[type="checkbox"]{accent-color:var(--red);width:18px;height:18px;margin:0;c
 .r-year{font-variant-numeric:tabular-nums;white-space:nowrap}
 .dl dd.none{color:var(--faint)}
 .d-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.d-actions .btn .bi{width:16px;height:16px;flex:none}
+.qmenu{position:relative;display:inline-flex}
+.qmenu .menu{left:0;right:auto;min-width:272px}
+.qmenu .menu-item{padding:10px 12px}
+.qmenu .menu-item b{font-weight:600}
 a.btn[aria-disabled]{opacity:.6;cursor:progress}
 .d-section{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:10px}
 .d-section h3{margin:0;font:600 14px var(--f-cond);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -877,7 +882,7 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.11.1';
+const APP_VERSION = '1.12.0';
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
 const SNAP_DATE = String(window.__OPL_SNAPSHOT || '');
@@ -915,7 +920,10 @@ const GLYPH = {
   building: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5l8-2v18M12 8l8 2v11M3 21h18M7 8h2M7 12h2M7 16h2M15 13h2M15 17h2"/></svg>',
   plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
   photo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></svg>',
-  back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>'
+  back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+  qaqc: '<svg class="bi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 13l2 2 4-4"/></svg>',
+  hse: '<svg class="bi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.6-3 8.3-7 10-4-1.7-7-5.4-7-10V6z"/><path d="M12 8v8M8 12h8"/></svg>',
+  chev: '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'
 };
 
 /* ---------- helpers ---------- */
@@ -1191,8 +1199,8 @@ function renderDetail() {
         <button type="button" class="btn btn-primary" data-act="present">New presentation sheet</button>
         <button type="button" class="btn" data-act="toggle-sel">${sel ? 'Remove from selection' : 'Add to selection'}</button>
         ${w ? '<button type="button" class="btn" data-act="edit">Edit</button>' : ''}
-        <button type="button" class="btn" data-act="pqp" title="Open the PQP in PQP Maker, or save it as a PQP file">PQP details and file</button>
-        ${msButtonHTML(p)}
+        ${qaqcHTML(p)}
+        <button type="button" class="btn" data-act="hse" title="HSE Plan: send this project to HSE Plan Maker">${GLYPH.hse}HSE</button>
       </div>
       <dl class="dl">
         ${dRow('Project code', p.code)}${dRow('Level / floors', p.levels)}${dRow('Area', p.area)}${dRow('Year', p.year)}
@@ -1205,6 +1213,39 @@ function renderDetail() {
       ${w ? `<div class="d-section">${del || '<div><button type="button" class="btn btn-sm btn-ghost btn-danger" data-act="del">Delete project</button></div>'}</div>` : ''}
     </div>`;
   if (!PQP_READY.has(pqpKey(p))) preparePqp(p);
+}
+/* QA/QC on a project: a menu with the PQP and the MSRA Log */
+function qaqcHTML(p) {
+  return `<div class="qmenu"><button type="button" class="btn" id="btn-qaqc" data-act="qaqc" aria-haspopup="menu" aria-expanded="false" aria-controls="qaqc-menu">${GLYPH.qaqc}QA/QC${GLYPH.chev}</button>
+    <div class="menu" id="qaqc-menu" role="menu" aria-label="QA/QC" hidden>
+      <button type="button" class="menu-item" role="menuitem" data-act="pqp"><span><b>PQP details and file</b><small>Project Quality Plan in PQP Maker, or a PQP file</small></span></button>
+      ${msMenuItemHTML(p)}
+    </div></div>`;
+}
+function closeQaqc(focus) {
+  const m = $('#qaqc-menu'), b = $('#btn-qaqc'); if (!m || m.hidden) return;
+  m.hidden = true; b.setAttribute('aria-expanded', 'false'); if (focus) b.focus();
+}
+function toggleQaqc() {
+  const m = $('#qaqc-menu'), b = $('#btn-qaqc'); if (!m) return;
+  if (!m.hidden) return closeQaqc();
+  m.hidden = false; b.setAttribute('aria-expanded', 'true');
+  // keep the menu on the screen: it opens to the right of the button, or as far left as it needs
+  const w = m.parentElement.getBoundingClientRect(), vw = document.documentElement.clientWidth, pad = 12;
+  let left = 0; if (w.left + m.offsetWidth > vw - pad) left = Math.max(pad - w.left, vw - pad - m.offsetWidth - w.left);
+  m.style.left = left + 'px'; m.style.right = 'auto';
+  m.querySelector('.menu-item').focus();
+}
+function bindQaqc() {
+  $('#detail').addEventListener('keydown', e => {
+    const m = $('#qaqc-menu'); if (!m || m.hidden || !m.contains(document.activeElement)) return;
+    const list = [...m.querySelectorAll('.menu-item')], i = list.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown') { e.preventDefault(); list[(i + 1) % list.length].focus(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); list[(i - 1 + list.length) % list.length].focus(); }
+    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); closeQaqc(true); }
+    else if (e.key === 'Tab') closeQaqc();
+  });
+  document.addEventListener('click', e => { if (!e.target.closest('.qmenu')) closeQaqc(); });
 }
 function renderSelbar() {
   const n = S.selected.size, bar = $('#selbar');
@@ -1268,8 +1309,10 @@ async function handleAct(act) {
     case 'present': if (p) openPres([p.no]); return;
     case 'toggle-sel': if (p) { S.selected.has(p.no) ? S.selected.delete(p.no) : S.selected.add(p.no); renderList(); renderDetail(); renderSelbar(); } return;
     case 'edit': if (p) openEdit(p.no); return;
-    case 'pqp': if (p) openPqp(p.no); return;
-    case 'msra': if (p) openMsra(p.no); return;
+    case 'qaqc': return toggleQaqc();
+    case 'pqp': closeQaqc(); if (p) openPqp(p.no); return;
+    case 'msra': closeQaqc(); if (p) openMsra(p.no); return;
+    case 'hse': if (p) openHse(p.no); return;
     case 'del': S.delConfirm = S.active; return renderDetail();
     case 'del-no': S.delConfirm = null; return renderDetail();
     case 'del-yes': return deleteProject(S.delConfirm);
@@ -1580,6 +1623,106 @@ function openPqp(no) {
         .then(() => toast(`PQP Maker opens in a new tab with ${name}. The cover photo is copied: paste it there with Ctrl+V.`, 7000), fail);
     } catch (err) { fail(); }
     setTimeout(closeModal, 50);
+  });
+}
+
+/* ---------- Send to HSE Plan Maker ---------- */
+// HSE Plan Maker reads the same project file as PQP Maker (format pqp-maker-project) under Import project, with the
+// cover photo inside the file. Its own fields: the Lead Consultant and the MEP Consultant when it is a different firm.
+const HSE_URL = 'https://markwendelllontocdotcom.github.io/MEP-HSE-Plan-Maker/';
+const HSE_LIVE = false;   // true once HSE Plan Maker is online: Open in HSE Plan Maker then opens it with the project in its link
+const HSE_LEFT = ['the Document No., Revision and Date', 'Our Role and Disciplines', 'the HSE organization (Projects Director, Project Manager, HSE Manager and team)', 'the client and consultant logos'];
+function hseData(p) {
+  const q = pqpData(p).pr, pr = {}, rows = [], put = (k, label, v) => { pr[k] = v; rows.push([label, v]); };
+  if (q.P01) put('P01', 'Project Name', q.P01);
+  if (q.P02) put('P02', 'Project Code & Project Number', q.P02);
+  if (q.P04) put('P04', 'Location / Emirate', q.P04);
+  if (q.P05) put('P05', 'Plot No. / Address', q.P05);
+  if (q.P07) put('P07', 'Scope of MEP Works (summary)', q.P07);
+  if (q.P13) put('P13', 'Building Configuration / Description', q.P13);
+  if (q.R01) put('R01', 'Client / Employer', q.R01);
+  const lead = realName(p.leadConsultant).slice(0, 200), mep = realName(p.mepConsultant).slice(0, 200);
+  if (lead) { put('R02', 'Lead Consultant', lead); if (mep && mep.toLowerCase() !== lead.toLowerCase()) put('R02m', 'MEP Consultant', mep); }
+  else if (mep) put('R02', 'Lead Consultant', mep);
+  if (q.R03) put('R03', 'Main Contractor', q.R03);
+  return { pr, rows };
+}
+const hseFileName = p => safeName([pqpData(p).pr.P02 || p.no, p.name || 'Untitled project', 'HSE Plan details'].filter(Boolean).join(' - ')) + '.json';
+async function hseProject(p, slot, forLink) {
+  const { pr } = hseData(p);
+  if (slot >= 0) {
+    try {
+      const c = await pqpCanvas(p, slot);
+      if (c) {
+        // in a link the photo travels in the address, so it is kept smaller there
+        let cv = c;
+        if (forLink && Math.max(c.width, c.height) > 1400) { const k = 1400 / Math.max(c.width, c.height); cv = document.createElement('canvas'); cv.width = Math.round(c.width * k); cv.height = Math.round(c.height * k); cv.getContext('2d').drawImage(c, 0, 0, cv.width, cv.height); }
+        pr.R10 = { name: `${safeName(p.name || p.no)} - Cover Photo.jpg`, type: 'image/jpeg', dataUrl: cv.toDataURL('image/jpeg', forLink ? 0.8 : 0.86), w: cv.width, h: cv.height };
+      }
+    } catch (e) { /* no photo: HSE Plan Maker shows the photo box */ }
+  }
+  return { format: 'pqp-maker-project', version: 1, app: 'Oxypro Project Library ' + APP_VERSION, saved: new Date().toISOString(), source: { library: p.no, for: 'HSE Plan Maker' }, project: pr };
+}
+// The project travels to HSE Plan Maker after # in the address (never sent to a server), as for PQP Maker
+async function hseLink(p, slot) {
+  const raw = new TextEncoder().encode(JSON.stringify(await hseProject(p, slot, true)));
+  if (window.CompressionStream) {
+    try { return HSE_URL + '#library=' + b64u(new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer())); }
+    catch (e) { /* plain JSON below */ }
+  }
+  return HSE_URL + '#library-json=' + b64u(raw);
+}
+function openHse(no) {
+  const p = S.projects.get(no); if (!p) return;
+  const { rows } = hseData(p), phs = photosOf(p);
+  let slot = phs.findIndex(Boolean);   // the main photo when there is one
+  const photoName = i => i < 0 ? 'No photo' : i === 0 ? 'Main photo' : SLOT_NAMES[i];
+  const cell = v => esc(String(v)).replace(/\n/g, '<br>');
+  const tiles = phs.map((x, i) => x ? `<button type="button" class="ptile" data-hse-ph="${i}" aria-pressed="${i === slot}" aria-label="Use ${i === 0 ? 'the main photo' : SLOT_NAMES[i].toLowerCase()}"><img src="${esc(blobUrl(x.id))}" alt="" style="object-position:${+x.x || 50}% ${+x.y || 50}%"><span class="pt-cap">${i === 0 ? 'Main photo' : esc(SLOT_NAMES[i])}</span></button>` : '').join('')
+    + `<button type="button" class="ptile" data-hse-ph="-1" aria-pressed="${slot < 0}">No photo<small>The plan shows the photo box</small></button>`;
+  openModal(`<div class="dialog">
+    <div class="dialog-head"><h2>Send ${esc(p.no)} to HSE Plan Maker</h2><button type="button" class="btn btn-ghost btn-sm" data-close>Close</button></div>
+    <div class="dialog-body">
+      <div class="field"><span class="flabel">Cover photo for the HSE Plan</span>
+        <p class="d-note" style="margin:0">${slot >= 0 ? 'Use the main photo, or choose another photo of this project from the library.' : 'This project has no photos in the library yet.'}</p>
+        <div class="ptiles hse-ph" role="group" aria-label="Cover photo">${tiles}</div></div>
+      <p style="margin:0" id="hse-how"></p>
+      <div class="imp-table"><table><thead><tr><th>HSE Plan Maker field</th><th>From the Library</th></tr></thead><tbody>
+        ${rows.map(([l, v]) => `<tr><td>${esc(l)}</td><td>${cell(v)}</td></tr>`).join('')}
+        <tr><td>Cover Photo</td><td id="hse-ph-cell"></td></tr>
+      </tbody></table></div>
+      <p class="d-note" style="margin:0">Left for you to fill in HSE Plan Maker: ${esc(joinAnd(HSE_LEFT))}. The plan starts as Rev 01 of the company HSE Plan.</p>
+      <p class="err" id="hse-err" hidden></p>
+    </div>
+    <div class="dialog-foot">${HSE_LIVE
+      ? '<button type="button" class="btn" id="hse-go">Save HSE Plan file</button><a class="btn btn-primary" id="hse-open" target="_blank" rel="noopener" aria-disabled="true">Open in HSE Plan Maker</a>'
+      : '<button type="button" class="btn btn-primary" id="hse-go">Save HSE Plan file</button>'}</div>
+  </div>`);
+  const file = `<strong>${esc(hseFileName(p))}</strong>`, name = `${p.no} ${p.name || ''}`.trim();
+  const setPhoto = i => {
+    slot = i;
+    document.querySelectorAll('[data-hse-ph]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.hsePh === i)));
+    $('#hse-ph-cell').textContent = i < 0 ? 'None (the plan shows the photo box)' : photoName(i);
+    const what = slot >= 0 ? 'these details and the cover photo' : 'these details';
+    $('#hse-how').innerHTML = HSE_LIVE
+      ? `<strong>Open in HSE Plan Maker</strong> starts the HSE Plan with ${what} in a new tab. <strong>Save HSE Plan file</strong> keeps them as ${file}: in HSE Plan Maker choose <strong>Import project</strong> and pick the file.`
+      : `<strong>Save HSE Plan file</strong> keeps ${what} as ${file}. In HSE Plan Maker choose <strong>Import project</strong>, then <strong>Project Library or PQP Maker file</strong>, then pick the file: the HSE Plan starts with these details.`;
+    if (!HSE_LIVE) return;
+    const a = $('#hse-open'); a.removeAttribute('href'); a.setAttribute('aria-disabled', 'true');
+    hseLink(p, slot).then(url => { if (slot !== i) return; const a2 = $('#hse-open'); if (a2) { a2.href = url; a2.removeAttribute('aria-disabled'); } }).catch(() => {});
+  };
+  setPhoto(slot);
+  document.querySelector('.hse-ph').addEventListener('click', e => { const b = e.target.closest('[data-hse-ph]'); if (b) setPhoto(+b.dataset.hsePh); });
+  $('#hse-go').addEventListener('click', async () => {
+    const btn = $('#hse-go'), label = btn.textContent; btn.disabled = true; btn.textContent = 'Preparing…';
+    try {
+      const ok = await saveFile(hseFileName(p), new Blob([JSON.stringify(await hseProject(p, slot), null, 1)], { type: 'application/json' }));
+      if (ok) closeModal(); else { btn.disabled = false; btn.textContent = label; }
+    } catch (e) { const er = $('#hse-err'); er.textContent = 'The file could not be made: ' + ((e && e.message) || e); er.hidden = false; btn.disabled = false; btn.textContent = label; }
+  });
+  if (HSE_LIVE) $('#hse-open').addEventListener('click', e => {
+    if (!e.currentTarget.getAttribute('href')) { e.preventDefault(); toast('One moment: the project is being prepared.'); return; }
+    toast(`HSE Plan Maker opens in a new tab with ${name}`); setTimeout(closeModal, 50);
   });
 }
 
@@ -2934,6 +3077,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.12.0', '29 Oct 2026', 'QA/QC and HSE on each project: QA/QC opens a menu with PQP details and file and the MSRA Log; HSE sends the project and a cover photo of your choice (the main photo, another library photo or none) to HSE Plan Maker.'],
   ['1.11.1', '27 Oct 2026', 'App icon: the yellow folder with the Oxypro mark, for the page, the shortcut and the GitHub edition.'],
   ['1.11.0', '27 Oct 2026', 'GitHub edition: the library as a website outside Claude, with a copy of the projects and photos; MSRA Logs are saved in the browser.'],
   ['1.10.2', '27 Oct 2026', 'This About page (About in the header and in the footer).'],
@@ -2955,23 +3099,24 @@ function openAbout() {
     <div class="dialog-body about">
       <div class="about-card">
         <img class="about-icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAA/7ElEQVR42u2dd5xV1dX3v3ufc+vcO70xlBlAei8iKEVUUBGwYokajT2J3Zg37Yn6tCRPy/smT4qJeVLsYhTBDhaKDQGl9yJ9ep+5955z9n7/OOfeuQMDDDWah/P5zGfgzsy95+y19lq/9Vtlw+nr9HX6On2dvk5fp6//jZc41A+0PvTPTvUdCtCnRXWKLq0RWiO/TDqq9Szjy3VP/wsswKb/l5tJU02g6W94c1Yj6rs/pX4h2K5yPiKFeEydFttJUICkyd/6ZFFBYU7wF6bhmyhzBge1MP9mFlgKbCmpcOzWj6u2LXui2/UVH51WgpOlAC9giKtxqv7a7cm8Et8NzdUKwx8BITi1CpC8JY0QEp8/iMwuxtYR3bRv8z/nXLTsx1rPMoSY7ZwW3/FfZnL3C4HzyxujeYahz4/V2o7taOzmGnnSZKzbybrttQOuGErrym3KyCiS2X1G/0PlK5YSYvajp5XgBFnZ9P8UdRU5aMKO0obWSCENcVK+RNp3ccBrB335pfRlmHZzhWje+pmdUzrgkQ1P5J0vxIvOCy9gnBbhCVSAuOMKPrkTtT5JX6R954DXDvrSaKUwfGGRaNgndaya7gPG/e6FW3XurFmP6C9NuPpVdgHJK0CaGdaHixGON9Y84DtHhhlaKaQvJJv2rLKzB0zuNfnKs34uxGM36TWz/Pq9itOg8HBX5ULNLJQQB6+y2ZFskjvyZGG/o4AAB8NDIc3GbSvs/LIxX9/+5M43xeDZz56WcKc5HikE6rAKcCoswDEYAO8BNEKaJFprjVj1Dl3UZ8J/V7+5f4jpM5Q6bQMOCKGFRtk4TTviEmvrZ9uYL8S+qkceQT72WJsSmJ2W0JdGizWGGRQtlVsIF/hyc7tkfx99Wvod2ktlgzTQjmbsAPbsfLrLrT2u3/eWfgQpPCUwOzATKTdwsizAsbqA9JsU0kdz+VrdXK6do/zr/1VKIAwfIHRmWHSNBI2nF/5z/hB+WLVfP4oQAv03sQDak5dO0wB91DLUSDMgDmnFTl9tOxpoaNZWdkTmdevqmyYEf9BuCO0cAgOIL10UcNj3OX0dCTq78FmgpdR9OwSBWiNeeTTDUIBWjutWT0fYf2fGwBRSmkGttWC2aFOARx9FPPYY6p4z9jec9U9FKH8G2hAg9MnZZccNAk5fR7fWAq01SsVorSuPCyG0fs9dfVNrLYQUau7jd4QnTh7xcDjkhKSIaOGLCsRppvXv43LQVqOQoonCkr3DX/jvzRHOnd2stRZC60fk7EfXmZfdNmOur1uXC6luUihHIs1TFwac9ukn2QQo0DZgKHIyZGLvvvmv/OHV6bMeHWgLgIrVP7+moH+f51R1gyXRPoRIocfT198bGNQ2eVlm5YbN1xYOeeB5CZARDl+McpTUyoX/Wp3ejn9f8M+1Aih3YytHZYTDFyVBoBCoLtiWRNv6NPT/uw8FBLYlBaoEECYgNY4GB4WD0CdfAQQC7QUZJz8I0AeZQSEOy5l0+Dd/P7ZAIXHQ2tHgIj1QloV2QDkIcQoeWIBI4xnECVhq3YGStfsAjWcGAaXRB/yFQKQ9u0j7G7dq4eDf/6oaAA04oC0LXCpYaa2tpI84FfUVSXrhRFqAlMCTNLO2Qdso5YDWbo5DSMDADW9lmylILYoDOAit3B8JgZQGCBMhjHZKob+qGEm7GE85TkoBtGMnbBcgOHCKyu/FCdpN7q4VaO2gVQLt2CgEiBCYuRDMQfhyEGYm0oyCEUQIv6sEwntW7T671glwYmi7EW03oK1alFULdj3oRiQaYZgI6UcI6SrCVy1a0u5GV8q2kwqA0I6Ndk4d+veiTJH+76M0AcL7A2UnUI6Fxg++AkS0BzLUDekvQJiRY1bKdmtmN6ESlejW3ajWnZCoRJBAGj6k4fcUUH91FEA7rsxJ5gK0Y4ODRJ2Sx9Bpph8PCxw296BTUncBpHZwrBhKS7S/GBntgxHujQwUdPzH6drWWUShk2hRIMwIhhmBcE8XQsQrUc1bsVs2IeLlSKGQZhAhDNc1JB/wSwgUJLiAP10BlLZdEKidU2MAvOI0kaYQImmdOhKGEO6tOxa23YoSIUTGYIzMochQ94M1PB3MIQ4N+w+LUjvQQK1BSGSgwFW23LGo1l04DStxmjchdROGL+QFVwqU/vJpQXKhtW2lFEArZSV9A6faAhwCxbfdsATl4FiNruCjYzCzRyP9OR0IXbT59ZOBWIQ4wKpIZKg7MtQdlajFqVuG1bgSqesxfGGQ0sNVXzJOSDuuzNssgBsGKuVwiqLAziUDhUQlmnCUQESHY+aNR/pyDvQLRyX0pK8+MNw91OuHthCi3X1Ifw6ycAoqezROzRKsxpUYUiN9Ib5MJWtKg2wLAz0MYDuW2395alzAEetBhEQrBzvRDMGeGIUXYiRNffpuP4YYOCngzvz76KCjaxWkPwdZPAMnazhOxVs4rdsx/RkIaXx5FEHbKNtpUwDHsZwkOvyb+ywhUYlmbCWR+RfjyzunDSWKzu12rd3wTEp5EPZoaGjA7/cTDAbbvd7c3ExzczOFhYUdKs2RFUOkhTIaI9Qdo/RWrOoPsKoWYEr1JbEGLg/gaDstCsCx0Pap81fiACeg24CeHatB+bvj63YVMlSSWtCjMfNCiHbCSgpv8ZIPmDPnFTIzM7n9tlsoKSkBYO/evTz+uyeoqalh2rSLufiiC1FKIaVMvU/nrYJo59B8eeNR4Z5Y+/6KjO3GDGSSSsr8DS0AtqsA0rWqtqcAnhKc7C9lt31XtstAKgerpRodGYG/7C5X+KnYUHTaxANs376DpUs/TT5j6lq0aBHNzc3s2LGDNWvWpl7ftHkzu3btwrZtli1bnhJ4PB7n2eee51/+9SesWr26nXVRSnH4ZgSRslwy1BV/2V3oyHD3GZVDinjz2MdT9uXJWdMuCrAtlHczQpwyS5RcKO1orHgTsnAavsIL08I/2SmBa8+KSCnZunUrv/jlr2hubua88ybzteuuxXEcpJRMmjiRV+bOo7S0B0OGDkm9z9AhQxgyZDD795czdcoFqd9fvWYN77zzLj6fjzlz5jJk8OCjtwgeYyikH3+3r2H58rCqXsfnjyCkaOMcTiUVrBxX5m0KkGQCnbRa7VMQBkiBchzsRBxZch2+3LFHBfJSwoAUhdXU1ExLSwsAdXV1AJim6+nGjz+HYcOGEgwG8fl8LipWitzcXO679x5isRjhcDj1/l2Ku1BQUEBVVRW9evVMfV5jYyPz5y8gOyeHSRMnYBhG5x5Ya3xFF2L7skjsfRafP+DmGk6tBnhhoJ0OAl0XoLUjTkk20Cs9V7aDlUhgdr8VM3u4J/zOgTwhBBs2bOSNN99ixIhhnDtpElprBg0ayNeuu5b9+8u56KKpANTX17N6zVoGDOhPXm5uSjn+/Jcnaahv4Nprr6ZPnz6Ew2FaW1v5fOVKupZ0pUeP7tx/371UVVfR54wzXMtgGLz00hwWL1kCQhAIBDjn7HHt3MGB4LMdSNQKM3csGEGsnf+Dz+87pUqgtRZoG+047SyA5wJOEUIVEuU4WIkYZukdmFnDPfdjdDqGTyQsnn7mWfbv38+27dsZMngweXl5mKbJ5Mnnpv4mHo/zu98/wYYNG+nduxf33H030WiENWvWsnLlKqSUvPfeQvr06YPWmhdffImFixaRm5vLgw/cR3FxMUVFhR3kMtxOy+Tu71joh3AJ2nGfucetWF/81p2CIiWnLAZXDo5Ko4K1Y9tuguAUMYFKYcUaMXocnfDTY3XDkBQVFbJv3z66d+tGyDPdy5evYNeuXUyefC6ZmZnEYjH27t2H3++noqKKeDxORkaYbt26UlhUSGtzK8OHD0Uphdaa8opyDMOgvr6exsZGioqKiMXivP/++9i2zZQpF3DlFVeQn59PVmYmZ44elVK0d959j2g0yjlnjzu8QgjDU4Jh6G43Y+38Hf5g9JSRcGjHlXlSAYR2rBQyP+kKKLFaa5FdrsGXe1anhJ/c9fX1DQSDAQKBAIZhcMs3bmbTps2UlZUSDoXYtGkzf/rzX2hubqaurp6bb/460WiUq6++ik8+XspZZ40hPz8PgLKyMr733YdJJBLtYv8rLr+MOa/MpVevXpSVlQGwcOFCXnp5TioCmDlzBpdMu7jdpnrzrbeYO/dVpJSEQyFGjRqZCiUPpwS+3LPQiSqsfc/jC+UgTjYdrwFlo3SaC7CVZbvhmHPSwlOBRgsTu7UanT2BQPElnRJ+chE//XQZzz73PAUFBdx15+1kZ2cTDocZPnxYmpVwQzMhBI7jpEzzuLFjGTd2rOf761m5ciW9e/eiW7duAFiWxerVq8nJyaFXr148+MD9B1htmVJCfyCQckX79u0nGo0QjUaxLPsgDiIZLh7ISxyoBP7iS4i17sauW4wZykFo++QW5igbnZ4MUkqnwkBxEhROJP1+vAHH34Ngj5uPGOalx9tSSj5fuZKamhrq6urYtXs3OTk5LP30U5YvX8GkiRMZOHAAffr04es33sC+/fuZfO4klFJs2bKV/Pw8cnNzaWlp4fdPuHigoCCfB+6/j8LCQp566hk++PBDAoEAN910I2eOHo0QgsrKKqLRCBdOuQC/z+cq07ixCCFYtGgxL8z+K126FPHtb32TaRdfhN/vIzc3jxEjhgN0IjpoCxMDpTcTa/kCGd+D4Q8jtHNS2jPdFLxEOSodA1g22kJrS5wUnyMEytFYtsLf506EETgi4k/umqQJnTplCrW1tXQtKaF/v35UVlby1FPPEI/H2bt3Lz/8wfcJBoOcddaY1Hv8+S9P8tFHH5OTk823vnkX2dnZ7Ny5i8zMTCoqKtm/v5yioiLWrF1LNBqlsbGJdevWM+bMM3n77fm8+trr5Obmcvttt7QDllprli1fgePYbN++g127djNkyGBmzpiRCrUty2LOK3OpqanhiisupyA//xB0shsZCBnA3/NOEut/iDDiSCkQ+sQXnmnXGGMnrDYm0EokbBwbcTKYQBy01litNRglV2OESz3TLw+L9Ldt286TTz7N5s1bACgt7cF3H/4O11//tRSXX1hQgG07FBUVEwgEaGluYf/+cgBisRirV68hGAyyf38569dvIBqNMuWC8/FJyYSzx9G3d2+04zBl8mQcy6K4qDAVTr6/cBFCCHbt2sXST5d596VJJBIIIZg4YTwZGRmMGDGc3r17AdDa2opt2wgBq1av5q233ubjj5fy2muvt3u2Q0UGRrgUo+QarNaatOLNE/sltA2O7WaA29LBjosBTnAU4Oq6xEnUo8MD8Bdf4u1847BIP5FI8Je/PMkXO3eyfsMG/uFHPyAUCrF06ads3LSJqVOnUFRYyLe+dRdbtmxl8JDB7Nu3j8cf/z21dXVcdOFULr74IiZNnMCCd96lT69ejBg6FICZM2dw0cwZ+NM+96JLLmbMeecS9vkImibathk2eBDz332PSEYGAwf0x7ZtnnzqabZu3cbECeO58MKp9O/fj1AohGEYrFq9muefn01BQT633vINCvILyM7OprGpidIePTqJBxT+4ktoqfkQJ74Jw5+B0OrEB4cuCEyrCLIcG8dGqxNMBAnceN92CPS91dN01YlwTxKNRgGIRiP4fD527drNn//yJLFYjJqaGu69525yc3MZM8YldhYvWsyu3buJRqMsXLSYKRecz4wZ0xl/ztlk5uZiJMPPPXtRu/fQUFGJamxyBRLJINqtBKO4GN2lGGGaXHPdtQwaNIhoNEJpz56sWbOWDz/8iEgkwitz5zFkyGBKSkpSOYEPPviQ/eXl7Nmzhy1btzJi+HDuvfdu4rE4ffqc0Y6RPBIm8Pe4hcT6h5GGlYQIJ5YIcjQqbjttTKC2bZTtOocT+WEY2LFaZP50jMgZh/X76f7R5zO59bZbWLd2HQMHDsA0Tfx+P5mZmcQTCfJy8xBCsHfvPvbu3cuwYUMZPHgQixYvobq6mvFnj8P0u3s8JzeXlvcX0fD6W8RXrsbavQenvh7sNOJLSjBNZDSKv2cZ4TGjiU6/mMGjRqR4i5ysLDIzM6lvaKBH9+5kegrqOAqfz2Tc2LFs27ad7t270ecMV+A9ureVqyUSCdasXUfPslJycnI6xgPeBjGjfbDzzseueg1fKOeEhufCNfk4wg0DBcDKZ8edP3RwlwXKPnGTgQQCpRxitkFo2OPIQN4BBRQHX4lEgpaWVrKzs1KvOY6D4zj4/X727dvH7t17GDZsGPvL9/PLX/6K2to6zjrrTG6/7Vbq6+upq6mhtGdPUIr6F1+m7o9PElu1Gm3bSH8A4feBaXoFprRLJmE76EQcFY8jQ2ECo0eQe9vNRC92E1TbNm9h87ZtjBwxgoLCAubOncfy5Ss4++xxXHjhVJqamgiHM5BSsGzZcsLhEAMHDkRrzZ/+9GcWf/AhPcvKeOD+e8nIyDhEUsndgSpeRevKOwmaCimNE9mHoKUpxIrPd10w6sZP3zEB4olWG8dx+8ZO1KcIAytWh1H8NWQg/5C7P7kTKisreeIPf6SisoJrZs3irLPGuEDwqaeRUnLT12+ktLQHXbp0cVO+27ZTVVVNVlYmmzZtpqW5maysLLKysmj5eClVP/l3Wj/+FOH3IyORVFGHmw1T7ROSKRJfIEIhzIwMtFLEPl7K3o+WEjl/Ennf+w69Bg2kl2fOt23fzptvvY3P5+OVufPo06cPvXq5VcOvvf4Gc+a8gt/v547bb2Xo0KHs+GInhpSUl5fT3NJCJBI5BCj0UsiBAoz8C7H2P4s/nHsirYDAETjpUYCd0LZyLAQ2bXUBx/PloO1WHJGBv+Qy2ip7D436t27bxoYNG6ivq+ezzz5HCMHnK1eyY8cOtm7dyqpVq1IWAWDkyJEMHjwQAZw/+VzCGRlooOrnv2T3NTfSuvwzZE42IhwCpdCugrs73zAQhgHeV+r/Xlu8tm1QCpmRgcyM0rTgfXZdfi21f34KlVRa3Wa1XGBHCg/U1dZh2w6xeJzGxia01syadSVDBg/m6llXUZCfj+Mcpg3PK5jxl1yOIzLQdquH4o9fNgIb5VjYSreBQMdSjlJKG1IIrd2+zeNzMhI73ojMn4EMFh7W9wshUEoxeNAgJk6cQEVFJVOnTgFg9OhRbN60GSEFo0ePZu/evTz73PMAXHP1LB64/z4a6urIzs1Fx2Lsf/D/UD/7ZYycLLcGz1MWhEBIibZtVCwGlpVKR+P5RIRA+P2IYABhmq7CKLdyx8jKRNs2FQ//EGvbDgof+xE9e/XkG1+/keWff87QoUPo2bNn6pmmT78EBBTk5zN+/DkADB40iMGDBnV+EbVCBguRuROwq151sQDquDCaBi0EQimt45ZyUuKa/6tBZ547pttHpmEYjtLHpwBu+QOx1mYCQ36NmTWw02neQ1HBSUr3t4//jhUrPkdpxcjhw/nWt+7y/GWcfXfeQ+Orb2AW5KPTKoGEYaDicXRzCzI3h0D/vgSHDMJfVobMzHTp45oaEl/sIvbZShKbNqOam5GRCPh87ZQIKXEqq8i5/RsU/fSf2t3nmjVreePNtyjt0YMrr7w8xQI2Njayb98+evfunSK2Nm3aTGNTIyOGDz90rsBbM7t+HfHV3yIYykAcJw7QoA0phGU7zgef7Bk7+Z41y7yqYGVrpRWGMtq6aI71MlCJJsgYgJk54IiUr+M4bNy4iZKSErKzs9Ba8977C1m8aDFnjjmTiy+6MGX2i4uL0drdld26dUV7pn3/vd+h8fU3MQoLktXOXgGpwKmrw9ejO1l3X0V05nT8fXpzmJshtmYdDXPm0fjSK9gVlciszJQlwHEwCwuofeKPGLk55H33QbRt09TSwtPPPEtDQwMbNmwgPz+Pc8+dRE1NDb/57ePs2rWbCRPGc+MN17N5yxZ+9evf0NzczBVXXMa0iy/uOGnkxX9m5gDi4f448fWY/ohLDh1nHYZAO3bcaQsDE7ayhcABfB2jo6NifrCtGEbXcz2f2nHCJwn+/vrSy7z55tv07duHB+6/F0cp5s2bR0tLK/PmvcqZo0dRUOC2fF126UyKi4vQSjNm1CiElFT/31/R8OJLmIWFbcKXEhwH1dxC9o1fI/+7D2IU5Ld9tuN0fOuGQXDYEILDhpBz8w1U/tNPaZz3uqsESXzg2Bh5eVT/1y8JDh9KZOoFCKVS9YdKaeLxOEIIamvr2LlzF0KIFKNZV1tHU5OLCyrKK4+UNwdhYOSfi7PjM08Bjp8X0KASws0FGABXT8nJ71OadbthCJ9WKj1COoZcv0NC+Qj0ugfpzzpkT14SAM2dN4/a2lri8Tjjxp5FJBJhf3k55eUVjBwxgnHjxrLis8945tnnqays5ILzz6d7925Iw6B16TLKv/N9ZDTatksNA21ZCCEo/s+fkHf/3ciMMNq2U3kJIaX75bFyQkqvi0endrqRm0N05iUYmVGa31voYgop2noGpaD1o6VEZkwjVJBPblYWVdXVDBs6hGnTpuHz+cjMjHoQQ3HFFZeRn5dHQUE+QkpKSrowffo0QqHQYdhBb8eamST2v4Ep9fHVDGiNlEIoWyU2bq59/Ll3aypdJrDJsbVORxjHqmISx26G8GCMjB7e+xye+Ln8sst4e/58RowYQV6eS/B84+abuOiiC+lSXExdXR1PP/0slmWxfv16upaUMHLUSHQ8TsWj/+L6aBeCu98dN6NZ8vtfkzF5ovtzKRFJFs4r/BAybT5A8jXhKYKUqVAx585bMXJz2P/Q9xDJXgKlkMEg1s6d1Pzn/6PoP37C6DFnMnrMma4FtG3i8TiBQIDLLru03XMHAgEuP+C1Q3cWu27AyOgBGX1wYms8K6COb/+jncbWljYX0BRvUgJlt7XpHqsLEDhWDKNoRDsTdjiA179/P/r375d6bfuOHRQWFNCluDgllFAwSHNzMz6fj0jILZ+qe/UNYstWYOTluqBPuKZfNTXR5Zf/RcbkiWjLRvjMlPajtasMyaWw3TnTwjDabJSnMK5FAG3bZM66AqehkYofPILMyQbHcYml7GwaXp5L9q034+vXJ2Xqn37mWRzH4bprr2HgwAHYts3rr7/Bvn37mTlzBsXFRUgpaWpqwufzEQgEjuwGskbgNC7D9Gccu4y0q1Raa8fRVlsYGLOko7VyQKKPoxRBa4WjJf7s4Z2q8EmaPaXcTNu8V1/jjTfepKy0lG9+8y4ikQyysjL55jfv4v2FC+nXpw/9Bw9GOw4NTz2L8PvR3k4VpoldXUPubd8g84pLXZOfLnwPFMY3bKLx5VeIrV6LU1UNQmB2KSY0eiTRS6fj696t3d8Iw0DbDjm33kTrJ0tpnPc6RlYW2nEQUuLU1VP3l6cp+sk/AvD22/MpLy9HSsmrr73OoEEDWblqFXPnvYoQAsu2uOfub7Nu3XqefOopQqEwd9xxG8VFRYftPjKyh5PYJdFaHWc0oEErJxGTbePiW6xEW2/4sZYECYF2Emgj2+X9U0i2Y9NfX1/P62+8SVZWFlMuOB/TNFmzeo3Hsu2gutpl+RoaGiguLuLGG65PvUfrJ58SW/E5IiOcMv0qFsffqyd5Dz8ASrnETpogdSxG1c/+i7qnn8OprXNjfu93YqvX0vj6W9T85ndkf/168h+6z6WLk0ogXQBY8OMf0vLhJ+jWVhdrKIWIZND01gJyH7gHX2EBpd278dnKlW6k0tXtPIpGIkQiEVpaWiguLgZg6aefUlVVjW1XsG7tukMrgLeGZuQM4kY22okjDPOY5KSTc3mEdlyZp1yAcLTWDkIjhD6mQFAgUHYMEeyFEcjjUOPGkw/5xptv8fbb8xFSkpOTzbixY5k27WJee/11+vbtS48e3Vnx2ec8//zzSCG58cYb6N+vL9IwaHzlVbRlIZNzBqRENTWT/fD1GDnZqd2ZXCTV1MTe279N09vvYOTlYubnpSxHW8Qo0fEEVT/7L+LrNlDy218gkqZZSrTj4OtWQvbXrqbq//4KMzcH7ThIvx97715aP/gI3+UzuXjaxWTl5OA4DhMmjEcpRb9+/bjvvnuorall2PBhaK0ZN3YsmzdvIRwOM3jwoEPkBZJIUCMDeYhgV1R8HdKIHFNuwF0uLbTWTqxFtFkAKxZzhPYCTH2MzUFaoBwLES7rlP/Pz8tzfXokQn6eG6KNGDE8VU4F8M4779DU1IztOCxatIiBAwfgxOK0frocEQy6QhQCbVkYhflEZ16SOgSxTeVh/4P/h6YF72IWF6ETCRcz6PYPqrXr+80uRTTOe53y/DyK//OnKQsjvDAwc9aV1P7xyQNCSUHLoiVkXj4T0zCYOHFCiiY2TROtNb169oQ0trBfv7786IffR0qZwgCHpIa9tRThUlTLStDHFqaljIbCabVibRigprzFUe44LUAddU7IHUitUY6DDJcePk7wCI/zzz+PkpISIpEIPXp0R2vNzl276FJcjN9L5fbr1y8VP/f1UqzWF19g7d6D8PlSoE61tBIZfza+bl29Bnh3xwrDoHHuazS8NNdlCBOJ9itxoBlVCp2wMAsLqH/meTIvn0l4/NkuMDQM0Br/Gb0IDBpIbNlyREaGa9H8PmKr17qKZRhUV1Xxl788RWVVFZdMu5jx488hFovxwuwX2bVrN1+77lrKykoJhUJHF2OFy1CO4+K0YyoXc62y1sop39uSsgCizkJptO0KXx3brEAtUFpjBos7aY4EAwcOSLmF55+fzfsLF9K3b1/uvOM2wuEwM6ZfQq+eZQghGTSgvxti7dqNampGRiOur/eEHRwxzIMwCoHhugClqPvTk4hgoJ3J7xRYRlD356ddBUhW+XrYIjR6JK0ffoyMCPc1nw+nshKrohJ/SReWLFrCuvXriUQizHnlFcaOPYvNW7awcOFipJTMe/VV7r3nbqqrq1m4aDHdunVlzJlnHnnNgsU4WnOs01y0l+1XKKc+kXZmUE0FCo3d1q59DAygVmjhRwaKjpj3T6eBDcPAcRSr16xBKcXGjRuprqlJ5csHDx6cYu8E4FRUgmOn5gxprRGm4VK8om0nIyXWFzuJrV2PDIZScX3K6R8KRHlEkAgFaV3xGU5NLUZuTrvfDwzo15ZI8qyQ09iEXVWNv6QLOdlZaKC5pYVuJSVIKSkoKKCoqJDq6mrO8KzZc8+/wPLlKwgEAhQWFFJWVnqIXgKvuC5QhBY+zyUcK10jQGFXV7rjuUwNjG5GuU7wgAmOR7H7tVZoTKQv84haGI/Hee65F9i5axdXz7qK/v37MWP6Jcyfv4BBgwfRtUsJ5eUVPPvsc9TW1TJj+nRGjxrpKk1tXXviRClEIIDPQ9ciTbiJbdtdaxHJaJ/UOZQSJF/TGmGaqNp6rF27UwqQ1C+zIB/h87Xdh5QQi0FTEwATJk4goRx279rD+Rech5SS4qIiHnrwfurq6lN1A9FIFK0hIyPjyDgAkL5MND7X6shj0IC2yad2+R53hJWJhiaB8pr2Sc1tOwYKGOFHmBntF/oA4ifZwr14yRIA5i9YQP/+/Rg79izGjj0r9btLlixh1erVhMNhXnllLiOGDMYIBNCx+EE7VhgGIq2rNxl/qLp6UE6KA2i3yw+bi/cgs22hmpsPTnZ4FUXtn1+54SEghWDKBRcc9NZ5eXnk5eWl/j9r1pV07VpCz1496dKl+NA8QLIL2sxAC5+7VzmWhlIvMae1vbseBw3mo48iNrrjYu22I2L00RoAzwUYIP2H9fsAJSVd6du3L/v372fkyBEpy1BbW0tWVhaGYdClSxd8Ph+xWIyePcuQXjs3huyURwIQ0Yg3m0cfDIWTSnDgz9IjCMNApo2SSa6Ljsfbu5QDYnakwcpVq/jii52MOfNMiouLiMfjzJkzl23bt3HpzJkMHDiAUCjE+eefd1BN5KFNgN8dQactNPLouYCkbLV2qkE9+ijCfJRHeIzHlNbKHRcrnKOmAYT2RrW6CfgjKkBOTjYP3H8vTc3N5HoFkn/968u8v3Ah48efw9WzrmLcuLEEAgGam5sZM+bMA8x0B0ZKHLxj/L17ISMZbQDwwAVLDXQUB//fcTAyo5gemUNyThBgV1S6VHBaPaEwTUTUzdatW7uW3z7+e6xEghUrVvDDH36f7dt38Nbbb2MYBi/PeYWBAwdgWRbbt++gW7euhMPhIyuBkB7ucRBaHj0XIFyKR2l3LMujPILkUS8y1NhtuYKj+9IH+Zgjo1G/358SfmtrKx99/DG2bfPJJ0tpbm5GCMGoUSOZOHECwWCwTb6HBG/tYk03ZCsrJTCgP7o15r52pB2W/LmUqNZWgsOGYhYVtiWavCuxfmOqiiiZiJLhcCrlvG/fPhLxOFlZWVRVVdPc3EKXLsX0LCvD7/czcqTLdTzzzHP8+3/8J7/7/R+IxWJHSAy1f059jLLyPsMGNI+2HRuntdsdehxJBtK6gY4cAgLU1zeQlZVJKBRiwoRzWLRoCRPGux03SinefPMtPvzoI4YNHcrll85MlXofWQPaQrasG66lecmHmJmRFHF0kAs4ABMIIcBRZN90fZt59hhHlKZ1+WduHiI5osayMEu64Ct2I6CRo0exas1adu/Zw9SpU8iMRpFS8t3vfoeqqmq6dnX7CbZu24rWsGXLFpqamggGg4dXgPT1PY50gNDaSsaRZhs+81xAMsQ4aiJYg06ASnQiFoWXXnqZRYuXMHHiBK64/DIuu/RSLjj//FS17J49e3n1tTcIBPy89fZ8BvTty+BhQ71RMEfuXxCGAUoRvXwm0bmv0fjG2y4ZlF4xdKD/lxLhM7H3lZN943VknD+5La/gKU98wwbi6zcgQkH3NcNAJxIEBvRDBoNoxyEnJ4cHHriPpqYmIpG2gdVKa7p2LUmNsLvs0kt5++35jBgxnLy8vCO7AJUAnfCSQc4xRgEKb7N7ucHZ67yT5bDa2fSjMiueU3ZiKKv5kKY6+YCtrTE++PAjWltb+WDJB6mZPpFIJFVlGw6HiEYjNDU1kZGRQVZWVpsbO/D99aFNupCS4l/8BxnnjMMur3BfMw3XJRhe2tcw3HoBpbD3lROdfjGFP/2nNjOfVFwhqH/qOVRjYyrXIAAcRcbkSSnFW7t2HZ9+uoxIJIJSCsdxmD37RX74w39g3quvpiKikSNH8L3vfZcLL5x66KKQtGdVVjM4sVSdwLHJSQO4FmD2OmGmLaHdLoY6aoZRgrLQVsNhTb/WmlAoyMQJ41m02DX54XCY+vp6nnn2Ofbt3cdVs65i6JDB3HnH7Xz2+eeMGD6M7mWlHg6S7g1KcWQyzNvlRnY2XZ/6Hyr/8V9p+Osc7Lp6hM/nKgJuzl9bNmZeLvnffYC8h+5ro5o9Hy8Mg8SmzdT/dQ4yGnVzAUKgLAuzuIjQJJf//3Tpp/zhT3/GSiTYsnUr1117DVVVVSxctBilFO+++z7nTZ5MRkYG+8vLycvNTQ2sOuIyW/WuFRCBY8va6qQlImkBUgqgHMexPfNw1DyQW0MmETqG07rvsNsyqeWXXXYpU6ZckOLDN27cxCefLMUwTN57732GDhlMr1496dWrpwuQkmndjh78cKPgPSWQkQyK/u1fyP7G12mcM5fW5Z/j1NS49QBFhYTGjCbz8pn4SnschBGSGKDix/+EamxEZmaCbbsVxw0NZFw+E38Xl4hav249juMQDofZuGEjWmuysrIYPXoUKz77jDFnnkk4HOb1N97k9dfeoF+/vtx++60EAoHDmH/3mZ3W/QgdR+BVBR2lEnh2BNzpIAowTGalEk5WEhAdbUmISLHnCqd1T6d56STdC9CnzxkMGjSQiopKxo4dk+qmffGvL7FkyQeMGjaM62+5ueMCM69Gr0PTmUTq3rMFBvQjMODhFHhD47aLpfhp5b5XqghUIUyD6p//kub3FyGzs1NlaFopRDhMzjduTCnmWWePZd2GDbS0tjJp0kSEEPh8Pm6+6evMnDGd3Nxcd77AsuXErQTr1q+ntrbu8ERQ8tZa97SNkPGOwTn6YhCNcjxrPyv96HWBdawuoC18ljhN2zolfCEE9Q0NvPvue/To3p1Ro0bywP33YVlWyipUV1ezaNFi/H4/ixYvZsIlF1PsD3il4QfcgNIdK4ZSbS7D+3+yJlAkTa/WrjCFaCOaHAcMiTANan75G6p+9l/IrCywbQ9HmNhVVeTc9g0Cgwa2pXn79uXRR35Mc0tzCtht2rSZgoJ8cnNzUy3i06ZdxKuvvsaQwUMoLCzoFBHkNG1DCnnssyXbSj6t5EtmWthke1kmfUzDIoXAkCZW09ZDVgMdeL04+6988OGHhMNh8vPzKS3tgVKKlStXUdazjKysLHr27MmGDRvoWVZGYU4Olm0dHM/rjkGnU9+AkZXZJlDPGiRn/qQTP8JL96Z+z6survqXf6Pmt793hZ8klIRAtbTg792bvO/cD1pTWVnJ87NfxO/3c+0116SEP3fuPF5/400KCwu5955vk5+fjxCC0aNGMWrkyM5lXr21dJq24pPeYRTHVBfomg2NOlgB0G2HRhx1PUBybp5hopq348SqMIL5RzQnfs/0+v1+TJ+JUoo//unPfPLJUvr168v9993LN++6g82bt9C7rIxoIEBVhz117UvZkrUANf/9G5yqavIevLet1i+Z90/7fZEkjzzBA7R+vJTKf/13Wj9ZiszJcXMK6bjAsij+93/BzHPnE8x79TU+/3ylB3JD3HD911xM4OGAvXv3Ul1dTUFBAZs3byE7O5uCgvxO7Hx3DZ1YFap5O9JnorXbyn/ULkC4U0LdkP9AC4C2jpVg0F6IIaUfkajBqt+AERx/xKqgq666kq5du1LStYSuJSXE43F2796DEIKKikpirTGysrPcSWBHOtChIwgQj1P729/T/N4iopdcRHTmJQSGDEKGwx2qpVNdQ+vyz2h48SWa57+LsixX+Ok9hoaBXV1N4WP/QHjCOe7v+HyEQuGUeY+mxf4zpl/Ca6+/QY8e3enTpw8LFrzD7BdfIj8/j/vuvZvCwsLDK4G3hlb9BkSiGhnIdvMux+EC3GMCD1AAZbvDIvXxHB4pBAYxElWfECwaf0QmMBQKcd55k9vy7IEA119/HQvmv8NZZ40hKzuLffv2YRomBYUFqRjmoChDH0pxBTInB93SQu0Tf6TuqWfxlfYg0K8vvrIeGJmZ6EQCp7qGxI4vSGzajLVvPyiNjEbcBJTn85P0sl1VTcH3HiL3W3e4rLHXb3DllZcTzgjjM02mTp2SesZBgwYyKA0jbN26DctKUFFRQV1d3ZEVIEk/V32MQTy1i49J/u7hickooL0COFpZx1cVDOBg+nzEqz4EHurUtG+lFM3Nzcyb9xqhcIgrLr+M/v3cPoGlSz/lmWefw+/3c9dtt9CrT5+0dEPaeXPSE1BHn2G75VxGTo47IuaLXSQ2b/VMepLCcE2/8AfcplAvGZSqCjZNVGsrOA6Fj/2I3G/fCVqzafNmXnp5Dn6/nxtvuIFLZ7pTwmKtMZ555ln27tvPVVdeTu/evbFtG8MwmDHjEhzl0LOsJ2eccUaHB1t05P8TlR8S9PnbGEDNMZpqjWM7B7sAlLBRh8+3HDkFqzHMDJz6tViN2/FFex5xLIxhGLz3/kLmL1iAlJIuxcWpUW/r12+gqakJx1Fs377DVYD0m0vfNVIc2i1onSriFAE/IhRs5wJSE0KSwyPSBK+Vwq6uxl9aStHP/pmM8yalSKC5815jx44vsG2bN958k+u/dh0Aq9eu4d33F2JIg1dfe53777s3RfaUlJTwrW/e1dkiCxASq3E7qmEtRjicEs4xD/RUoLXoIArQLhXsmqPjwAGGieGUE9v7Dr5+t3UKVHQtKSESiRIMBigsKkztiPPOO5eKykrCoSCjvIogt6XrEPn7Dgmqjpy908EBVd5vel1C2rJwGhsR4bDbK/Dw/ZhFRV79g9vmXVbag40bN2KaJqU9eqRawkt7lNKzrJSamlpGjhjhdjy/9z67du9m6pQpFHk9AMYRaxvcu4ztfQfDqUPKIu+wB47dBbiTAjsKAy0L7TsB5wZpt5BjzzwifW/1jlg9RH2DJ+jRo0dR3KUYn89HUWEhTU1N+P1+unfvzsPfefAAi3gU9+Z0EColQ7n0KZ7ezte2jY4n0Eph5ueROX0aWTddT8hL38ZbW3nxpZfZsnUbl86cweWXX0ZZz56EgkEGDRpIdXU1pumjsLCAhx58kNbWFgoKCti6dRvPPf8ClmVTX1/Pvffc3bkdLCRaa2J75hLw+aAtiXesGgBa4DjWwS7AQdjH3Rvq2RjTH6G1djnx6s8J5g/v1Ezgbl27ArBmzRr+8uTT5OXlctutt7SRJ1qnAFcqukxP4XZSaYXfj47H0c3NaKW93kATEQpiFhXi79uHjHMnEpk8EV+P9odSrt2wgfcWLsLv8/Pyy3MYMmRwqlZx3fr1/OEPfyQQCHDXnXfQo0d3IpEMHMchMzNKYWEh5eXlbn9AZyqAvGGa8erPUbUrMKOREzPHUYPoyAUIRSKVDDzOUVFSSkyRoHnb0wTzR3Tqb5Igaemny6iqqqKyspKNGzdx9tnjXNOaXtXTQT2kPtzieMqi43GKf/4z/L17Ye+vwGltBdPAl5WFkZ+HWVTkFpAmN0UiwYIF77CvooJLLplGUWGhOyquro6uXbtiGEZqpvHKlauora1FKc3WrVvp4SmPYRgUFBRw//33UlVVlQK4nTtfQNC89WlMkfB+3zm+rkDtsvZOR0yg7Z0ZoLU6nvEAqdxAIBihcc9c7OYHMTO6HHFMjGEYCCEYf8457Ny5k+zsbAYNGkQ8HnfPBCgpwfD73TDwQH7pUFSwOrh82lfShcCA/gS8PoMDr507dpCbm0skM5NlKz5j9pxXEEBjUxP33P1t7rvn2+zes4fRI0dh2zZ19fXk5+Vxztln88UXXxAKhRkxYjhVVVU89/xsiouLmDF9Ovl5eeSnFYR2BvzZzXtJ7J1LNBhxR7we92QIjwiy08PA2UlcpO3U6eEnYGa8YZqYzRU0bHqC3BE/PqLvSprDvn378KMf/gDDMFBK8etf/5bVa9Zw9pgzuenWW44OnnQwrVvFE6AUVmsrSz74kGA4zFljz0JIyXPPPc/7ixbTo3t37r//XkwvJaxxO5iVUpSWllJaWkosFuO/f/Vrtm3bzqyrrmTChPE8/J2HUnOAnnn2OZYvXw5CcEbv3gwbNhTHcTo3LdSbq9Cw6QlMuwIjo/DEjYnTCrf+E5id7gIQFooTcoiVECC0IhDKpmnbU9j9bscMF3dqWJTWOrVIjY1NbN22DUcp1q/fgJOqB9Cdywa2wwttSR+kZP6Cd3jRO+DB1prx489h2fIVBINBtm7bzpYtWxk5cgTXXD2L8opKpk45HyllqrR9//5y1q1bj23brFq1mgkTxqeiAK01vXv34oMPwhQUFFDStQSRdrxMp3Z/yz5i254kEsp2T3IRJ+ioQQW2o9NB4GzPBbjxxYkYFZoMCU0zgNlSQd3qn5N/1r91CsGmH7aQnZ3FNVfPYskHH3DBuediAk5yAtiB2cCOFie9dFu3D/eqqmswTMMrP3Pp53Fnj+P99xcycGB/yspKEUIwZUpbff+cV+aydu06rrryCnr37sV5kyezafMmpky5AEcpPvrwI6KZUYYNHcpZY8bQo3sPotFIqiyscwyru/vrVv8c06nCNAsB+8Qd5KG9ze6ZgDZ7JHXC9a8nbliwwCIUzqF++5PEzriBYN7QTo+MSy7WuHFjGTdubBrf41UEiSPnAjoiNJLve8GU86msrcU0Tc477zyU0lx15RVMmjiB7OxsfD4fdXX1aK3Iyclh7959vPXW2yQsi9ffeJMH7r+Xa6+9OtXetnDhIp586ml8Ph933/0tBg4YQBevSKTT5xF7vH+8ehWx7U+SFclxQ3Z9wmQPSrsHhKQswCz3dduybXQCrfUJmxcuPHAXNGLULvseXaa+mkbcd+5TlFeNox3HCwN1W+Yu5Q5kx+8nD56lkWpO6d6dhx56oN3P4vF4aiLZho0b+cMf/oiUkjvvuJ2Ski7069eXrVu3pZpak+A12e6WnBSqvIxl8gDKzu98jdaKmmXfI2jGMIwA4gQOinYPixDYyk4WhOi2ZJBSbRhAnDgFENohGM4iXvkedesfJ3vgN92xpcLs1HvI9F4+j9vXsVZ0LOzy/B2kg9s/8QHGVUrilsV78xeQm5/PmWeORinFq6+9zkcffcy5507iogunsnnTZiorK925P1u20KtXT+6843YaGhspKixk165dLHjnXUaNHMnQoUOYPPlcpGGQlZnJkCFDUsrReek4IEzq1/4GVfkewZwiV/jiBA5w9zr/lOqgHsBJywWcUJMDSBQZkVwaPn+MUPFEArmDjnl6qFmYT6BfX4zs7FStnlYKEQx0DEZEe4Dp9/t5Zf4C5s5+kUAoRG5uDl26dGH+/AUkEhbvvPMuF5x/HmefPY7tO3ZgmibjvJ7FUChEKBRCa83TzzzLxk2bWbNmLY/8+EdkZmZygdfmdSzIHGESr1lLw8rHyIzmIj1hnOhDvLQCxxIHM4FKKVu5recn9vBQ4fICPtMkZLZSueQuSqa9hTSCh2/SPPBtvN2UfdMNZN1wXXsf77VmeQxLWv6+4/vxe524brQhCAaDnHP2OD76+BPOHjcW0zTJy8vj3nvuTinOggXvUFdXz9SpFxCNRikqKmLjps0UFhbg95pEkvUAnT5EMk3Cym6hcsldhMwEPiOaVvt3QuUvtGsBDqEASh972/lhHY9bMBoKZWHVL6fyw+9QNPHXrivAPLr384Y8dhJAtHsYKQTxhMXUyeeSIQTZeXmccYY7Ova6667l4mkXk52VRTwep66uLpW0+eyzz3nu+RdwHAelHK6+ehbXXXsNI0YMp1fPngS9BtKjMvkp6bqmv/LDh5ANywllFblT20/C7ke7mKpDBXAUdup1fcI/19t8NpFoLnXbfk9NVm9yhz2EVhZC+o7yDXWnEH+HHKXWmFIyyStE2bZtG42NTQwZMpjsrCyampr47eO/44sdO7nyqis4d9JEotEoGRkZxGKx1JSvYDDI8GHDjtMc2wjpo+bz/yS+7Qmyc4oQxE6O8NMiY0ek1wM8mqSCE7ZSPk7miYUCkEKRmZVH3YofYIRLyOpz3dErQWd9VHpZeHp5OO5ZRps2b+bXv3mc1tZWZsyYzozpl1BbW8eWLVuJx+OsWrWKcydNpE+fM3jg/vtojbUyoH//lFtIhnfH4jOTz1y/+VkaPvsB2dl5SGF5R7ty0kSgFGjLo4IfTbe/lrAOzLecDA0QgCkhM5pJzQe3I32ZRMsuOTZL0BmNTySQiQRaaTcL6PUGSsMgFouljnqrr69HCOHO8L1kGmvXrePCqVOT7pGystKDwsljBUvJZ23c8So1H9xOVjQTM63M4WQoQHLEsVIQd0Q7C6B5DOIJHMdBJ+shTooO6LbKIZ9pEg0HqHr/ejj3aU8JbIQ0T9jHGdlZ+LuWuONkLRvV2oL0eg60UgwdOpTrrruG8v0VTPPOAjYMg+nTL3EPfUjLbiZ3/FEBvMOY/cYdr1H1/g1EwwF8polApRb+JF0aEI6DJqkAj6bxAAhhg1ZCC0OdLAvQjpFVBPx+0Akq37sONf73ZPW5Ju1QyeM4tMQDY7n3fJOcO291k0JeqZdMHtbkzQw+b/LkDvMRBxJHx7Pj27gKhZAm9Zufp3rJbWSG/QT8foQ4OSHfwQSzSzjEVNuhAykFsNxCQXf4zCk4xt5dS+UeByck1QtvwmrcSf7Ih9OIEeP4PiMYbJvwfUhQpA4SsDjR57gnn0UYVK34dxpW/AOZmVH8vradfyrW3NtTio6KQi0HB4VKdR6Lk3sfSR8jUfhNk6ysbBqWf59E7QaKJ/4C6cs4fpfQiWjheE1650y+ibKa2b/oXuLb/kxWdj4+QyDTzL44ee6/3RtrhbKcDiyAxrK1Tii0PLm2qE0FSBZySaHxSUF2Tg4N2/+HnbWrKJr0O0IFI9po3mM5c0gI/maX9kbMSpPWys8of/8ORP0ysnPyMUQCKXQ7n3/SDYDG6wlQKk4HNYFNrcJBO45AHdOowGPBAe3G+ggNWGTl5NDStII98yaRM+ofyRt2v9cW7iCQf1uhdtLqaBTCc1/VK/8vtct+TNhsJpyTgyTmli5ocUqsfjsE6N6fE2tsiwJS2yrRjOOeGsKxDR86ykFF7fP57oJIITCwycjIJCukqP/4Ab6Ycx4t5Z+6CyoEWp/4Q65P1I7X2uscFgYt5Uv5Ys551H/8AFlhRUZGJga2l9wSJ3+ND7HuSqPseFthRsoCxKRwtFd1eOIOkD0UId1+IKk+CBc4BEwDIyebltr32Dt3EuE+3yB/5HfxZ5a2ASvEMR9Hd0JNPdqd5o0k0fAFVSt+RsvmPxE0WonmZGMKhcA52WHekeGQ+9l2zBIHYwCVwNFKOKcCkR7KCLQPEzUmDpFINgHboXnTr9m5bTaRft8gZ/BdBLJ6tgdaQp46ZdDeUG1ppj4zXr+d2jW/pWnj/2DaVWRFo/jMbCTOYXtXTqUPcGUrHMvsIBvYHI87aN8JTkAfEQMeYAIOxnBSO/gN8GVnE08007L632jc8AThsivIHnALGSXj2kUKWtmpkTUnDC94fh2tU0JPNrw07/2QuvV/pGXHS5hWDdFImEAk29vxTvIU2C8DNElyHE6sJZbmArw1aozhALY4yWww6QDzABNwoE6kMonCnY4Z9Jv4c3KwrBitW55g7+Y/Y+aPIdLzcqJlFxHMG3Rw2KidNmJHiLQGko5P7dZpxSVCCC9+FwiM1J/EqtfSuONNmra/jF21FL+wyMoI44vkIEWa4NMW/qSHeUfec9rLzDuerEG4tLxOA4HOiekO6pwL6MzPdLuH0C6Q8pn4s7OxbUW8/iMaPvmA2mWP4MsdRqhkIuGSiQQLhuKPdHV9s+isWep43lSiaQ+xylW07FlI677FWDUrMZxmggFJNBrBNDM8Qsc+JAXxJTACXjoYp7aZ5LnB2kze2P5alPaOjTmp2/+EaLNG4OAzwMyIEsqQOLZFvOFjWio/pPHzn0KgACPzDPzZ/fDn9MOXWYYv0hUjkIPhz0QYgVTySSsL7cRxEo048Rqspt1YDV+QqN1Iom4jTsMWiFdiCPAHJJGMMIaZ4xE5LsD7ckn6MLjLwYk1HEwEiSYbB61twSkggjqJATrzNkIohFYYpsBnRtFhgVIa227CavgEu+Yj4o5XGyIlCD8YIYT0g/SoZuWgVcIdwqjjCKXwRgbgNyU+XwAzlIWUAiG0V61jt/l3zVfict2fsmvjqTMB2pJBiVaUptX2DhY89WHg8U6+og0vSAmGXxDwm6nyBrfcTaG1hVJx19sn/bPh/rVbwWsghC81b8IVtoUgcdCa6K+I4NvuVaC1sitaD+ABNNB/N45ODYo6NRhAn0QfeSDUkwK0caDFEWkaqUE44MXrRw1evhJaAGis/btxkkvg6vkLyI3VxBybCp9EobxR9KeSCTwFDKRIfpH87rbLtnvtb8HQnYovhfZJlKOo2FhNjBdc2afHTFZtI4uL85iiNQnaOuq+mibg9NXeA2gcDPzVjSzGHRZttAt4Hh+Fb3N3ejw4k792KWBYa4s7YONk+DlxCBCoTyvBSVlrQ0IoDPsq+Pwn87hq8C523rncnRGQsgALeqEq1lL+329yy82TuCcng0lCkIvGPL2MX2UNwNaamp2VLPrLIn6xahPl+wehWN4BHfbIJMxPWgm/uZTgbVMo6dOFHENiKoU4vZJfvUtKtKOwN++j9on57L1oDLGzQrQ8trCNsTpIsI+AzJxFYGsFxuf7EbZzWvhf5cs00MOL0b0LcRpmE3/sgB59cQSsdlr4fxde4DTEPn0d4vr/aZDz+4I9jioAAAAASUVORK5CYII=" alt="" width="64" height="64">
-        <div><div class="about-name">Oxypro Project Library</div><div class="about-ver">Version ${APP_VERSION} · 27 Oct 2026${GH ? ` · GitHub edition, projects as of ${esc(SNAP_DATE)}` : ''}${n ? ` · ${n} projects` : ''}</div>
-          <p class="about-tag">One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, the Project Quality Plan hand-off to PQP Maker and each project's Method Statement Log.</p></div>
+        <div><div class="about-name">Oxypro Project Library</div><div class="about-ver">Version ${APP_VERSION} · 29 Oct 2026${GH ? ` · GitHub edition, projects as of ${esc(SNAP_DATE)}` : ''}${n ? ` · ${n} projects` : ''}</div>
+          <p class="about-tag">One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, QA/QC (the PQP hand-off to PQP Maker and each project's Method Statement Log) and HSE (the hand-off to HSE Plan Maker).</p></div>
       </div>
       <section><h3>What it does</h3>
         <ul>
           <li><b>Projects:</b> search and filter by emirate, status and sector; each project shows its details from the Projects Master List and up to five photos.</li>
           <li><b>Presentations:</b> select one or more projects for a top sheet, an Oxypro Project Presentation Sheet per project and a summary page, as PDF or PowerPoint; View / Present runs them full screen first.</li>
-          <li><b>PQP details and file:</b> opens PQP Maker with the project's PQP already created, or saves a PQP file.</li>
-          <li><b>MSRA Log:</b> the project's Method Statement Submittal Log in the Oxypro template, with the Summary, seven discipline logs and the planner's MSL, saved as Excel or PDF.</li>
+          <li><b>QA/QC:</b> <b>PQP details and file</b> opens PQP Maker with the project's PQP already created, or saves a PQP file. <b>MSRA Log</b> is the project's Method Statement Submittal Log in the Oxypro template, with the Summary, seven discipline logs and the planner's MSL, saved as Excel or PDF.</li>
+          <li><b>HSE:</b> sends the project's details and a cover photo of your choice to HSE Plan Maker for the Project HSE Plan.</li>
           <li><b>Master List:</b> add projects, import from the Projects Master List (Excel) and export the whole list in the same layout.</li>
         </ul></section>
       <section><h3>How to use it</h3>
         <ol>
           <li>Find a project with the search box or the filters and click it to see its details and photos.</li>
           <li>For a presentation, tick the projects and choose <b>Make presentation</b>, or use <b>New presentation sheet</b> on one project. Adjust photos and text, then <b>View / Present</b>, <b>Download PDF</b> or <b>Download PowerPoint</b>.</li>
-          <li>For a PQP, open the project and choose <b>PQP details and file</b>, pick the cover photo, then <b>Open in PQP Maker</b>.</li>
-          <li>For the Method Statement Log, choose <b>Create MSRA Log</b> (or <b>Open MSRA Log</b>). Use <b>Edit</b> to change it, <b>Save to library</b> to keep it, <b>Save as</b> for Excel or PDF and <b>Print</b> for a print-ready PDF.</li>
+          <li>For a PQP, open the project, choose <b>QA/QC</b> and then <b>PQP details and file</b>, pick the cover photo, then <b>Open in PQP Maker</b>.</li>
+          <li>For the Method Statement Log, choose <b>QA/QC</b> and then <b>Create MSRA Log</b> (or <b>Open MSRA Log</b>). Use <b>Edit</b> to change it, <b>Save to library</b> to keep it, <b>Save as</b> for Excel or PDF and <b>Print</b> for a print-ready PDF.</li>
+          <li>For an HSE Plan, choose <b>HSE</b>, keep the main photo or pick another one (or no photo), then <b>Save HSE Plan file</b>. In HSE Plan Maker choose <b>Import project</b> and pick the file.</li>
           <li>Click <b>Project Library</b> at the top to come back to the list from any page. <b>View</b> switches between Light, Dark and Auto.</li>
         </ol></section>
       <section><h3>Your data</h3>
@@ -2981,11 +3126,12 @@ ${GH ? `<li>This is the GitHub edition: the projects and photos are a copy of th
           <li>Files you make (PDF, PowerPoint, Excel, PQP files) are downloaded to your device; Print opens the PDF for printing.</li>` : `<li>Projects, photos and MSRA Logs are kept in this shared library in Claude. Everyone with the link sees the same, up-to-date list.</li>
           <li>Only the library's owner and editors can add or change projects, photos and MSRA Logs${w ? ' (you can)' : ' (you can view, make presentations and download files)'}.</li>
           <li>Files you make (PDF, PowerPoint, Excel, PQP files) are downloaded to your device. Printing is done from the downloaded PDF, as Claude cannot open the print window.</li>`}
-          <li>Open in PQP Maker passes the project's text details to PQP Maker in its link; the cover photo goes by copy and paste. Nothing else leaves the library.</li>
+          <li>Open in PQP Maker passes the project's text details to PQP Maker in its link; the cover photo goes by copy and paste. The HSE Plan file holds the project's details and the cover photo you chose. Nothing else leaves the library.</li>
         </ul></section>
       <section><h3>Related</h3>
         <ul>
           <li><a href="${PQP_URL}" target="_blank" rel="noopener">PQP Maker</a>: Project Quality Plans in the Oxypro template (opens in a new tab).</li>
+          <li>${HSE_LIVE ? `<a href="${HSE_URL}" target="_blank" rel="noopener">HSE Plan Maker</a>` : 'HSE Plan Maker'}: Project HSE Plans in the Oxypro format, the same layout as the PQP${HSE_LIVE ? ' (opens in a new tab)' : ''}.</li>
           <li>Projects Master List (Excel): the source of the project details, imported and exported here.</li>
         </ul></section>
       <section><h3>What's new</h3>
@@ -3008,6 +3154,7 @@ function goHome() {
 }
 function bindGlobal() {
   $('#home-link').addEventListener('click', goHome);
+  bindQaqc();
   $('#btn-about').addEventListener('click', openAbout);
   $('#foot-about').addEventListener('click', openAbout);
   $('#modal').addEventListener('click', e => { if (e.target.id === 'modal' || e.target.closest('[data-close]')) closeModal(); });
@@ -3690,9 +3837,9 @@ const msFontsReady = (() => { let pr = null; return () => pr || (pr = (async () 
   try { for (const [w, k] of [['400', 'r'], ['700', 'b']]) { const f = new FontFace('Open Sans', b64ToBuf(MS_FONT_B64[k]), { weight: w }); await f.load(); document.fonts.add(f); } } catch (e) { /* the page falls back to the system font */ }
 })()); })();
 
-function msButtonHTML(p) {
+function msMenuItemHTML(p) {
   const has = S.msMeta && S.msMeta.has(p.no);
-  return `<button type="button" class="btn" data-act="msra" title="${has ? 'Open this project\'s Method Statement Log' : 'Create the Method Statement Log for this project'}">${has ? 'Open MSRA Log' : 'Create MSRA Log'}</button>`;
+  return `<button type="button" class="menu-item" role="menuitem" data-act="msra"><span><b>${has ? 'Open MSRA Log' : 'Create MSRA Log'}</b><small>${has ? 'This project\'s Method Statement Submittal Log' : 'Method Statement Submittal Log for this project'}</small></span></button>`;
 }
 function msSetDirty() { if (!MSV.dirty) { MSV.dirty = true; msRenderActions(); } }
 function msCloseSub() { if (MSV.unsub) { try { MSV.unsub(); } catch (e) { /* gone */ } MSV.unsub = null; } }
