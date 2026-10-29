@@ -568,7 +568,7 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.11.1 (27 Oct 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.12.2 (29 Oct 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -632,6 +632,7 @@ const LIBS = {
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
 const APP_VERSION = '1.12.2';
+const APP_DATE = '29 Oct 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
 const SNAP_DATE = String(window.__OPL_SNAPSHOT || '');
@@ -2854,7 +2855,7 @@ function openAbout() {
     <div class="dialog-body about">
       <div class="about-card">
         <img class="about-icon" src="data:image/png;base64,__APP_ICON128__" alt="" width="64" height="64">
-        <div><div class="about-name">Oxypro Project Library</div><div class="about-ver">Version ${APP_VERSION} · 29 Oct 2026${GH ? ` · GitHub edition, projects as of ${esc(SNAP_DATE)}` : ''}${n ? ` · ${n} projects` : ''}</div>
+        <div><div class="about-name">Oxypro Project Library</div><div class="about-ver">Version ${APP_VERSION} · ${APP_DATE}${GH ? ` · GitHub edition, projects as of ${esc(SNAP_DATE)}` : ''}${n ? ` · ${n} projects` : ''}</div>
           <p class="about-tag">One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, QA/QC (the PQP hand-off to PQP Maker and each project's Method Statement Log) and HSE (the hand-off to HSE Plan Maker).</p></div>
       </div>
       <section><h3>What it does</h3>
@@ -2926,6 +2927,7 @@ function bindGlobal() {
 /* ---------- boot ---------- */
 async function boot() {
   applyView(lsGet('viewTheme') || 'auto');
+  $('#version').textContent = `Version ${APP_VERSION} (${APP_DATE})`;   // always the version the page runs
   if (GH) {
     const e = $('#edition'); e.hidden = false;
     e.firstElementChild.innerHTML = `<span><b>GitHub edition</b> · projects and photos as of ${esc(SNAP_DATE)} · read-only; MSRA Logs are saved in this browser</span><a href="${CLAUDE_URL}" target="_blank" rel="noopener">Open the live library in Claude</a>`;
