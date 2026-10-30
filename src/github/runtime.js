@@ -6,7 +6,8 @@ window.__OPL_SNAPSHOT = '__SNAPSHOT_DATE__';
 (() => {
   'use strict';
   const PROJECTS = __PROJECTS__;
-  const READONLY = new Set(['projects', 'settings']);
+  const LOGOS = __LOGOS__;
+  const READONLY = new Set(['projects', 'settings', 'logos']);
   const KEY = 'opl-gh:';
   const lsRead = k => { try { const v = localStorage.getItem(KEY + k); return v == null ? null : JSON.parse(v); } catch (e) { return null; } };
   const lsWrite = (k, v) => {
@@ -15,8 +16,8 @@ window.__OPL_SNAPSHOT = '__SNAPSHOT_DATE__';
   };
   const clone = x => x == null ? x : JSON.parse(JSON.stringify(x));
   const fail = msg => Object.assign(new Error(msg), { code: 'invalid_argument' });
-  const read = (col, id) => col === 'projects' ? (PROJECTS[id] || null) : col === 'settings' ? null : lsRead(col + '/' + id);
-  const ids = col => col === 'projects' ? Object.keys(PROJECTS).sort() : col === 'settings' ? [] : (lsRead('index/' + col) || []).filter(id => lsRead(col + '/' + id));
+  const read = (col, id) => col === 'projects' ? (PROJECTS[id] || null) : col === 'logos' ? (LOGOS[id] || null) : col === 'settings' ? null : lsRead(col + '/' + id);
+  const ids = col => col === 'projects' ? Object.keys(PROJECTS).sort() : col === 'logos' ? Object.keys(LOGOS).sort() : col === 'settings' ? [] : (lsRead('index/' + col) || []).filter(id => lsRead(col + '/' + id));
   const listeners = new Map();   // 'col' or 'col/id' -> Set of callbacks
   const on = (k, fn) => { if (!listeners.has(k)) listeners.set(k, new Set()); listeners.get(k).add(fn); return () => listeners.get(k).delete(fn); };
   const docSnap = (col, id) => { const d = read(col, id); return { id, exists: d != null, data: () => clone(d), metadata: { hasPendingWrites: false } }; };

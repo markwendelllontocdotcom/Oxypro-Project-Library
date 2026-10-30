@@ -234,6 +234,23 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 .pm-img svg{width:20px;height:20px}
 .pm-label{font-size:11.5px;color:var(--muted);line-height:1.2}
 .pm-rm{border:0;background:none;padding:0;color:var(--danger);font-size:11.5px;cursor:pointer;text-align:left}
+.lg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.lg-tile{display:flex;flex-direction:column;gap:5px;min-width:0}
+.lg-img{height:78px;border-radius:4px;background:#FFFFFF;border:1px solid var(--line);display:grid;place-items:center;padding:8px;color:#8A8F98;font-size:12px;overflow:hidden}
+.lg-img.none{background:var(--surface-2);border-style:dashed;border-color:var(--line-strong);color:var(--faint)}
+.lg-img img{max-width:100%;max-height:100%;object-fit:contain}
+.lg-cap{font-size:12px;line-height:1.3;min-width:0}
+.lg-cap b{display:block;font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.lg-cap span{display:block;overflow-wrap:anywhere}
+.lg-btns{display:flex;gap:10px}
+.lg-btns button{border:0;background:none;padding:0;font-size:12px;cursor:pointer;color:var(--red-text)}
+.lg-btns button.rm{color:var(--danger)}
+.mg-table td{white-space:normal;overflow-wrap:anywhere}.mg-table td:first-child{white-space:nowrap}
+.mg-logos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mg-logos .lg-img{height:64px}
+.mg-cons{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px}
+.mg-cons label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+@media (max-width:560px){.mg-logos{grid-template-columns:1fr}}
 .confirm{border:1px solid var(--line-strong);background:var(--surface-2);border-radius:5px;padding:12px;display:flex;flex-direction:column;gap:10px;font-size:14px}
 .confirm .btns{display:flex;flex-wrap:wrap;gap:8px}
 .d-empty{padding:40px 24px;color:var(--muted);text-align:center}
@@ -568,7 +585,7 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.12.2 (29 Oct 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.13.0 (30 Oct 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -616,6 +633,7 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <input type="file" id="file-photo" accept="image/*" hidden>
+<input type="file" id="file-logo" accept="image/*,.svg" hidden>
 <input type="file" id="file-xlsx" accept=".xlsx,.xls,.csv" hidden>
 <input type="file" id="file-msl" accept=".xlsx,.xlsm,.xls" hidden>
 
@@ -631,8 +649,8 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.12.2';
-const APP_DATE = '29 Oct 2026';   // shown in the footer and in About
+const APP_VERSION = '1.13.0';
+const APP_DATE = '30 Oct 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
 const SNAP_DATE = String(window.__OPL_SNAPSHOT || '');
@@ -775,7 +793,7 @@ const S = {
   canWrite: null, assets: null, assetsKnown: false, downloads: null,
   view: 'library', pres: { sheets: [], cur: 0, dirty: new Set(), cover: null, summary: null }, coverDesign: 'A',
   extraCols: [], summaryCols: lsGet('summaryCols'),
-  delConfirm: null, pmConfirm: null, busy: null, fileTarget: null, imp: null, msMeta: new Map()
+  delConfirm: null, pmConfirm: null, busy: null, fileTarget: null, imp: null, msMeta: new Map(), logos: new Map(), logoTarget: null, lgConfirm: null
 };
 let DB = null;
 const canWrite = () => S.canWrite !== false && !!DB;
@@ -960,16 +978,188 @@ function renderDetail() {
         ${extraList().map(c => dRow(c.label, fmtDate((p.extra || {})[c.key]))).join('')}
       </dl>
       ${photoSec}
+      ${logoSecHTML(p, w)}
       ${w ? `<div class="d-section">${del || '<div><button type="button" class="btn btn-sm btn-ghost btn-danger" data-act="del">Delete project</button></div>'}</div>` : ''}
     </div>`;
   if (!PQP_READY.has(pqpKey(p))) preparePqp(p);
 }
+/* ---------- company logos ---------- */
+// One logo per company (collection logos, doc id = companyKey(name)), so a client, consultant or contractor's logo is added
+// once and shows on every project with that company. Used by Generate MSRA (and shown on the project).
+const LOGO_ROLES = [['client', 'Client'], ['mepConsultant', 'MEP consultant'], ['leadConsultant', 'Lead consultant'], ['mainContractor', 'Main contractor']];
+function companyKey(name) {
+  let t = realName(name).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim(), prev;
+  do { prev = t; t = t.replace(/\s+(llc|l l c|ltd|limited|co|company|pjsc|fze|fzco|est|inc|plc|corp)$/, '').trim(); } while (t !== prev);
+  return t.replace(/\s+/g, '-').slice(0, 120);
+}
+const logoOf = name => { const k = companyKey(name); return (k && S.logos.get(k)) || null; };
+const logoUrl = id => GH ? 'logos/' + encodeURIComponent(id) + '.png' : '/_blob/' + encodeURIComponent(id);
+function logoSecHTML(p, w) {
+  const rows = LOGO_ROLES.map(([f, lab]) => realName(p[f]) ? [f, lab, realName(p[f])] : null).filter(Boolean);
+  if (!rows.length) return '';
+  const edit = w && S.assets && DB && !GH;
+  const tiles = rows.map(([f, lab, n]) => {
+    const lg = logoOf(n);
+    return `<div class="lg-tile"><div class="lg-img${lg ? '' : ' none'}">${lg ? `<img src="${esc(logoUrl(lg.id))}" alt="${esc(n)} logo">` : 'No logo'}</div>
+      <div class="lg-cap"><b>${esc(lab)}</b><span>${esc(n)}</span></div>
+      ${edit ? `<div class="lg-btns"><button type="button" data-lg-up="${f}">${lg ? 'Replace' : 'Add logo'}</button>${lg ? `<button type="button" class="rm" data-lg-rm="${f}">Remove</button>` : ''}</div>` : ''}</div>`;
+  }).join('');
+  const cf = S.lgConfirm && S.lgConfirm.no === p.no ? realName(p[S.lgConfirm.f]) : '';
+  return `<div class="d-section"><h3>Company logos</h3><p class="d-note">One logo per company: it shows on every project with that company and goes into QA/QC &gt; Generate MSRA.</p>
+    <div class="lg">${tiles}</div>
+    ${cf ? `<div class="confirm"><span>Remove the ${esc(cf)} logo? It is removed from every project with this company.</span><div class="btns"><button type="button" class="btn btn-sm btn-danger-solid" data-act="lg-rm-yes">Remove logo</button><button type="button" class="btn btn-sm" data-act="lg-rm-no">Keep it</button></div></div>` : ''}
+    ${S.logoBusy ? `<span class="busy-note">${esc(S.logoBusy)}</span>` : ''}</div>`;
+}
+// a logo as PNG: transparent or white margins trimmed, at most 700 px wide (the MSRA Generator's logo size)
+async function logoPng(file) {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await loadImg(url);
+    let k = Math.min(1, 1400 / (img.naturalWidth || 1400)); let c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round((img.naturalWidth || 1400) * k)); c.height = Math.max(1, Math.round((img.naturalHeight || 400) * k));
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let x0 = c.width, y0 = c.height, x1 = -1, y1 = -1;
+    for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) {
+      const i = (y * c.width + x) * 4;
+      if (d[i + 3] >= 16 && !(d[i] > 245 && d[i + 1] > 245 && d[i + 2] > 245)) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    }
+    if (x1 >= 0) {
+      const pad = Math.max(2, Math.round(0.02 * Math.max(x1 - x0, y1 - y0)));
+      x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(c.width, x1 + 1 + pad); y1 = Math.min(c.height, y1 + 1 + pad);
+      const t = document.createElement('canvas'); t.width = x1 - x0; t.height = y1 - y0; t.getContext('2d').drawImage(c, x0, y0, t.width, t.height, 0, 0, t.width, t.height); c = t;
+    }
+    if (c.width > 700) { const t = document.createElement('canvas'); t.width = 700; t.height = Math.max(1, Math.round(c.height * 700 / c.width)); const g = t.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(c, 0, 0, t.width, t.height); c = t; }
+    const blob = await new Promise((res, rej) => c.toBlob(x => x ? res(x) : rej(new Error('image')), 'image/png'));
+    return { blob, w: c.width, h: c.height };
+  } finally { URL.revokeObjectURL(url); }
+}
+async function onLogoFile(e) {
+  const file = e.target.files && e.target.files[0]; const tgt = S.logoTarget; S.logoTarget = null;
+  if (!file || !tgt || !S.assets || !DB) return;
+  const p = S.projects.get(tgt.no), name = p && realName(p[tgt.f]), key = companyKey(name);
+  if (!key) return;
+  let png;
+  try { png = await logoPng(file); } catch (err) { toast('This logo could not be read. Save it as PNG or JPG and try again.'); return; }
+  S.logoBusy = `Uploading the ${name} logo…`; renderDetail();
+  try {
+    const r = await S.assets.upload(png.blob, { type: 'image/png' }); const old = S.logos.get(key);
+    await DB.collection('logos').doc(key).set({ name, id: r.id, w: png.w, h: png.h, updatedAt: new Date().toISOString() });
+    if (old && old.id && old.id !== r.id) { try { await S.assets.delete(old.id); } catch (err) { /* ignore */ } }
+    toast(`${name} logo saved: it shows on every project with this company`);
+  } catch (err) { toast(err && err.code === 'too_large' ? 'This logo is too large.' : writeError(err)); }
+  finally { S.logoBusy = null; renderDetail(); }
+}
+async function removeLogo() {
+  const c = S.lgConfirm; S.lgConfirm = null; const p = c && S.projects.get(c.no); if (!p) return renderDetail();
+  const name = realName(p[c.f]), key = companyKey(name), old = S.logos.get(key);
+  if (!old) return renderDetail();
+  try {
+    await DB.collection('logos').doc(key).delete();
+    if (old.id && S.assets) { try { await S.assets.delete(old.id); } catch (e) { /* ignore */ } }
+    toast(`${name} logo removed`);
+  } catch (e) { toast(writeError(e)); }
+  renderDetail();
+}
+
+/* ---------- QA/QC > Generate MSRA: a project file for the Oxypro MSRA Generator ---------- */
+// The file is a whole MSRA Generator project (format v 1, as its Save project writes): Open project in the Generator loads
+// it as a new project with the details and logos below, the chosen cover photo and the Generator's standard list of
+// Method Statements (as its New project makes it). Nothing links the two apps: the file is the hand-off.
+const MSG_STD = __MSRA_GEN_STD__;
+const MSG_EMIRATE = { DXB: 'dubai', AUH: 'abudhabi', SHJ: 'sharjah', AJM: 'northern', RAK: 'northern', FUJ: 'northern', UAQ: 'northern' };
+const msgUp = v => String(v || '').replace(/\s+/g, ' ').trim().toUpperCase();
+const msgCode = p => String(p.code || p.no || '').replace(/\s+/g, '').toUpperCase();
+function msgConsultants(p) {
+  const lead = realName(p.leadConsultant), mep = realName(p.mepConsultant), out = [];
+  if (lead) out.push({ k: 'lead', label: 'Lead consultant', name: lead });
+  if (mep && (!lead || mep.toLowerCase() !== lead.toLowerCase())) out.push({ k: 'mep', label: 'MEP consultant', name: mep });
+  return out;   // the first is the default: the lead consultant when there is one, as in the user's own MSRA projects
+}
+function msgFields(p, cons) {
+  const code = msgCode(p), name = msgUp(p.name), lv = msgUp(p.levels), area = msgUp(p.area);
+  const full = [name + (lv ? ` (${lv})` : ''), area].filter(Boolean).join(', ') + (code ? ` (${code})` : '');
+  return { name: full, cover1: full, code, projNo: code, emirate: MSG_EMIRATE[p.emirate] || 'dubai', client: msgUp(realName(p.client)), consultant: msgUp(cons || ''), mainContractor: msgUp(realName(p.mainContractor)), mepContractor: 'OXYPRO ELECTROMECHANICAL WORKS LLC' };
+}
+async function msgLogo(name) {
+  const lg = logoOf(name); if (!lg) return null;
+  const img = await loadImg(logoUrl(lg.id)), k = Math.min(1, 700 / img.naturalWidth);
+  const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  return { data: c.toDataURL('image/png'), w: c.width, h: c.height };
+}
+async function msgFile(p, cons, slot) {
+  const f = msgFields(p, cons), logos = {};
+  for (const [k, n] of [['client', realName(p.client)], ['consultant', cons], ['contractor', realName(p.mainContractor)]]) { try { const l = n && await msgLogo(n); if (l) logos[k] = l; } catch (e) { /* left out */ } }
+  let photo = null;
+  if (slot >= 0) {
+    try {
+      const c = await pqpCanvas(p, slot);
+      if (c) { const k = Math.min(1, 1600 / c.width), t = document.createElement('canvas'); t.width = Math.round(c.width * k); t.height = Math.round(c.height * k); const g = t.getContext('2d'); g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, t.width, t.height); g.drawImage(c, 0, 0, t.width, t.height); photo = { data: t.toDataURL('image/jpeg', 0.86), w: t.width, h: t.height }; }
+    } catch (e) { /* no photo */ }
+  }
+  return {
+    v: 1,
+    project: { name: f.name, cover1: f.cover1, cover2: '', cover3: '', code: f.code, emirate: f.emirate, area: '', client: f.client, consultant: f.consultant, mainContractor: f.mainContractor, mepContractor: f.mepContractor,
+      projNo: f.projNo, raClientHse: 'no', ra: { ec: {}, ap: {} }, desOxy: 'QA/QC Engineer', desMc: 'MEP Coordinator', desCons: 'Project Engineer', nameOxy: '', nameMc: '', nameCons: '', logos, photo, sample: false },
+    settings: Object.assign({}, MSG_STD.settings, { disc: Object.assign({}, MSG_STD.settings.disc), date: today() }),
+    register: MSG_STD.list.map(a => ({ key: a.id, libId: a.id, title: a.title, disc: a.disc, stage: a.stage, seq: a.seq, related: '', selected: false, docNo: '', rev: '', area: '', raRef: '', specSections: '' })),
+    stdList: 2, edits: {}, custom: {}, specs: [], stdSel: {}, specSectionList: [], transmittals: [], ui: { view: 'register', filter: 'ALL' },
+    fromLibrary: { app: 'Oxypro Project Library ' + APP_VERSION, project: p.no, saved: new Date().toISOString() }
+  };
+}
+const msgFileName = p => safeName(['MS Project', msgCode(p), p.name || 'Untitled project'].filter(Boolean).join(' - ')) + '.json';
+function openMsraGen(no) {
+  const p = S.projects.get(no); if (!p) return;
+  const cons = msgConsultants(p), phs = photosOf(p);
+  let ci = 0, slot = phs.findIndex(Boolean);
+  const tiles = phs.map((x, i) => x ? `<button type="button" class="ptile" data-mg-ph="${i}" aria-pressed="${i === slot}" aria-label="Use ${i === 0 ? 'the main photo' : SLOT_NAMES[i].toLowerCase()}"><img src="${esc(blobUrl(x.id))}" alt="" style="object-position:${+x.x || 50}% ${+x.y || 50}%"><span class="pt-cap">${i === 0 ? 'Main photo' : esc(SLOT_NAMES[i])}</span></button>` : '').join('')
+    + `<button type="button" class="ptile" data-mg-ph="-1" aria-pressed="${slot < 0}">No photo<small>The cover shows no photo</small></button>`;
+  openModal(`<div class="dialog">
+    <div class="dialog-head"><h2>Generate MSRA: ${esc(p.no)}</h2><button type="button" class="btn btn-ghost btn-sm" data-close>Close</button></div>
+    <div class="dialog-body">
+      <p style="margin:0">A project file for the <strong>Oxypro MSRA Generator</strong> with this project's details, the company logos and a cover photo.</p>
+      ${cons.length > 1 ? `<div class="field"><span class="flabel">Consultant on the MSRA</span><div class="mg-cons" role="radiogroup">${cons.map((c, i) => `<label><input type="radio" name="mg-cons" value="${i}"${i === 0 ? ' checked' : ''}> ${esc(c.name)} <span class="d-note">(${c.k === 'lead' ? 'lead consultant' : 'MEP consultant'})</span></label>`).join('')}</div></div>` : ''}
+      <div class="field"><span class="flabel">Logos</span><div class="mg-logos" id="mg-logos"></div><p class="d-note" id="mg-logo-note" style="margin:0"></p></div>
+      <div class="field"><span class="flabel">Cover photo</span>
+        <p class="d-note" style="margin:0">${slot >= 0 ? 'Use the main photo, or choose another photo of this project from the library.' : 'This project has no photos in the library yet.'}</p>
+        <div class="ptiles mg-ph" role="group" aria-label="Cover photo">${tiles}</div></div>
+      <div class="imp-table mg-table"><table><thead><tr><th>MSRA Generator field</th><th>From the Library</th></tr></thead><tbody id="mg-rows"></tbody></table></div>
+      <p style="margin:0">In the MSRA Generator choose <strong>Open project</strong> and pick the file. It opens as a new project with these details, the logos and the cover photo, and the standard list of ${MSG_STD.list.length} Method Statements (import the project's MS Log there to replace the list). <strong>Open project replaces the project open in the Generator, so save that one first.</strong></p>
+      <p class="err" id="mg-err" hidden></p>
+    </div>
+    <div class="dialog-foot"><button type="button" class="btn btn-primary" id="mg-go">Save MSRA project file</button></div>
+  </div>`);
+  const consName = () => cons[ci] ? cons[ci].name : '';
+  const draw = () => {
+    const f = msgFields(p, consName()), em = { dubai: 'Dubai', abudhabi: 'Abu Dhabi', sharjah: 'Sharjah', northern: 'Northern Emirates' }[f.emirate];
+    $('#mg-rows').innerHTML = [['Project name', f.name], ['Project code (document numbers)', f.code], ['RA Project No.', f.projNo], ['Emirate / jurisdiction', em], ['Client', f.client || '–'],
+      ['Consultant', f.consultant || '–'], ['Main Contractor', f.mainContractor || '–'], ['MEP Contractor', f.mepContractor], ['Cover page line 1', f.cover1],
+      ['Method Statements', `Standard list of ${MSG_STD.list.length}`], ['Cover photo', slot < 0 ? 'None' : slot === 0 ? 'Main photo' : SLOT_NAMES[slot]]]
+      .map(([l, v]) => `<tr><td>${esc(l)}</td><td>${esc(v)}</td></tr>`).join('');
+    const ls = [['Client', realName(p.client)], ['Consultant', consName()], ['Main contractor', realName(p.mainContractor)]], miss = [];
+    $('#mg-logos').innerHTML = ls.map(([lab, n]) => { const lg = n && logoOf(n); if (n && !lg) miss.push(n);
+      return `<div class="lg-tile"><div class="lg-img${lg ? '' : ' none'}">${lg ? `<img src="${esc(logoUrl(lg.id))}" alt="">` : 'No logo'}</div><div class="lg-cap"><b>${esc(lab)}</b><span>${esc(n || '–')}</span></div></div>`; }).join('');
+    $('#mg-logo-note').textContent = miss.length ? `No logo in the library for ${joinAnd(miss)}: add it under Company logos on this project${GH ? ' in the live library' : ''}, or upload it in the MSRA Generator.` : '';
+  };
+  draw();
+  document.querySelector('.mg-ph').addEventListener('click', e => { const b = e.target.closest('[data-mg-ph]'); if (!b) return; slot = +b.dataset.mgPh; document.querySelectorAll('[data-mg-ph]').forEach(x => x.setAttribute('aria-pressed', String(+x.dataset.mgPh === slot))); draw(); });
+  document.querySelectorAll('input[name="mg-cons"]').forEach(r => r.addEventListener('change', () => { ci = +r.value; draw(); }));
+  $('#mg-go').addEventListener('click', async () => {
+    const btn = $('#mg-go'), label = btn.textContent; btn.disabled = true; btn.textContent = 'Preparing…';
+    try {
+      const ok = await saveFile(msgFileName(p), new Blob([JSON.stringify(await msgFile(p, consName(), slot))], { type: 'application/json' }));
+      if (ok) closeModal(); else { btn.disabled = false; btn.textContent = label; }
+    } catch (e) { const er = $('#mg-err'); er.textContent = 'The file could not be made: ' + ((e && e.message) || e); er.hidden = false; btn.disabled = false; btn.textContent = label; }
+  });
+}
+
 /* QA/QC on a project: a menu with the PQP and the MSRA Log */
 function qaqcHTML(p) {
   return `<div class="qmenu"><button type="button" class="btn" id="btn-qaqc" data-act="qaqc" aria-haspopup="menu" aria-expanded="false" aria-controls="qaqc-menu">${GLYPH.qaqc}QA/QC${GLYPH.chev}</button>
     <div class="menu" id="qaqc-menu" role="menu" aria-label="QA/QC" hidden>
       <button type="button" class="menu-item" role="menuitem" data-act="pqp"><span><b>PQP details and file</b><small>Project Quality Plan in PQP Maker, or a PQP file</small></span></button>
       ${msMenuItemHTML(p)}
+      <button type="button" class="menu-item" role="menuitem" data-act="msragen"><span><b>Generate MSRA</b><small>Project file for the MSRA Generator: details and logos</small></span></button>
     </div></div>`;
 }
 function closeQaqc(focus) {
@@ -1039,6 +1229,8 @@ function bindLibrary() {
   $('#detail').addEventListener('click', e => {
     const up = e.target.closest('[data-pm-up]'); if (up) { S.fileTarget = { kind: 'library', no: S.active, slot: +up.dataset.pmUp }; $('#file-photo').value = ''; $('#file-photo').click(); return; }
     const rm = e.target.closest('[data-pm-rm]'); if (rm) { S.pmConfirm = +rm.dataset.pmRm; renderDetail(); return; }
+    const lu = e.target.closest('[data-lg-up]'); if (lu) { S.logoTarget = { no: S.active, f: lu.dataset.lgUp }; $('#file-logo').value = ''; $('#file-logo').click(); return; }
+    const lr = e.target.closest('[data-lg-rm]'); if (lr) { S.lgConfirm = { no: S.active, f: lr.dataset.lgRm }; renderDetail(); return; }
     const act = e.target.closest('[data-act]'); if (act) handleAct(act.dataset.act);
   });
   $('#btn-add').addEventListener('click', () => openEdit(null));
@@ -1047,6 +1239,7 @@ function bindLibrary() {
   $('#sel-clear').addEventListener('click', () => { S.selected.clear(); renderList(); renderDetail(); renderSelbar(); });
   $('#sel-make').addEventListener('click', () => openPres([...S.selected].sort((a, b) => numOf(a) - numOf(b))));
   $('#file-photo').addEventListener('change', onPhotoFile);
+  $('#file-logo').addEventListener('change', onLogoFile);
   $('#file-xlsx').addEventListener('change', onXlsxFile);
 }
 async function handleAct(act) {
@@ -1062,6 +1255,9 @@ async function handleAct(act) {
     case 'qaqc': return toggleQaqc();
     case 'pqp': closeQaqc(); if (p) openPqp(p.no); return;
     case 'msra': closeQaqc(); if (p) openMsra(p.no); return;
+    case 'msragen': closeQaqc(); if (p) openMsraGen(p.no); return;
+    case 'lg-rm-yes': return removeLogo();
+    case 'lg-rm-no': S.lgConfirm = null; return renderDetail();
     case 'hse': if (p) openHse(p.no); return;
     case 'del': S.delConfirm = S.active; return renderDetail();
     case 'del-no': S.delConfirm = null; return renderDetail();
@@ -2831,6 +3027,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.13.0', '30 Oct 2026', 'QA/QC > Generate MSRA: a project file for the MSRA Generator with the project details, the client, consultant and main contractor logos and a cover photo. Company logos on each project, kept once per company.'],
   ['1.12.2', '29 Oct 2026', 'New app icon: the Oxypro Library open book, for the page, the shortcuts and the GitHub edition.'],
   ['1.12.1', '29 Oct 2026', 'HSE Plan Maker is online: HSE > Open in HSE Plan Maker opens it with the project and copies the cover photo for pasting there.'],
   ['1.12.0', '29 Oct 2026', 'QA/QC and HSE on each project: QA/QC opens a menu with PQP details and file and the MSRA Log; HSE sends the project and a cover photo of your choice (the main photo, another library photo or none) to HSE Plan Maker.'],
@@ -2856,13 +3053,14 @@ function openAbout() {
       <div class="about-card">
         <img class="about-icon" src="data:image/png;base64,__APP_ICON128__" alt="" width="64" height="64">
         <div><div class="about-name">Oxypro Project Library</div><div class="about-ver">Version ${APP_VERSION} · ${APP_DATE}${GH ? ` · GitHub edition, projects as of ${esc(SNAP_DATE)}` : ''}${n ? ` · ${n} projects` : ''}</div>
-          <p class="about-tag">One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, QA/QC (the PQP hand-off to PQP Maker and each project's Method Statement Log) and HSE (the hand-off to HSE Plan Maker).</p></div>
+          <p class="about-tag">One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, QA/QC (the PQP hand-off to PQP Maker and each project's Method Statement Log and the MSRA Generator project file) and HSE (the hand-off to HSE Plan Maker).</p></div>
       </div>
       <section><h3>What it does</h3>
         <ul>
           <li><b>Projects:</b> search and filter by emirate, status and sector; each project shows its details from the Projects Master List and up to five photos.</li>
           <li><b>Presentations:</b> select one or more projects for a top sheet, an Oxypro Project Presentation Sheet per project and a summary page, as PDF or PowerPoint; View / Present runs them full screen first.</li>
-          <li><b>QA/QC:</b> <b>PQP details and file</b> opens PQP Maker with the project's PQP already created, or saves a PQP file. <b>MSRA Log</b> is the project's Method Statement Submittal Log in the Oxypro template, with the Summary, seven discipline logs and the planner's MSL, saved as Excel or PDF.</li>
+          <li><b>QA/QC:</b> <b>PQP details and file</b> opens PQP Maker with the project's PQP already created, or saves a PQP file. <b>MSRA Log</b> is the project's Method Statement Submittal Log in the Oxypro template, with the Summary, seven discipline logs and the planner's MSL, saved as Excel or PDF. <b>Generate MSRA</b> saves a project file for the MSRA Generator with the project's details, the client, consultant and main contractor logos and a cover photo.</li>
+          <li><b>Company logos:</b> one logo per client, consultant and contractor, shown on every project with that company.</li>
           <li><b>HSE:</b> sends the project's details and a cover photo of your choice to HSE Plan Maker for the Project HSE Plan.</li>
           <li><b>Master List:</b> add projects, import from the Projects Master List (Excel) and export the whole list in the same layout.</li>
         </ul></section>
@@ -2872,6 +3070,7 @@ function openAbout() {
           <li>For a presentation, tick the projects and choose <b>Make presentation</b>, or use <b>New presentation sheet</b> on one project. Adjust photos and text, then <b>View / Present</b>, <b>Download PDF</b> or <b>Download PowerPoint</b>.</li>
           <li>For a PQP, open the project, choose <b>QA/QC</b> and then <b>PQP details and file</b>, pick the cover photo, then <b>Open in PQP Maker</b>.</li>
           <li>For the Method Statement Log, choose <b>QA/QC</b> and then <b>Create MSRA Log</b> (or <b>Open MSRA Log</b>). Use <b>Edit</b> to change it, <b>Save to library</b> to keep it, <b>Save as</b> for Excel or PDF and <b>Print</b> for a print-ready PDF.</li>
+          <li>For the MSRA Generator, choose <b>QA/QC</b> and then <b>Generate MSRA</b>, pick the consultant (when there are two) and the cover photo, then <b>Save MSRA project file</b>. In the MSRA Generator choose <b>Open project</b> and pick the file (save the project open there first).</li>
           <li>For an HSE Plan, choose <b>HSE</b>, keep the main photo or pick another one (or no photo), then <b>Open in HSE Plan Maker</b> and paste the photo there with Ctrl+V. Or <b>Save HSE Plan file</b>, then in HSE Plan Maker choose <b>Import project</b> and pick the file.</li>
           <li>Click <b>Project Library</b> at the top to come back to the list from any page. <b>View</b> switches between Light, Dark and Auto.</li>
         </ol></section>
@@ -2882,7 +3081,7 @@ ${GH ? `<li>This is the GitHub edition: the projects and photos are a copy of th
           <li>Files you make (PDF, PowerPoint, Excel, PQP files) are downloaded to your device; Print opens the PDF for printing.</li>` : `<li>Projects, photos and MSRA Logs are kept in this shared library in Claude. Everyone with the link sees the same, up-to-date list.</li>
           <li>Only the library's owner and editors can add or change projects, photos and MSRA Logs${w ? ' (you can)' : ' (you can view, make presentations and download files)'}.</li>
           <li>Files you make (PDF, PowerPoint, Excel, PQP files) are downloaded to your device. Printing is done from the downloaded PDF, as Claude cannot open the print window.</li>`}
-          <li>Open in PQP Maker and Open in HSE Plan Maker pass the project's text details in their link; the cover photo goes by copy and paste. The HSE Plan file holds the project's details and the cover photo you chose. Nothing else leaves the library.</li>
+          <li>Open in PQP Maker and Open in HSE Plan Maker pass the project's text details in their link; the cover photo goes by copy and paste. The HSE Plan file holds the project's details and the cover photo you chose; the MSRA project file also holds the company logos. Nothing else leaves the library.</li>
         </ul></section>
       <section><h3>Related</h3>
         <ul>
@@ -2953,6 +3152,10 @@ async function boot() {
     for (const n of [...S.selected]) if (!m.has(n)) S.selected.delete(n);
     renderAll();
   }, err => { S.dbState = 'error'; S.dbError = (err && err.code) || ''; renderAll(); });
+  DB.collection('logos').onSnapshot(snap => {
+    const m = new Map(); snap.docs.forEach(d => { if (d.exists) { const x = d.data(); if (x && x.id) m.set(d.id, x); } });
+    S.logos = m; if (S.view === 'library') renderDetail();
+  }, () => {});
   DB.collection('mslogmeta').onSnapshot(snap => {
     const m = new Map(); snap.docs.forEach(d => { if (d.exists) m.set(d.id, d.data()); });
     S.msMeta = m; if (S.view === 'library') renderDetail();

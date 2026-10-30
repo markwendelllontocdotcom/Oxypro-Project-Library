@@ -17,6 +17,10 @@ for k,v in {'__MSRA_STD__':ma['std'],'__MSRA_LOGO__':ma['logo'],'__OPENSANS_R__'
 for k,v in {'/*__MSRA_JS__*/':msjs,'/*__MSRA_CSS__*/':open(os.path.join(here,'src','msra','msra.css')).read()}.items():
     assert s.count(k)==1, k
     s=s.replace(k,v)
+# the MSRA Generator's standard list and default settings (Generate MSRA), from its repository data
+std=open(os.path.join(here,'build','msra-gen-std.json')).read().replace('</','<\\/')
+assert s.count('__MSRA_GEN_STD__')==1, '__MSRA_GEN_STD__'
+s=s.replace('__MSRA_GEN_STD__',std)
 os.makedirs(os.path.join(here,'dist'),exist_ok=True)
 out=os.path.join(here,'dist','Oxypro Project Library.html')
 open(out,'w').write(s)
@@ -31,7 +35,8 @@ if os.path.exists(snap_path):
     rt=open(os.path.join(here,'src','github','runtime.js')).read()
     data=json.dumps(snap['projects'],ensure_ascii=False,separators=(',',':')).replace('</','<\\/')
     assert '__PROJECTS__' in rt and '__SNAPSHOT_DATE__' in rt
-    rt=rt.replace('__PROJECTS__',data).replace('__SNAPSHOT_DATE__',snap['date'])
+    logos=json.dumps(snap.get('logos',{}),ensure_ascii=False,separators=(',',':')).replace('</','<\\/')
+    rt=rt.replace('__PROJECTS__',data).replace('__LOGOS__',logos).replace('__SNAPSHOT_DATE__',snap['date'])
     marker="<script>\n(() => {\n'use strict';"
     assert s.count(marker)==1, 'main script marker'
     page=s.replace(marker,'<script>\n'+rt+'\n</script>\n'+marker)
@@ -81,4 +86,13 @@ if os.path.exists(snap_path):
         src=os.path.join(here,'github','photos',i+'.jpg'); dst=os.path.join(site,'photos',i+'.jpg')
         if os.path.exists(src) and (not os.path.exists(dst) or os.path.getsize(dst)!=os.path.getsize(src)): shutil.copyfile(src,dst)
         assert os.path.exists(dst), 'missing photo '+i
-    print(os.path.join(site,'index.html'), round(len(page)/1024),'KB,', len(used),'photos')
+    # company logos: from github/logos (asset id .png), as the projects' photos
+    os.makedirs(os.path.join(site,'logos'),exist_ok=True)
+    lused=set(x['id'] for x in snap.get('logos',{}).values())
+    for f in os.listdir(os.path.join(site,'logos')):
+        if f[:-4] not in lused: os.remove(os.path.join(site,'logos',f))
+    for i in lused:
+        src=os.path.join(here,'github','logos',i+'.png'); dst=os.path.join(site,'logos',i+'.png')
+        if os.path.exists(src): shutil.copyfile(src,dst)
+        assert os.path.exists(dst), 'missing logo '+i
+    print(os.path.join(site,'index.html'), round(len(page)/1024),'KB,', len(used),'photos,', len(lused),'logos')

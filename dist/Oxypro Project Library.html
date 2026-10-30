@@ -234,6 +234,23 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 .pm-img svg{width:20px;height:20px}
 .pm-label{font-size:11.5px;color:var(--muted);line-height:1.2}
 .pm-rm{border:0;background:none;padding:0;color:var(--danger);font-size:11.5px;cursor:pointer;text-align:left}
+.lg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.lg-tile{display:flex;flex-direction:column;gap:5px;min-width:0}
+.lg-img{height:78px;border-radius:4px;background:#FFFFFF;border:1px solid var(--line);display:grid;place-items:center;padding:8px;color:#8A8F98;font-size:12px;overflow:hidden}
+.lg-img.none{background:var(--surface-2);border-style:dashed;border-color:var(--line-strong);color:var(--faint)}
+.lg-img img{max-width:100%;max-height:100%;object-fit:contain}
+.lg-cap{font-size:12px;line-height:1.3;min-width:0}
+.lg-cap b{display:block;font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.lg-cap span{display:block;overflow-wrap:anywhere}
+.lg-btns{display:flex;gap:10px}
+.lg-btns button{border:0;background:none;padding:0;font-size:12px;cursor:pointer;color:var(--red-text)}
+.lg-btns button.rm{color:var(--danger)}
+.mg-table td{white-space:normal;overflow-wrap:anywhere}.mg-table td:first-child{white-space:nowrap}
+.mg-logos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mg-logos .lg-img{height:64px}
+.mg-cons{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px}
+.mg-cons label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+@media (max-width:560px){.mg-logos{grid-template-columns:1fr}}
 .confirm{border:1px solid var(--line-strong);background:var(--surface-2);border-radius:5px;padding:12px;display:flex;flex-direction:column;gap:10px;font-size:14px}
 .confirm .btns{display:flex;flex-wrap:wrap;gap:8px}
 .d-empty{padding:40px 24px;color:var(--muted);text-align:center}
@@ -738,7 +755,7 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.12.2 (29 Oct 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.13.0 (30 Oct 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -786,6 +803,7 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <input type="file" id="file-photo" accept="image/*" hidden>
+<input type="file" id="file-logo" accept="image/*,.svg" hidden>
 <input type="file" id="file-xlsx" accept=".xlsx,.xls,.csv" hidden>
 <input type="file" id="file-msl" accept=".xlsx,.xlsm,.xls" hidden>
 
@@ -801,8 +819,8 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.12.2';
-const APP_DATE = '29 Oct 2026';   // shown in the footer and in About
+const APP_VERSION = '1.13.0';
+const APP_DATE = '30 Oct 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
 const SNAP_DATE = String(window.__OPL_SNAPSHOT || '');
@@ -945,7 +963,7 @@ const S = {
   canWrite: null, assets: null, assetsKnown: false, downloads: null,
   view: 'library', pres: { sheets: [], cur: 0, dirty: new Set(), cover: null, summary: null }, coverDesign: 'A',
   extraCols: [], summaryCols: lsGet('summaryCols'),
-  delConfirm: null, pmConfirm: null, busy: null, fileTarget: null, imp: null, msMeta: new Map()
+  delConfirm: null, pmConfirm: null, busy: null, fileTarget: null, imp: null, msMeta: new Map(), logos: new Map(), logoTarget: null, lgConfirm: null
 };
 let DB = null;
 const canWrite = () => S.canWrite !== false && !!DB;
@@ -1130,16 +1148,188 @@ function renderDetail() {
         ${extraList().map(c => dRow(c.label, fmtDate((p.extra || {})[c.key]))).join('')}
       </dl>
       ${photoSec}
+      ${logoSecHTML(p, w)}
       ${w ? `<div class="d-section">${del || '<div><button type="button" class="btn btn-sm btn-ghost btn-danger" data-act="del">Delete project</button></div>'}</div>` : ''}
     </div>`;
   if (!PQP_READY.has(pqpKey(p))) preparePqp(p);
 }
+/* ---------- company logos ---------- */
+// One logo per company (collection logos, doc id = companyKey(name)), so a client, consultant or contractor's logo is added
+// once and shows on every project with that company. Used by Generate MSRA (and shown on the project).
+const LOGO_ROLES = [['client', 'Client'], ['mepConsultant', 'MEP consultant'], ['leadConsultant', 'Lead consultant'], ['mainContractor', 'Main contractor']];
+function companyKey(name) {
+  let t = realName(name).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim(), prev;
+  do { prev = t; t = t.replace(/\s+(llc|l l c|ltd|limited|co|company|pjsc|fze|fzco|est|inc|plc|corp)$/, '').trim(); } while (t !== prev);
+  return t.replace(/\s+/g, '-').slice(0, 120);
+}
+const logoOf = name => { const k = companyKey(name); return (k && S.logos.get(k)) || null; };
+const logoUrl = id => GH ? 'logos/' + encodeURIComponent(id) + '.png' : '/_blob/' + encodeURIComponent(id);
+function logoSecHTML(p, w) {
+  const rows = LOGO_ROLES.map(([f, lab]) => realName(p[f]) ? [f, lab, realName(p[f])] : null).filter(Boolean);
+  if (!rows.length) return '';
+  const edit = w && S.assets && DB && !GH;
+  const tiles = rows.map(([f, lab, n]) => {
+    const lg = logoOf(n);
+    return `<div class="lg-tile"><div class="lg-img${lg ? '' : ' none'}">${lg ? `<img src="${esc(logoUrl(lg.id))}" alt="${esc(n)} logo">` : 'No logo'}</div>
+      <div class="lg-cap"><b>${esc(lab)}</b><span>${esc(n)}</span></div>
+      ${edit ? `<div class="lg-btns"><button type="button" data-lg-up="${f}">${lg ? 'Replace' : 'Add logo'}</button>${lg ? `<button type="button" class="rm" data-lg-rm="${f}">Remove</button>` : ''}</div>` : ''}</div>`;
+  }).join('');
+  const cf = S.lgConfirm && S.lgConfirm.no === p.no ? realName(p[S.lgConfirm.f]) : '';
+  return `<div class="d-section"><h3>Company logos</h3><p class="d-note">One logo per company: it shows on every project with that company and goes into QA/QC &gt; Generate MSRA.</p>
+    <div class="lg">${tiles}</div>
+    ${cf ? `<div class="confirm"><span>Remove the ${esc(cf)} logo? It is removed from every project with this company.</span><div class="btns"><button type="button" class="btn btn-sm btn-danger-solid" data-act="lg-rm-yes">Remove logo</button><button type="button" class="btn btn-sm" data-act="lg-rm-no">Keep it</button></div></div>` : ''}
+    ${S.logoBusy ? `<span class="busy-note">${esc(S.logoBusy)}</span>` : ''}</div>`;
+}
+// a logo as PNG: transparent or white margins trimmed, at most 700 px wide (the MSRA Generator's logo size)
+async function logoPng(file) {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await loadImg(url);
+    let k = Math.min(1, 1400 / (img.naturalWidth || 1400)); let c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round((img.naturalWidth || 1400) * k)); c.height = Math.max(1, Math.round((img.naturalHeight || 400) * k));
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let x0 = c.width, y0 = c.height, x1 = -1, y1 = -1;
+    for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) {
+      const i = (y * c.width + x) * 4;
+      if (d[i + 3] >= 16 && !(d[i] > 245 && d[i + 1] > 245 && d[i + 2] > 245)) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    }
+    if (x1 >= 0) {
+      const pad = Math.max(2, Math.round(0.02 * Math.max(x1 - x0, y1 - y0)));
+      x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(c.width, x1 + 1 + pad); y1 = Math.min(c.height, y1 + 1 + pad);
+      const t = document.createElement('canvas'); t.width = x1 - x0; t.height = y1 - y0; t.getContext('2d').drawImage(c, x0, y0, t.width, t.height, 0, 0, t.width, t.height); c = t;
+    }
+    if (c.width > 700) { const t = document.createElement('canvas'); t.width = 700; t.height = Math.max(1, Math.round(c.height * 700 / c.width)); const g = t.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(c, 0, 0, t.width, t.height); c = t; }
+    const blob = await new Promise((res, rej) => c.toBlob(x => x ? res(x) : rej(new Error('image')), 'image/png'));
+    return { blob, w: c.width, h: c.height };
+  } finally { URL.revokeObjectURL(url); }
+}
+async function onLogoFile(e) {
+  const file = e.target.files && e.target.files[0]; const tgt = S.logoTarget; S.logoTarget = null;
+  if (!file || !tgt || !S.assets || !DB) return;
+  const p = S.projects.get(tgt.no), name = p && realName(p[tgt.f]), key = companyKey(name);
+  if (!key) return;
+  let png;
+  try { png = await logoPng(file); } catch (err) { toast('This logo could not be read. Save it as PNG or JPG and try again.'); return; }
+  S.logoBusy = `Uploading the ${name} logo…`; renderDetail();
+  try {
+    const r = await S.assets.upload(png.blob, { type: 'image/png' }); const old = S.logos.get(key);
+    await DB.collection('logos').doc(key).set({ name, id: r.id, w: png.w, h: png.h, updatedAt: new Date().toISOString() });
+    if (old && old.id && old.id !== r.id) { try { await S.assets.delete(old.id); } catch (err) { /* ignore */ } }
+    toast(`${name} logo saved: it shows on every project with this company`);
+  } catch (err) { toast(err && err.code === 'too_large' ? 'This logo is too large.' : writeError(err)); }
+  finally { S.logoBusy = null; renderDetail(); }
+}
+async function removeLogo() {
+  const c = S.lgConfirm; S.lgConfirm = null; const p = c && S.projects.get(c.no); if (!p) return renderDetail();
+  const name = realName(p[c.f]), key = companyKey(name), old = S.logos.get(key);
+  if (!old) return renderDetail();
+  try {
+    await DB.collection('logos').doc(key).delete();
+    if (old.id && S.assets) { try { await S.assets.delete(old.id); } catch (e) { /* ignore */ } }
+    toast(`${name} logo removed`);
+  } catch (e) { toast(writeError(e)); }
+  renderDetail();
+}
+
+/* ---------- QA/QC > Generate MSRA: a project file for the Oxypro MSRA Generator ---------- */
+// The file is a whole MSRA Generator project (format v 1, as its Save project writes): Open project in the Generator loads
+// it as a new project with the details and logos below, the chosen cover photo and the Generator's standard list of
+// Method Statements (as its New project makes it). Nothing links the two apps: the file is the hand-off.
+const MSG_STD = {"from":"Oxypro MSRA Generator standard list (Method-Statement-Generator 2ba6f80, 30 Oct 2026): New project register","settings":{"pattern":"{PRJ}-MEP-{DISC}-MST-{NNN}","itpPattern":"{PRJ}-MEP-{DISC}-ITP-{NNN}","raPattern":"{PRJ}-MEP-{DISC}-RA-{NNN}","msraPattern":"{PRJ}-MEP-{DISC}-MSRA-{NNN}","disc":{"MEC":"ME","PLU":"PL","ELE":"EL","ELV":"ELV","FF":"FF","LPG":"LPG","MEP":"BW"},"rev":"00"},"list":[{"id":"MEC-01","title":"Installation of GI, PI & Fire Rated Ductwork with Accessories","disc":"MEC","stage":"INS","seq":1},{"id":"MEC-02","title":"Installation of Flexible Ducts & Flexible Duct Connectors","disc":"MEC","stage":"INS","seq":2},{"id":"MEC-03","title":"Installation of Duct Insulation & Acoustic Duct Liner","disc":"MEC","stage":"INS","seq":3},{"id":"MEC-04","title":"Installation of Chilled Water Piping, Fittings & Valves","disc":"MEC","stage":"INS","seq":4},{"id":"MEC-05","title":"Installation of Mechanical Pipe Supports, Hangers & Vibration Isolators","disc":"MEC","stage":"INS","seq":5},{"id":"MEC-06","title":"Installation of Chilled Water Pipe Insulation & Aluminium Cladding","disc":"MEC","stage":"INS","seq":6},{"id":"MEC-07","title":"Installation of Refrigerant Copper Piping, Fittings & Accessories","disc":"MEC","stage":"INS","seq":7},{"id":"MEC-08","title":"Installation of Dampers, Louvers, Air Outlets & Sound Attenuators","disc":"MEC","stage":"INS","seq":8},{"id":"MEC-09","title":"Installation of FCUs with PICV Valve Packages","disc":"MEC","stage":"INS","seq":9},{"id":"MEC-10","title":"Installation of FAHUs & Ventilation Fans","disc":"MEC","stage":"INS","seq":10},{"id":"MEC-11","title":"Installation of Air Cooled Chillers, CHW Pumps & Pressurization Unit","disc":"MEC","stage":"INS","seq":11},{"id":"MEC-12","title":"Installation of DX Split Units","disc":"MEC","stage":"INS","seq":12},{"id":"MEC-13","title":"Installation of Chilled Water Chemical Treatment & Dosing System","disc":"MEC","stage":"INS","seq":13},{"id":"MEC-14","title":"Installation of BTU Meters & FAHU Control Valves (PICV)","disc":"MEC","stage":"INS","seq":14},{"id":"MEC-15","title":"Installation of BMS Panels, Field Devices & Control Cabling","disc":"MEC","stage":"INS","seq":15},{"id":"MEC-16","title":"Duct Leak Testing, Cleaning & Air Tightness Testing","disc":"MEC","stage":"TC","seq":16},{"id":"MEC-17","title":"Pressure Testing, Flushing & Chemical Cleaning of Chilled Water Piping System","disc":"MEC","stage":"TC","seq":17},{"id":"MEC-18","title":"Testing & Commissioning of Chillers, CHW Pumps & Pressurization Unit","disc":"MEC","stage":"TC","seq":18},{"id":"MEC-19","title":"Testing & Commissioning of FAHUs, FCUs, DX Split Units & Ventilation Fans","disc":"MEC","stage":"TC","seq":19},{"id":"MEC-20","title":"Testing, Adjusting & Balancing (TAB) of Air & Water Systems","disc":"MEC","stage":"TC","seq":20},{"id":"MEC-21","title":"Testing & Commissioning of BMS & System Integration","disc":"MEC","stage":"TC","seq":21},{"id":"PLU-01","title":"Installation of Below Ground uPVC Drainage Piping & Fittings","disc":"PLU","stage":"INS","seq":1},{"id":"PLU-02","title":"Installation of Above Ground uPVC & Sound Proof Drainage Piping & Fitting","disc":"PLU","stage":"INS","seq":2},{"id":"PLU-03","title":"Installation of uPVC & HDPE High Pressure Piping, Fittings & Accessories","disc":"PLU","stage":"INS","seq":3},{"id":"PLU-04","title":"Installation of PPR & PEX Domestic Water Piping, Fittings & Accessories","disc":"PLU","stage":"INS","seq":4},{"id":"PLU-05","title":"Installation of Plumbing Pipe Supports & Hangers","disc":"PLU","stage":"INS","seq":5},{"id":"PLU-06","title":"Installation of Plumbing Pipe Insulation","disc":"PLU","stage":"INS","seq":6},{"id":"PLU-07","title":"Installation of Plumbing Valves, Pressure Reducing Valves (PRV), Pressure Gauges & Thermometers","disc":"PLU","stage":"INS","seq":7},{"id":"PLU-08","title":"Installation of Angle Valves, Bib Taps, Float Valves, Flexible Hoses & Automatic Air Vents","disc":"PLU","stage":"INS","seq":8},{"id":"PLU-09","title":"Installation of GRP Water Storage Tanks","disc":"PLU","stage":"INS","seq":9},{"id":"PLU-10","title":"Installation of Plumbing Pumps (Transfer / Booster / Circulation / Sump / CDP)","disc":"PLU","stage":"INS","seq":10},{"id":"PLU-11","title":"Installation of Electric Water Heaters","disc":"PLU","stage":"INS","seq":11},{"id":"PLU-12","title":"Pressure Testing, Flushing, Disinfection & Sterilization of Domestic Water System","disc":"PLU","stage":"TC","seq":12},{"id":"PLU-13","title":"Testing & Commissioning of Plumbing System (Pumps, Water Heaters, Sanitary wares and accessories)","disc":"PLU","stage":"TC","seq":13},{"id":"ELE-01","title":"Installation of Earthing & Lightning Protection System","disc":"ELE","stage":"INS","seq":1},{"id":"ELE-02","title":"Installation of PVC & GI Conduits, Back Boxes & Accessories","disc":"ELE","stage":"INS","seq":2},{"id":"ELE-03","title":"Installation of uPVC Cable Ducts & Underground Cable Route Works","disc":"ELE","stage":"INS","seq":3},{"id":"ELE-04","title":"Installation of Cable Trays, Trunking, Ladders & Supports","disc":"ELE","stage":"INS","seq":4},{"id":"ELE-05","title":"Installation of LV Power & Control Cables, Glands, Lugs & Terminations","disc":"ELE","stage":"INS","seq":5},{"id":"ELE-06","title":"Installation of Fire Rated & Heat Resistant Cables","disc":"ELE","stage":"INS","seq":6},{"id":"ELE-07","title":"Installation of LV Switchgear (MDB / SMDB / DB / ATS / MCC / Control Panels)","disc":"ELE","stage":"INS","seq":7},{"id":"ELE-08","title":"Installation of Busbar Trunking System","disc":"ELE","stage":"INS","seq":8},{"id":"ELE-09","title":"Installation of Wiring Accessories, Isolators, Floor Boxes & Ceiling Roses","disc":"ELE","stage":"INS","seq":9},{"id":"ELE-10","title":"Installation of Lighting Fixtures & Lighting Control System","disc":"ELE","stage":"INS","seq":10},{"id":"ELE-11","title":"Installation of Central Battery Emergency Lighting System","disc":"ELE","stage":"INS","seq":11},{"id":"ELE-12","title":"Installation of UPS & Kilowatt-Hour (Energy) Meters","disc":"ELE","stage":"INS","seq":12},{"id":"ELE-13","title":"Installation of Diesel Generator & Associated Works","disc":"ELE","stage":"INS","seq":13},{"id":"ELE-14","title":"Installation of EV Chargers","disc":"ELE","stage":"INS","seq":14},{"id":"ELE-15","title":"Installation of Fire Alarm, Voice Evacuation, Master Telephone & Smoke Management System","disc":"ELE","stage":"INS","seq":15},{"id":"ELE-17","title":"Testing & Commissioning of Earthing & Lightning Protection System","disc":"ELE","stage":"TC","seq":17},{"id":"ELE-18","title":"Testing & Commissioning of LV Cables, Switchgear & Busbar Trunking","disc":"ELE","stage":"TC","seq":18},{"id":"ELE-19","title":"Testing & Commissioning of Diesel Generator, UPS & Central Battery System","disc":"ELE","stage":"TC","seq":19},{"id":"ELE-20","title":"Testing & Commissioning of Lighting, Lighting Control & Small Power Systems","disc":"ELE","stage":"TC","seq":20},{"id":"ELE-21","title":"Testing & Commissioning of Fire Alarm, Voice Evacuation & Smoke Management System","disc":"ELE","stage":"TC","seq":21},{"id":"ELV-01","title":"Installation of Structured Cabling System (Containment, Cabling, Racks & Outlets)","disc":"ELV","stage":"INS","seq":1},{"id":"ELV-02","title":"Installation of Security Systems (CCTV, Access Control & Security Intercom)","disc":"ELV","stage":"INS","seq":2},{"id":"ELV-03","title":"Installation of Audio Intercom & AV / BGM Systems","disc":"ELV","stage":"INS","seq":3},{"id":"ELV-04","title":"Installation of Parking Management System","disc":"ELV","stage":"INS","seq":4},{"id":"ELV-05","title":"Testing & Commissioning of Structured Cabling System","disc":"ELV","stage":"TC","seq":5},{"id":"ELV-06","title":"Testing & Commissioning of ELV Systems (CCTV, Access Control, Intercom, AV / BGM & Parking Management)","disc":"ELV","stage":"TC","seq":6},{"id":"FF-01","title":"Installation of Fire Protection Piping, Grooved Fittings, Valves & Supports","disc":"FF","stage":"INS","seq":1},{"id":"FF-02","title":"Installation of Sprinkler System, Fire Hose Reels & Fire Extinguishers","disc":"FF","stage":"INS","seq":2},{"id":"FF-03","title":"Installation of Fire Pump Set & Accessories","disc":"FF","stage":"INS","seq":3},{"id":"FF-04","title":"Installation of Clean Agent Fire Suppression System (NOVEC)","disc":"FF","stage":"INS","seq":4},{"id":"FF-05","title":"Installation of Foam Deluge System (Generator Room)","disc":"FF","stage":"INS","seq":5},{"id":"FF-06","title":"Installation of Firestop Systems & Penetration Sealing","disc":"FF","stage":"INS","seq":6},{"id":"FF-07","title":"Pressure Testing & Flushing of Fire Protection Piping Network","disc":"FF","stage":"TC","seq":7},{"id":"FF-08","title":"Testing & Commissioning of Fire Pump Set, Sprinkler & Suppression Systems","disc":"FF","stage":"TC","seq":8},{"id":"LPG-01","title":"Installation of LPG Piping, Fittings, Valves & Supports","disc":"LPG","stage":"INS","seq":1},{"id":"LPG-02","title":"Installation of LPG Tanks, Vaporizers, Gas Panels, Meters & Regulators","disc":"LPG","stage":"INS","seq":2},{"id":"LPG-03","title":"Installation of LPG Gas Detection System","disc":"LPG","stage":"INS","seq":3},{"id":"LPG-04","title":"Pressure Testing & Purging of LPG Piping Network","disc":"LPG","stage":"TC","seq":4},{"id":"LPG-05","title":"Testing & Commissioning of LPG System & Gas Detection System","disc":"LPG","stage":"TC","seq":5},{"id":"MEP-05","title":"Installation of MEP Sleeves, Box Outs and Puddle Flanges","disc":"MEP","stage":"INS","seq":1},{"id":"MEP-02","title":"Installation of MEP Identification Labels & Colour Coding","disc":"MEP","stage":"INS","seq":2},{"id":"MEP-03","title":"Integrated Systems Testing (IST) of MEP & Life Safety Systems","disc":"MEP","stage":"TC","seq":3}]};
+const MSG_EMIRATE = { DXB: 'dubai', AUH: 'abudhabi', SHJ: 'sharjah', AJM: 'northern', RAK: 'northern', FUJ: 'northern', UAQ: 'northern' };
+const msgUp = v => String(v || '').replace(/\s+/g, ' ').trim().toUpperCase();
+const msgCode = p => String(p.code || p.no || '').replace(/\s+/g, '').toUpperCase();
+function msgConsultants(p) {
+  const lead = realName(p.leadConsultant), mep = realName(p.mepConsultant), out = [];
+  if (lead) out.push({ k: 'lead', label: 'Lead consultant', name: lead });
+  if (mep && (!lead || mep.toLowerCase() !== lead.toLowerCase())) out.push({ k: 'mep', label: 'MEP consultant', name: mep });
+  return out;   // the first is the default: the lead consultant when there is one, as in the user's own MSRA projects
+}
+function msgFields(p, cons) {
+  const code = msgCode(p), name = msgUp(p.name), lv = msgUp(p.levels), area = msgUp(p.area);
+  const full = [name + (lv ? ` (${lv})` : ''), area].filter(Boolean).join(', ') + (code ? ` (${code})` : '');
+  return { name: full, cover1: full, code, projNo: code, emirate: MSG_EMIRATE[p.emirate] || 'dubai', client: msgUp(realName(p.client)), consultant: msgUp(cons || ''), mainContractor: msgUp(realName(p.mainContractor)), mepContractor: 'OXYPRO ELECTROMECHANICAL WORKS LLC' };
+}
+async function msgLogo(name) {
+  const lg = logoOf(name); if (!lg) return null;
+  const img = await loadImg(logoUrl(lg.id)), k = Math.min(1, 700 / img.naturalWidth);
+  const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  return { data: c.toDataURL('image/png'), w: c.width, h: c.height };
+}
+async function msgFile(p, cons, slot) {
+  const f = msgFields(p, cons), logos = {};
+  for (const [k, n] of [['client', realName(p.client)], ['consultant', cons], ['contractor', realName(p.mainContractor)]]) { try { const l = n && await msgLogo(n); if (l) logos[k] = l; } catch (e) { /* left out */ } }
+  let photo = null;
+  if (slot >= 0) {
+    try {
+      const c = await pqpCanvas(p, slot);
+      if (c) { const k = Math.min(1, 1600 / c.width), t = document.createElement('canvas'); t.width = Math.round(c.width * k); t.height = Math.round(c.height * k); const g = t.getContext('2d'); g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, t.width, t.height); g.drawImage(c, 0, 0, t.width, t.height); photo = { data: t.toDataURL('image/jpeg', 0.86), w: t.width, h: t.height }; }
+    } catch (e) { /* no photo */ }
+  }
+  return {
+    v: 1,
+    project: { name: f.name, cover1: f.cover1, cover2: '', cover3: '', code: f.code, emirate: f.emirate, area: '', client: f.client, consultant: f.consultant, mainContractor: f.mainContractor, mepContractor: f.mepContractor,
+      projNo: f.projNo, raClientHse: 'no', ra: { ec: {}, ap: {} }, desOxy: 'QA/QC Engineer', desMc: 'MEP Coordinator', desCons: 'Project Engineer', nameOxy: '', nameMc: '', nameCons: '', logos, photo, sample: false },
+    settings: Object.assign({}, MSG_STD.settings, { disc: Object.assign({}, MSG_STD.settings.disc), date: today() }),
+    register: MSG_STD.list.map(a => ({ key: a.id, libId: a.id, title: a.title, disc: a.disc, stage: a.stage, seq: a.seq, related: '', selected: false, docNo: '', rev: '', area: '', raRef: '', specSections: '' })),
+    stdList: 2, edits: {}, custom: {}, specs: [], stdSel: {}, specSectionList: [], transmittals: [], ui: { view: 'register', filter: 'ALL' },
+    fromLibrary: { app: 'Oxypro Project Library ' + APP_VERSION, project: p.no, saved: new Date().toISOString() }
+  };
+}
+const msgFileName = p => safeName(['MS Project', msgCode(p), p.name || 'Untitled project'].filter(Boolean).join(' - ')) + '.json';
+function openMsraGen(no) {
+  const p = S.projects.get(no); if (!p) return;
+  const cons = msgConsultants(p), phs = photosOf(p);
+  let ci = 0, slot = phs.findIndex(Boolean);
+  const tiles = phs.map((x, i) => x ? `<button type="button" class="ptile" data-mg-ph="${i}" aria-pressed="${i === slot}" aria-label="Use ${i === 0 ? 'the main photo' : SLOT_NAMES[i].toLowerCase()}"><img src="${esc(blobUrl(x.id))}" alt="" style="object-position:${+x.x || 50}% ${+x.y || 50}%"><span class="pt-cap">${i === 0 ? 'Main photo' : esc(SLOT_NAMES[i])}</span></button>` : '').join('')
+    + `<button type="button" class="ptile" data-mg-ph="-1" aria-pressed="${slot < 0}">No photo<small>The cover shows no photo</small></button>`;
+  openModal(`<div class="dialog">
+    <div class="dialog-head"><h2>Generate MSRA: ${esc(p.no)}</h2><button type="button" class="btn btn-ghost btn-sm" data-close>Close</button></div>
+    <div class="dialog-body">
+      <p style="margin:0">A project file for the <strong>Oxypro MSRA Generator</strong> with this project's details, the company logos and a cover photo.</p>
+      ${cons.length > 1 ? `<div class="field"><span class="flabel">Consultant on the MSRA</span><div class="mg-cons" role="radiogroup">${cons.map((c, i) => `<label><input type="radio" name="mg-cons" value="${i}"${i === 0 ? ' checked' : ''}> ${esc(c.name)} <span class="d-note">(${c.k === 'lead' ? 'lead consultant' : 'MEP consultant'})</span></label>`).join('')}</div></div>` : ''}
+      <div class="field"><span class="flabel">Logos</span><div class="mg-logos" id="mg-logos"></div><p class="d-note" id="mg-logo-note" style="margin:0"></p></div>
+      <div class="field"><span class="flabel">Cover photo</span>
+        <p class="d-note" style="margin:0">${slot >= 0 ? 'Use the main photo, or choose another photo of this project from the library.' : 'This project has no photos in the library yet.'}</p>
+        <div class="ptiles mg-ph" role="group" aria-label="Cover photo">${tiles}</div></div>
+      <div class="imp-table mg-table"><table><thead><tr><th>MSRA Generator field</th><th>From the Library</th></tr></thead><tbody id="mg-rows"></tbody></table></div>
+      <p style="margin:0">In the MSRA Generator choose <strong>Open project</strong> and pick the file. It opens as a new project with these details, the logos and the cover photo, and the standard list of ${MSG_STD.list.length} Method Statements (import the project's MS Log there to replace the list). <strong>Open project replaces the project open in the Generator, so save that one first.</strong></p>
+      <p class="err" id="mg-err" hidden></p>
+    </div>
+    <div class="dialog-foot"><button type="button" class="btn btn-primary" id="mg-go">Save MSRA project file</button></div>
+  </div>`);
+  const consName = () => cons[ci] ? cons[ci].name : '';
+  const draw = () => {
+    const f = msgFields(p, consName()), em = { dubai: 'Dubai', abudhabi: 'Abu Dhabi', sharjah: 'Sharjah', northern: 'Northern Emirates' }[f.emirate];
+    $('#mg-rows').innerHTML = [['Project name', f.name], ['Project code (document numbers)', f.code], ['RA Project No.', f.projNo], ['Emirate / jurisdiction', em], ['Client', f.client || '–'],
+      ['Consultant', f.consultant || '–'], ['Main Contractor', f.mainContractor || '–'], ['MEP Contractor', f.mepContractor], ['Cover page line 1', f.cover1],
+      ['Method Statements', `Standard list of ${MSG_STD.list.length}`], ['Cover photo', slot < 0 ? 'None' : slot === 0 ? 'Main photo' : SLOT_NAMES[slot]]]
+      .map(([l, v]) => `<tr><td>${esc(l)}</td><td>${esc(v)}</td></tr>`).join('');
+    const ls = [['Client', realName(p.client)], ['Consultant', consName()], ['Main contractor', realName(p.mainContractor)]], miss = [];
+    $('#mg-logos').innerHTML = ls.map(([lab, n]) => { const lg = n && logoOf(n); if (n && !lg) miss.push(n);
+      return `<div class="lg-tile"><div class="lg-img${lg ? '' : ' none'}">${lg ? `<img src="${esc(logoUrl(lg.id))}" alt="">` : 'No logo'}</div><div class="lg-cap"><b>${esc(lab)}</b><span>${esc(n || '–')}</span></div></div>`; }).join('');
+    $('#mg-logo-note').textContent = miss.length ? `No logo in the library for ${joinAnd(miss)}: add it under Company logos on this project${GH ? ' in the live library' : ''}, or upload it in the MSRA Generator.` : '';
+  };
+  draw();
+  document.querySelector('.mg-ph').addEventListener('click', e => { const b = e.target.closest('[data-mg-ph]'); if (!b) return; slot = +b.dataset.mgPh; document.querySelectorAll('[data-mg-ph]').forEach(x => x.setAttribute('aria-pressed', String(+x.dataset.mgPh === slot))); draw(); });
+  document.querySelectorAll('input[name="mg-cons"]').forEach(r => r.addEventListener('change', () => { ci = +r.value; draw(); }));
+  $('#mg-go').addEventListener('click', async () => {
+    const btn = $('#mg-go'), label = btn.textContent; btn.disabled = true; btn.textContent = 'Preparing…';
+    try {
+      const ok = await saveFile(msgFileName(p), new Blob([JSON.stringify(await msgFile(p, consName(), slot))], { type: 'application/json' }));
+      if (ok) closeModal(); else { btn.disabled = false; btn.textContent = label; }
+    } catch (e) { const er = $('#mg-err'); er.textContent = 'The file could not be made: ' + ((e && e.message) || e); er.hidden = false; btn.disabled = false; btn.textContent = label; }
+  });
+}
+
 /* QA/QC on a project: a menu with the PQP and the MSRA Log */
 function qaqcHTML(p) {
   return `<div class="qmenu"><button type="button" class="btn" id="btn-qaqc" data-act="qaqc" aria-haspopup="menu" aria-expanded="false" aria-controls="qaqc-menu">${GLYPH.qaqc}QA/QC${GLYPH.chev}</button>
     <div class="menu" id="qaqc-menu" role="menu" aria-label="QA/QC" hidden>
       <button type="button" class="menu-item" role="menuitem" data-act="pqp"><span><b>PQP details and file</b><small>Project Quality Plan in PQP Maker, or a PQP file</small></span></button>
       ${msMenuItemHTML(p)}
+      <button type="button" class="menu-item" role="menuitem" data-act="msragen"><span><b>Generate MSRA</b><small>Project file for the MSRA Generator: details and logos</small></span></button>
     </div></div>`;
 }
 function closeQaqc(focus) {
@@ -1209,6 +1399,8 @@ function bindLibrary() {
   $('#detail').addEventListener('click', e => {
     const up = e.target.closest('[data-pm-up]'); if (up) { S.fileTarget = { kind: 'library', no: S.active, slot: +up.dataset.pmUp }; $('#file-photo').value = ''; $('#file-photo').click(); return; }
     const rm = e.target.closest('[data-pm-rm]'); if (rm) { S.pmConfirm = +rm.dataset.pmRm; renderDetail(); return; }
+    const lu = e.target.closest('[data-lg-up]'); if (lu) { S.logoTarget = { no: S.active, f: lu.dataset.lgUp }; $('#file-logo').value = ''; $('#file-logo').click(); return; }
+    const lr = e.target.closest('[data-lg-rm]'); if (lr) { S.lgConfirm = { no: S.active, f: lr.dataset.lgRm }; renderDetail(); return; }
     const act = e.target.closest('[data-act]'); if (act) handleAct(act.dataset.act);
   });
   $('#btn-add').addEventListener('click', () => openEdit(null));
@@ -1217,6 +1409,7 @@ function bindLibrary() {
   $('#sel-clear').addEventListener('click', () => { S.selected.clear(); renderList(); renderDetail(); renderSelbar(); });
   $('#sel-make').addEventListener('click', () => openPres([...S.selected].sort((a, b) => numOf(a) - numOf(b))));
   $('#file-photo').addEventListener('change', onPhotoFile);
+  $('#file-logo').addEventListener('change', onLogoFile);
   $('#file-xlsx').addEventListener('change', onXlsxFile);
 }
 async function handleAct(act) {
@@ -1232,6 +1425,9 @@ async function handleAct(act) {
     case 'qaqc': return toggleQaqc();
     case 'pqp': closeQaqc(); if (p) openPqp(p.no); return;
     case 'msra': closeQaqc(); if (p) openMsra(p.no); return;
+    case 'msragen': closeQaqc(); if (p) openMsraGen(p.no); return;
+    case 'lg-rm-yes': return removeLogo();
+    case 'lg-rm-no': S.lgConfirm = null; return renderDetail();
     case 'hse': if (p) openHse(p.no); return;
     case 'del': S.delConfirm = S.active; return renderDetail();
     case 'del-no': S.delConfirm = null; return renderDetail();
@@ -3001,6 +3197,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.13.0', '30 Oct 2026', 'QA/QC > Generate MSRA: a project file for the MSRA Generator with the project details, the client, consultant and main contractor logos and a cover photo. Company logos on each project, kept once per company.'],
   ['1.12.2', '29 Oct 2026', 'New app icon: the Oxypro Library open book, for the page, the shortcuts and the GitHub edition.'],
   ['1.12.1', '29 Oct 2026', 'HSE Plan Maker is online: HSE > Open in HSE Plan Maker opens it with the project and copies the cover photo for pasting there.'],
   ['1.12.0', '29 Oct 2026', 'QA/QC and HSE on each project: QA/QC opens a menu with PQP details and file and the MSRA Log; HSE sends the project and a cover photo of your choice (the main photo, another library photo or none) to HSE Plan Maker.'],
@@ -3026,13 +3223,14 @@ function openAbout() {
       <div class="about-card">
         <img class="about-icon" src="data:image/png;base64,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" alt="" width="64" height="64">
         <div><div class="about-name">Oxypro Project Library</div><div class="about-ver">Version ${APP_VERSION} · ${APP_DATE}${GH ? ` · GitHub edition, projects as of ${esc(SNAP_DATE)}` : ''}${n ? ` · ${n} projects` : ''}</div>
-          <p class="about-tag">One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, QA/QC (the PQP hand-off to PQP Maker and each project's Method Statement Log) and HSE (the hand-off to HSE Plan Maker).</p></div>
+          <p class="about-tag">One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, QA/QC (the PQP hand-off to PQP Maker and each project's Method Statement Log and the MSRA Generator project file) and HSE (the hand-off to HSE Plan Maker).</p></div>
       </div>
       <section><h3>What it does</h3>
         <ul>
           <li><b>Projects:</b> search and filter by emirate, status and sector; each project shows its details from the Projects Master List and up to five photos.</li>
           <li><b>Presentations:</b> select one or more projects for a top sheet, an Oxypro Project Presentation Sheet per project and a summary page, as PDF or PowerPoint; View / Present runs them full screen first.</li>
-          <li><b>QA/QC:</b> <b>PQP details and file</b> opens PQP Maker with the project's PQP already created, or saves a PQP file. <b>MSRA Log</b> is the project's Method Statement Submittal Log in the Oxypro template, with the Summary, seven discipline logs and the planner's MSL, saved as Excel or PDF.</li>
+          <li><b>QA/QC:</b> <b>PQP details and file</b> opens PQP Maker with the project's PQP already created, or saves a PQP file. <b>MSRA Log</b> is the project's Method Statement Submittal Log in the Oxypro template, with the Summary, seven discipline logs and the planner's MSL, saved as Excel or PDF. <b>Generate MSRA</b> saves a project file for the MSRA Generator with the project's details, the client, consultant and main contractor logos and a cover photo.</li>
+          <li><b>Company logos:</b> one logo per client, consultant and contractor, shown on every project with that company.</li>
           <li><b>HSE:</b> sends the project's details and a cover photo of your choice to HSE Plan Maker for the Project HSE Plan.</li>
           <li><b>Master List:</b> add projects, import from the Projects Master List (Excel) and export the whole list in the same layout.</li>
         </ul></section>
@@ -3042,6 +3240,7 @@ function openAbout() {
           <li>For a presentation, tick the projects and choose <b>Make presentation</b>, or use <b>New presentation sheet</b> on one project. Adjust photos and text, then <b>View / Present</b>, <b>Download PDF</b> or <b>Download PowerPoint</b>.</li>
           <li>For a PQP, open the project, choose <b>QA/QC</b> and then <b>PQP details and file</b>, pick the cover photo, then <b>Open in PQP Maker</b>.</li>
           <li>For the Method Statement Log, choose <b>QA/QC</b> and then <b>Create MSRA Log</b> (or <b>Open MSRA Log</b>). Use <b>Edit</b> to change it, <b>Save to library</b> to keep it, <b>Save as</b> for Excel or PDF and <b>Print</b> for a print-ready PDF.</li>
+          <li>For the MSRA Generator, choose <b>QA/QC</b> and then <b>Generate MSRA</b>, pick the consultant (when there are two) and the cover photo, then <b>Save MSRA project file</b>. In the MSRA Generator choose <b>Open project</b> and pick the file (save the project open there first).</li>
           <li>For an HSE Plan, choose <b>HSE</b>, keep the main photo or pick another one (or no photo), then <b>Open in HSE Plan Maker</b> and paste the photo there with Ctrl+V. Or <b>Save HSE Plan file</b>, then in HSE Plan Maker choose <b>Import project</b> and pick the file.</li>
           <li>Click <b>Project Library</b> at the top to come back to the list from any page. <b>View</b> switches between Light, Dark and Auto.</li>
         </ol></section>
@@ -3052,7 +3251,7 @@ ${GH ? `<li>This is the GitHub edition: the projects and photos are a copy of th
           <li>Files you make (PDF, PowerPoint, Excel, PQP files) are downloaded to your device; Print opens the PDF for printing.</li>` : `<li>Projects, photos and MSRA Logs are kept in this shared library in Claude. Everyone with the link sees the same, up-to-date list.</li>
           <li>Only the library's owner and editors can add or change projects, photos and MSRA Logs${w ? ' (you can)' : ' (you can view, make presentations and download files)'}.</li>
           <li>Files you make (PDF, PowerPoint, Excel, PQP files) are downloaded to your device. Printing is done from the downloaded PDF, as Claude cannot open the print window.</li>`}
-          <li>Open in PQP Maker and Open in HSE Plan Maker pass the project's text details in their link; the cover photo goes by copy and paste. The HSE Plan file holds the project's details and the cover photo you chose. Nothing else leaves the library.</li>
+          <li>Open in PQP Maker and Open in HSE Plan Maker pass the project's text details in their link; the cover photo goes by copy and paste. The HSE Plan file holds the project's details and the cover photo you chose; the MSRA project file also holds the company logos. Nothing else leaves the library.</li>
         </ul></section>
       <section><h3>Related</h3>
         <ul>
@@ -4295,6 +4494,10 @@ async function boot() {
     for (const n of [...S.selected]) if (!m.has(n)) S.selected.delete(n);
     renderAll();
   }, err => { S.dbState = 'error'; S.dbError = (err && err.code) || ''; renderAll(); });
+  DB.collection('logos').onSnapshot(snap => {
+    const m = new Map(); snap.docs.forEach(d => { if (d.exists) { const x = d.data(); if (x && x.id) m.set(d.id, x); } });
+    S.logos = m; if (S.view === 'library') renderDetail();
+  }, () => {});
   DB.collection('mslogmeta').onSnapshot(snap => {
     const m = new Map(); snap.docs.forEach(d => { if (d.exists) m.set(d.id, d.data()); });
     S.msMeta = m; if (S.view === 'library') renderDetail();
