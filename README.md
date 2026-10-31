@@ -12,7 +12,7 @@ This repository holds the source code and the GitHub edition website. The app ru
 
 `docs/` is the same Library as a plain website that runs without Claude, for GitHub Pages:
 
-- The projects, photos and company logos are a copy of the library as of 30 Oct 2026 (`github/snapshot.json`, `docs/photos/`). They are read-only here: no Add, Import, Edit or photo upload. Changes are made in the Claude library and copied here with a new snapshot.
+- The projects, photos and company logos are a copy of the library as of 31 Oct 2026 (`github/snapshot.json`, `docs/photos/`). They are read-only here: no Add, Import, Edit or photo upload. Changes are made in the Claude library and copied here with a new snapshot.
 - Presentations (PDF, PowerPoint), Export to Excel, QA/QC (PQP details and file, the MSRA Log) and HSE all work. MSRA Logs are saved in the visitor's browser on that device; Save as gives the Excel or PDF to keep or share. Print opens the PDF in a new tab.
 - `src/github/runtime.js` stands in for Claude's runtime (`window.claude`); the page code is the same as the Claude edition.
 

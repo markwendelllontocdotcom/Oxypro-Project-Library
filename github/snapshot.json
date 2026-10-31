@@ -1,5 +1,5 @@
 {
- "date": "30 Oct 2026",
+ "date": "31 Oct 2026",
  "taken": "2026-10-27T14:00:00Z",
  "projects": {
   "P100": {
@@ -304,7 +304,7 @@
    "duration": "",
    "emirate": "DXB",
    "leadConsultant": "Loci",
-   "levels": "",
+   "levels": "B+G+7P+Roof",
    "mainContractor": "McLaren Construction Group",
    "mepConsultant": "Consistent Engineering Consultants",
    "name": "Dubai Harbour (West) Car Park",
@@ -336,7 +336,7 @@
    "scopeType": "",
    "sectors": "Smart Parking Facility",
    "status": "Handover Stage",
-   "updatedAt": "2026-10-27T09:30:00.000Z",
+   "updatedAt": "2026-10-31T06:20:00.000Z",
    "value": "",
    "year": "2025-26"
   },
@@ -680,7 +680,7 @@
    "duration": "",
    "emirate": "SHJ",
    "leadConsultant": "na",
-   "levels": "2B+G+5-7+ROOF",
+   "levels": "2B+G+5-7+Roof",
    "mainContractor": "Roberts and Co.",
    "mepConsultant": "LACASA Architects & Engineering Consultants",
    "name": "Central Business District (CBD) Phase 2",
@@ -716,7 +716,7 @@
    "scopeType": "",
    "sectors": "Commercial Offices, Business Hub, Retail Spaces",
    "status": "Ongoing",
-   "updatedAt": "2026-10-29T14:40:00.000Z",
+   "updatedAt": "2026-10-31T06:20:00.000Z",
    "value": "",
    "year": "2026-28"
   },
@@ -730,7 +730,7 @@
    "duration": "",
    "emirate": "AUH",
    "leadConsultant": "Mirage Leisure & Development",
-   "levels": "",
+   "levels": "B+G+4-5+Rroof",
    "mainContractor": "Rowad Modern Engineering",
    "mepConsultant": "GCE Consultants",
    "name": "Marina Apartments MUA3 MUA4",
@@ -758,7 +758,7 @@
    "scopeType": "",
    "sectors": "Residential & Commercial Building",
    "status": "Ongoing",
-   "updatedAt": "2026-10-27T09:30:00.000Z",
+   "updatedAt": "2026-10-31T06:20:00.000Z",
    "value": "",
    "year": "2026-28"
   },
@@ -813,165 +813,179 @@
  },
  "logos": {
   "al-ansari-real-estate-development": {
-   "name": "Al Ansari Real Estate Development",
-   "id": "d13db93aa1f64d96da31aabce4ecbf29",
-   "w": 651,
    "h": 180,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "d13db93aa1f64d96da31aabce4ecbf29",
+   "name": "Al Ansari Real Estate Development",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 651
   },
   "al-futtaim-engineering-afe-contracting": {
-   "name": "Al Futtaim Engineering (AFE)Contracting",
-   "id": "1c893f4e6d204323459c3929216ea9f8",
-   "w": 700,
    "h": 149,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "1c893f4e6d204323459c3929216ea9f8",
+   "name": "Al Futtaim Engineering (AFE)Contracting",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 700
   },
   "al-masaood-national-general-contracting": {
-   "name": "Al Masaood National General Contracting LLC",
-   "id": "e6681dbf7687233424a1eebe85d325f4",
-   "w": 148,
    "h": 147,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "e6681dbf7687233424a1eebe85d325f4",
+   "name": "Al Masaood National General Contracting LLC",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 148
   },
   "al-wasl-al-jadeed-consultants": {
-   "name": "Al Wasl Al Jadeed Consultants",
-   "id": "da233597d8659974637dab74c7ba0ed2",
-   "w": 700,
    "h": 356,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "da233597d8659974637dab74c7ba0ed2",
+   "name": "Al Wasl Al Jadeed Consultants",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 700
   },
   "arada-developments": {
-   "name": "Arada Developments LLC",
-   "id": "b804f95f7a5983af9fff10986a7e27c1",
-   "w": 700,
    "h": 112,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "b804f95f7a5983af9fff10986a7e27c1",
+   "name": "Arada Developments LLC",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 700
   },
   "archcorp-architectural-engineering": {
-   "name": "Archcorp Architectural Engineering",
-   "id": "03c349280275dee13e77ba51b16082d5",
-   "w": 223,
    "h": 49,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "03c349280275dee13e77ba51b16082d5",
+   "name": "Archcorp Architectural Engineering",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 223
   },
   "architecture-and-planning-group-apg": {
-   "name": "Architecture and Planning Group (APG)",
-   "id": "ec775d7181d0fae672163ae3b0450ddb",
-   "w": 700,
    "h": 123,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "ec775d7181d0fae672163ae3b0450ddb",
+   "name": "Architecture and Planning Group (APG)",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 700
   },
   "avantime-ltd-eagle-wing": {
-   "name": "Avantime Ltd. | Eagle Wing",
-   "id": "47a7604a79dca3ef14f1c074f73d474b",
-   "w": 276,
    "h": 139,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "47a7604a79dca3ef14f1c074f73d474b",
+   "name": "Avantime Ltd. | Eagle Wing",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 276
+  },
+  "bur-juman-centre": {
+   "name": "Bur Juman Centre LLC",
+   "id": "ca66d31c7e1730d7161f5eac107ceac3",
+   "w": 700,
+   "h": 168,
+   "updatedAt": "2026-10-31T06:20:00.000Z"
   },
   "dutco-constructions": {
-   "name": "Dutco Constructions Co. LLC",
-   "id": "d67bfb103afed7d5f8646ee19f9020db",
-   "w": 700,
    "h": 340,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "d67bfb103afed7d5f8646ee19f9020db",
+   "name": "Dutco Constructions Co. LLC",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 700
   },
   "eagle-hills-properties": {
-   "name": "Eagle Hills Properties",
-   "id": "bd70c3d722288883ffe49afc219e58a2",
-   "w": 89,
    "h": 130,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "bd70c3d722288883ffe49afc219e58a2",
+   "name": "Eagle Hills Properties",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 89
   },
   "emaar-properties": {
-   "name": "EMAAR Properties",
-   "id": "980b0e172dc3b8c845317f0fea46fe8c",
-   "w": 700,
    "h": 160,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "980b0e172dc3b8c845317f0fea46fe8c",
+   "name": "EMAAR Properties",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 700
   },
   "federal-engineering-consultants": {
-   "name": "Federal Engineering Consultants",
-   "id": "d7ab2030c40fd456e4e5a0e8de488c5f",
-   "w": 695,
    "h": 168,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "d7ab2030c40fd456e4e5a0e8de488c5f",
+   "name": "Federal Engineering Consultants",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 695
   },
   "high-beam-contracting": {
-   "name": "High Beam Contracting",
-   "id": "887144a5597893b05a868098d5b67c3c",
-   "w": 700,
    "h": 577,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "887144a5597893b05a868098d5b67c3c",
+   "name": "High Beam Contracting",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 700
   },
   "indogulf-contracting": {
-   "name": "IndoGulf Contracting Company Llc",
-   "id": "c538b22320e5fd197c2968167041b3a6",
-   "w": 671,
    "h": 235,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "c538b22320e5fd197c2968167041b3a6",
+   "name": "IndoGulf Contracting Company Llc",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 671
   },
   "lacasa-architects-and-engineering-consultants": {
-   "name": "LACASA Architects & Engineering Consultants",
-   "id": "b85e5ec10e24ce74ff607a59714086a1",
-   "w": 700,
    "h": 108,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "b85e5ec10e24ce74ff607a59714086a1",
+   "name": "LACASA Architects & Engineering Consultants",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 700
   },
   "mclaren-construction-group": {
-   "name": "McLaren Construction Group",
-   "id": "cc36aade0588b49eaac6dd2217ae3e65",
-   "w": 700,
    "h": 217,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "cc36aade0588b49eaac6dd2217ae3e65",
+   "name": "McLaren Construction Group",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 700
   },
   "mirage-leisure-and-development": {
-   "name": "Mirage Leisure & Development",
-   "id": "f23603025d43070d50095d93027c715f",
-   "w": 681,
    "h": 195,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "f23603025d43070d50095d93027c715f",
+   "name": "Mirage Leisure & Development",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 681
   },
   "mirfa-iconic": {
-   "name": "MIRFA | ICONIC",
-   "id": "9ee135bd368d1702454a553fc957d4a0",
-   "w": 700,
    "h": 111,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "9ee135bd368d1702454a553fc957d4a0",
+   "name": "MIRFA | ICONIC",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 700
   },
   "mirfa-serenity-real-estate-development": {
-   "name": "Mirfa Serenity Real Estate Development Llc",
-   "id": "6a8ff2d25cab57b43d361f2652a5f6f5",
-   "w": 700,
    "h": 248,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "6a8ff2d25cab57b43d361f2652a5f6f5",
+   "name": "Mirfa Serenity Real Estate Development Llc",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 700
   },
   "oxyporo-electromechanical-work": {
-   "name": "Oxyporo Electromechanical Work LLC",
-   "id": "3d1556ca8ec1fb18dad38b6833833298",
-   "w": 700,
    "h": 205,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "3d1556ca8ec1fb18dad38b6833833298",
+   "name": "Oxyporo Electromechanical Work LLC",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 700
   },
   "roberts-and": {
-   "name": "Roberts and Co.",
-   "id": "7278a4d81c3a79329e35e33419d8fecc",
-   "w": 700,
    "h": 1028,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "7278a4d81c3a79329e35e33419d8fecc",
+   "name": "Roberts and Co.",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 700
   },
   "rowad-modern-engineering": {
-   "name": "Rowad Modern Engineering",
-   "id": "7a1865c4e209bafa35e1eac6a177e234",
-   "w": 665,
    "h": 239,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "7a1865c4e209bafa35e1eac6a177e234",
+   "name": "Rowad Modern Engineering",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 665
   },
   "transemitares-contracting": {
-   "name": "Transemitares Contracting",
-   "id": "acde9c4487b751c300f518af80b3ead2",
-   "w": 700,
    "h": 193,
-   "updatedAt": "2026-10-30T13:30:00.000Z"
+   "id": "acde9c4487b751c300f518af80b3ead2",
+   "name": "Transemitares Contracting",
+   "updatedAt": "2026-10-30T13:30:00.000Z",
+   "w": 700
+  },
+  "wsp": {
+   "name": "WSP",
+   "id": "980478f6022da994a17b306cfd511dd7",
+   "w": 700,
+   "h": 333,
+   "updatedAt": "2026-10-31T06:20:00.000Z"
   }
  }
 }
