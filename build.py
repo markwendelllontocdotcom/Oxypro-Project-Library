@@ -6,12 +6,12 @@ ic=json.load(open(os.path.join(here,'build','app-icon.json')))
 for k,v in {'__APP_ICON32__':ic['icon32'],'__APP_ICON128__':ic['icon128'],'__APP_ICON180__':ic['icon180']}.items():
     assert k in s, k
     s=s.replace(k,v)
-for k,v in {'__LOGO_LIGHT__':a['logoLight'],'__LOGO_DARK__':a['logoDark'],'__CALADEA__':a['caladea'],'__CARLITO__':a['carlito'],'__CARLITOB__':a['carlitoBold']}.items():
+for k,v in {'__LOGO_LIGHT__':a['logoLight'],'__LOGO_DARK__':a['logoDark'],'__CARLITO__':a['carlito'],'__CARLITOB__':a['carlitoBold']}.items():
     assert k in s, k
     s=s.replace(k,v)
 ma=json.load(open(os.path.join(here,'build','msra-assets.json')))
 msjs='\n'.join(open(os.path.join(here,'src','msra',f)).read() for f in ['core.js','xlsx.js','pdf.js','ui.js'])
-for k,v in {'__MSRA_STD__':ma['std'],'__MSRA_LOGO__':ma['logo'],'__OPENSANS_R__':ma['osr'],'__OPENSANS_B__':ma['osb']}.items():
+for k,v in {'__MSRA_STD__':ma['std'],'__MSRA_LOGO__':ma['logo']}.items():
     assert k in msjs, k
     msjs=msjs.replace(k,v)
 for k,v in {'/*__MSRA_JS__*/':msjs,'/*__MSRA_CSS__*/':open(os.path.join(here,'src','msra','msra.css')).read()}.items():

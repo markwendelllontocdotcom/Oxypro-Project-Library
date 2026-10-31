@@ -1,6 +1,6 @@
 /* ---------- MSRA Log page ---------- */
 const MS_LOGO = 'data:image/png;base64,__MSRA_LOGO__';
-const MS_FONT_B64 = { r: '__OPENSANS_R__', b: '__OPENSANS_B__' };
+const msPdfFonts = () => ({ r: FONT_B64.carlito, b: FONT_B64.carlitoBold });   // Calibri metrics
 const MSV = { no: null, log: null, base: '', dirty: false, tab: 'SUM', mode: 'view', state: 'idle', err: '', remote: null, unsub: null, rm: null, mslFilter: 'all', busy: '', menu: false };
 // who may save: editors in Claude; anyone in the GitHub edition (saved in their browser)
 const msCanSave = () => GH || canWrite();
@@ -8,9 +8,7 @@ const MS_WHERE = GH ? 'this browser' : 'the library';
 const msProj = () => S.projects.get(MSV.no) || { no: MSV.no, name: '' };
 const msName = () => { const p = msProj(); return `${p.no} ${p.name || ''}`.trim(); };
 const msFileBase = () => { const p = msProj(); return safeName([p.code || p.no, p.name || 'Untitled project', 'Method Statement Log', 'Rev ' + ((MSV.log && MSV.log.rev) || '00')].join(' - ')); };
-const msFontsReady = (() => { let pr = null; return () => pr || (pr = (async () => {
-  try { for (const [w, k] of [['400', 'r'], ['700', 'b']]) { const f = new FontFace('Open Sans', b64ToBuf(MS_FONT_B64[k]), { weight: w }); await f.load(); document.fonts.add(f); } } catch (e) { /* the page falls back to the system font */ }
-})()); })();
+const msFontsReady = () => fontsReady;   // Carlito, loaded with the app
 
 function msMenuItemHTML(p) {
   const has = S.msMeta && S.msMeta.has(p.no);

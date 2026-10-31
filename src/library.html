@@ -2,9 +2,6 @@
 <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,__APP_ICON32__">
 <link rel="apple-touch-icon" href="data:image/png;base64,__APP_ICON180__">
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
 <style>
 /* Layout: Oxypro brand banner (logo + red tagline bar), filter row, project list beside a sticky detail panel;
    the presentation view swaps in an A4 landscape sheet editor (true-size sheet scaled to fit). */
@@ -22,8 +19,9 @@
   /* the presentation sheet is paper: same in both themes */
   --show-bg:#0D0F12; --show-fg:#F2F3F5; --show-muted:#A8ADB5; --show-line:rgba(255,255,255,.16); --show-hover:rgba(255,255,255,.1);
   --paper:#FFFFFF; --paper-ink:#2B2B2B; --paper-grey:#6E6E6E; --paper-red:#D81F27; --paper-frame:#ECECEC; --paper-ph:#B7B7B7;
-  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-  --f-cond:"Barlow Condensed","Arial Narrow","Barlow",system-ui,sans-serif;
+  /* Calibri everywhere; Carlito (built in, same letter widths) where Calibri is not installed */
+  --f-body:Calibri,Carlito,"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  --f-cond:Calibri,Carlito,"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -330,7 +328,7 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 .frame-empty:hover{background:rgba(216,31,39,.06);color:var(--paper-red)}
 .t{position:absolute;white-space:pre;color:var(--paper-ink);overflow:visible}
 .t-eyebrow{font:700 8.5pt/1.2 Carlito,Calibri,sans-serif;color:var(--paper-red)}
-.t-name{font-family:Caladea,Cambria,Georgia,serif;font-weight:400;line-height:1.08;font-size:30pt}
+.t-name{font-family:Carlito,Calibri,sans-serif;font-weight:400;line-height:1.08;font-size:30pt}
 .t-scope{font:400 10pt/1.25 Carlito,Calibri,sans-serif;color:var(--paper-grey)}
 .t-detv{font:400 10pt/1.2 Carlito,Calibri,sans-serif}
 .t-ico{position:absolute;width:.5cm;height:.5cm;color:var(--paper-red)}
@@ -597,7 +595,7 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.14.0 (31 Oct 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.15.0 (31 Oct 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -653,7 +651,7 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 (() => {
 'use strict';
 /* ---------- constants ---------- */
-const FONT_B64 = { caladea: '__CALADEA__', carlito: '__CARLITO__', carlitoBold: '__CARLITOB__' };
+const FONT_B64 = { carlito: '__CARLITO__', carlitoBold: '__CARLITOB__' };
 const LIBS = {
   jspdf: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
   pptx: 'https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.bundle.js',
@@ -661,7 +659,7 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.14.0';
+const APP_VERSION = '1.15.0';
 const APP_DATE = '31 Oct 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
@@ -736,10 +734,10 @@ function b64ToBuf(b) { const bin = atob(b); const u = new Uint8Array(bin.length)
 let toastTimer = null;
 function toast(msg, ms = 3800) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, ms); }
 
-/* sheet fonts (Caladea = Cambria metrics, Carlito = Calibri metrics), used by the preview and the PDF */
+/* Carlito = Calibri metrics: the app where Calibri is not installed, the presentation pages and the PDFs */
 const fontsReady = (async () => {
   try {
-    const faces = [new FontFace('Caladea', b64ToBuf(FONT_B64.caladea)), new FontFace('Carlito', b64ToBuf(FONT_B64.carlito), { weight: '400' }), new FontFace('Carlito', b64ToBuf(FONT_B64.carlitoBold), { weight: '700' })];
+    const faces = [new FontFace('Carlito', b64ToBuf(FONT_B64.carlito), { weight: '400' }), new FontFace('Carlito', b64ToBuf(FONT_B64.carlitoBold), { weight: '700' })];
     for (const f of faces) { await f.load(); document.fonts.add(f); }
   } catch (e) { /* preview falls back to system fonts */ }
 })();
@@ -772,9 +770,9 @@ function wrap(text, font, maxPx, maxLines) {
 function fitName(text) {
   const t = String(text || '').replace(/\s+/g, ' ').trim(); const max = TW * CM;
   if (!t) return { pt: 30, lines: [] };
-  for (let pt = 30; pt >= 20; pt--) if (measure(t, pt + 'pt Caladea') <= max) return { pt, lines: [t] };
-  for (let pt = 24; pt >= 16; pt--) { const ls = wrapAll(t, pt + 'pt Caladea', max); if (ls.length <= 2) return { pt, lines: ls }; }
-  return { pt: 16, lines: wrap(t, '16pt Caladea', max, 2) };
+  for (let pt = 30; pt >= 20; pt--) if (measure(t, pt + 'pt Carlito') <= max) return { pt, lines: [t] };
+  for (let pt = 24; pt >= 16; pt--) { const ls = wrapAll(t, pt + 'pt Carlito', max); if (ls.length <= 2) return { pt, lines: ls }; }
+  return { pt: 16, lines: wrap(t, '16pt Carlito', max, 2) };
 }
 function detailValue(sh, key) {
   if (key === 'client') return [sh.client, sh.mc].map(s => String(s || '').trim()).filter(s => s && !/^(n\/?a)$/i.test(s)).join(' / ');
@@ -2122,7 +2120,7 @@ const curDesign = () => (S.pres.cover && S.pres.cover.design) || S.coverDesign;
 // where the photo sits on each design (x, y, w, h in cm)
 const PHOTO_BOX = { A: [8.6, 0, 21.1, 12.4], B: [0, 3, 29.7, 10.6], C: [0, 0, 29.7, 21], D: [0, 0, 29.7, 21] };
 const LOGO_AR = 655 / 185;
-const FM = { Caladea: [0.9, 0.25], Carlito: [0.952, 0.2686] };
+const FM = { Carlito: [0.952, 0.2686] };
 const fontCss = t => `${t.bold ? '700 ' : ''}${t.pt}pt ${t.font}`;
 const textW = (str, t) => measure(str, fontCss(t)) / CM + (t.ls ? t.ls * t.pt * PT * str.length : 0);
 const alignX = (t, ln) => t.align === 'right' ? t.x + t.w - textW(ln, t) : t.align === 'center' ? t.x + (t.w - textW(ln, t)) / 2 : t.x;
@@ -2167,8 +2165,8 @@ function coverPhoto(cv, sheets, design) {
 }
 function fitTitle(str, maxW, big, small) {
   const t = String(str || '').replace(/\s+/g, ' ').trim(); if (!t) return { pt: big, lines: [] };
-  for (let pt = big; pt >= small; pt -= 2) { const ls = wrapAll(t, pt + 'pt Caladea', maxW * CM); if (ls.length <= 2) return { pt, lines: ls }; }
-  return { pt: small, lines: wrap(t, small + 'pt Caladea', maxW * CM, 2) };
+  for (let pt = big; pt >= small; pt -= 2) { const ls = wrapAll(t, pt + 'pt Carlito', maxW * CM); if (ls.length <= 2) return { pt, lines: ls }; }
+  return { pt: small, lines: wrap(t, small + 'pt Carlito', maxW * CM, 2) };
 }
 // eyebrow, title, red rule, subtitle, prepared for and date; returns where the block ends
 function coverText(T, R, cv, o) {
@@ -2176,7 +2174,7 @@ function coverText(T, R, cv, o) {
   T.push({ str: COMPANY.eyebrow, x: X, y, w: W, font: 'Carlito', bold: true, pt: 9, ls: 0.14, color: pal.eyebrow, align: al });
   y += 0.62;
   const tt = fitTitle(cv.title, W, o.big, o.big - 10);
-  if (tt.lines.length) { T.push({ lines: tt.lines, x: X, y, w: W, font: 'Caladea', pt: tt.pt, lh: 1.08, color: pal.title, align: al }); y += tt.lines.length * tt.pt * 1.08 * PT; }
+  if (tt.lines.length) { T.push({ lines: tt.lines, x: X, y, w: W, font: 'Carlito', pt: tt.pt, lh: 1.08, color: pal.title, align: al }); y += tt.lines.length * tt.pt * 1.08 * PT; }
   R.push({ x: al === 'center' ? X + (W - 2) / 2 : X, y: y + 0.38, w: 2.0, h: 0.11, color: CRED }); y += 0.92;
   const sp = o.sub || 12, sub = cv.subtitle ? wrap(cv.subtitle, sp + 'pt Carlito', W * CM, 2) : [];
   if (sub.length) { T.push({ lines: sub, x: X, y, w: W, font: 'Carlito', pt: sp, lh: 1.3, color: pal.sub, align: al }); y += sub.length * sp * 1.3 * PT; }
@@ -2341,7 +2339,7 @@ function updateCoverText() {
   const lg = L.logo;
   fg.innerHTML = `<img class="cv-logo" src="${logoSrc(lg.dark)}" alt="Oxypro" style="left:${lg.x.toFixed(3)}cm;top:${lg.y}cm;height:${lg.h}cm;width:${(lg.h * LOGO_AR).toFixed(3)}cm">`
     + L.rects.map(r => `<span class="cv-rect" style="left:${r.x.toFixed(3)}cm;top:${r.y.toFixed(3)}cm;width:${r.w.toFixed(3)}cm;height:${r.h}cm;background:${r.color}"></span>`).join('')
-    + L.texts.map(t => `<div class="cv" style="left:${t.x.toFixed(3)}cm;top:${t.y.toFixed(3)}cm;width:${t.w.toFixed(3)}cm;font:${t.bold ? 700 : 400} ${t.pt}pt/${(t.pt * (t.lh || 1.2)).toFixed(2)}pt ${t.font === 'Caladea' ? 'Caladea,Cambria,Georgia,serif' : 'Carlito,Calibri,sans-serif'};color:${t.color};${t.ls ? `letter-spacing:${t.ls}em;` : ''}${t.align ? `text-align:${t.align};` : ''}">${esc((t.lines || [t.str]).join('\n'))}</div>`).join('');
+    + L.texts.map(t => `<div class="cv" style="left:${t.x.toFixed(3)}cm;top:${t.y.toFixed(3)}cm;width:${t.w.toFixed(3)}cm;font:${t.bold ? 700 : 400} ${t.pt}pt/${(t.pt * (t.lh || 1.2)).toFixed(2)}pt Carlito,Calibri,sans-serif;color:${t.color};${t.ls ? `letter-spacing:${t.ls}em;` : ''}${t.align ? `text-align:${t.align};` : ''}">${esc((t.lines || [t.str]).join('\n'))}</div>`).join('');
 }
 let thumbTok = 0, thumbTimer = 0;
 const queueThumbs = () => { clearTimeout(thumbTimer); thumbTimer = setTimeout(renderThumbs, 350); };
@@ -2483,7 +2481,7 @@ async function pptxCover(pptx, cv, sheets, I, strip) {
     const lines = t.lines || [t.str], lh = t.lh || 1.2;
     sl.addText(lines.join('\n'), {
       x: I(t.x), y: I(t.y), w: I(t.w), h: I(lines.length * t.pt * lh * PT + 0.12), margin: 0, valign: 'top', fit: 'none', paraSpaceBefore: 0, paraSpaceAfter: 0,
-      fontFace: t.font === 'Caladea' ? 'Cambria' : 'Calibri', fontSize: t.pt, bold: !!t.bold, color: t.color.slice(1), align: t.align || 'left',
+      fontFace: 'Calibri', fontSize: t.pt, bold: !!t.bold, color: t.color.slice(1), align: t.align || 'left',
       lineSpacing: Math.round(t.pt * lh * 10) / 10, ...(t.ls ? { charSpacing: Math.round(t.ls * t.pt * 10) / 10 } : {})
     });
   }
@@ -2558,7 +2556,7 @@ function summaryPages(cfg, sheets) {
   while (i < rows.length) {
     const T = [], R = [], first = !pages.length;
     T.push({ str: 'PROJECT SUMMARY', x: G.x, y: 1.2, w: 14, font: 'Carlito', bold: true, pt: 8.5, ls: 0.14, color: CRED });
-    T.push({ lines: wrap(`${cfg.title || 'Project Summary'}${first ? '' : ' (continued)'}`, '24pt Caladea', 20 * CM, 1), x: G.x, y: 1.65, w: 20, font: 'Caladea', pt: 24, lh: 1.08, color: '#1F2733' });
+    T.push({ lines: wrap(`${cfg.title || 'Project Summary'}${first ? '' : ' (continued)'}`, '24pt Carlito', 20 * CM, 1), x: G.x, y: 1.65, w: 20, font: 'Carlito', pt: 24, lh: 1.08, color: '#1F2733' });
     T.push({ str: `${n} project${n === 1 ? '' : 's'}  ·  ${date}`, x: G.x, y: 2.75, w: 14, font: 'Carlito', pt: 10.5, color: '#566070' });
     R.push({ x: G.x, y: 3.5, w: 2.0, h: 0.11, color: CRED });
     let y = G.top;
@@ -2593,7 +2591,7 @@ function specHTML(sp) {
     + (lg ? `<img class="cv-logo" src="${logoSrc(lg.dark)}" alt="Oxypro" style="left:${lg.x.toFixed(3)}cm;top:${lg.y}cm;height:${lg.h}cm;width:${(lg.h * LOGO_AR).toFixed(3)}cm">` : '')
     + sp.rects.map(r => `<span class="cv-rect" style="left:${r.x.toFixed(3)}cm;top:${r.y.toFixed(3)}cm;width:${r.w.toFixed(3)}cm;height:${r.h.toFixed(3)}cm;background:${r.color}"></span>`).join('')
     + (sp.images || []).map(m => `<img class="cv-img" src="${esc(m.src)}" alt="${esc(m.name || '')}" draggable="false" style="left:${m.x.toFixed(3)}cm;top:${m.y.toFixed(3)}cm;width:${m.w.toFixed(3)}cm;height:${m.h.toFixed(3)}cm">`).join('')
-    + sp.texts.map(t => `<div class="cv" style="left:${t.x.toFixed(3)}cm;top:${t.y.toFixed(3)}cm;width:${t.w.toFixed(3)}cm;font:${t.bold ? 700 : 400} ${t.pt}pt/${(t.pt * (t.lh || 1.2)).toFixed(2)}pt ${t.font === 'Caladea' ? 'Caladea,Cambria,Georgia,serif' : 'Carlito,Calibri,sans-serif'};color:${t.color};${t.ls ? `letter-spacing:${t.ls}em;` : ''}${t.align ? `text-align:${t.align};` : ''}">${esc((t.lines || [t.str]).join('\n'))}</div>`).join('');
+    + sp.texts.map(t => `<div class="cv" style="left:${t.x.toFixed(3)}cm;top:${t.y.toFixed(3)}cm;width:${t.w.toFixed(3)}cm;font:${t.bold ? 700 : 400} ${t.pt}pt/${(t.pt * (t.lh || 1.2)).toFixed(2)}pt Carlito,Calibri,sans-serif;color:${t.color};${t.ls ? `letter-spacing:${t.ls}em;` : ''}${t.align ? `text-align:${t.align};` : ''}">${esc((t.lines || [t.str]).join('\n'))}</div>`).join('');
 }
 async function specPdf(doc, sp) {
   if (sp.bg) doc.addImage(sp.bg, 'JPEG', 0, 0, 29.7, 21, undefined, 'FAST');
@@ -2615,7 +2613,7 @@ async function specPptx(pptx, sl, sp, I, strip) {
     const lines = t.lines || [t.str], lh = t.lh || 1.2;
     sl.addText(lines.join('\n'), {
       x: I(t.x), y: I(t.y), w: I(t.w), h: I(lines.length * t.pt * lh * PT + 0.1), margin: 0, valign: 'top', fit: 'none', paraSpaceBefore: 0, paraSpaceAfter: 0,
-      fontFace: t.font === 'Caladea' ? 'Cambria' : 'Calibri', fontSize: t.pt, bold: !!t.bold, color: t.color.slice(1), align: t.align || 'left',
+      fontFace: 'Calibri', fontSize: t.pt, bold: !!t.bold, color: t.color.slice(1), align: t.align || 'left',
       lineSpacing: Math.round(t.pt * lh * 10) / 10, ...(t.ls ? { charSpacing: Math.round(t.ls * t.pt * 10) / 10 } : {})
     });
   }
@@ -2729,7 +2727,7 @@ function refsPages(cfg) {
   const newPage = () => {
     const T = [], R = [], first = !pages.length;
     T.push({ str: 'REFERENCES', x: G.x, y: 1.2, w: 14, font: 'Carlito', bold: true, pt: 8.5, ls: 0.14, color: CRED });
-    T.push({ lines: wrap(`${cfg.title || REF_TITLE}${first ? '' : ' (continued)'}`, '24pt Caladea', 22 * CM, 1), x: G.x, y: 1.65, w: 22, font: 'Caladea', pt: 24, lh: 1.08, color: '#1F2733' });
+    T.push({ lines: wrap(`${cfg.title || REF_TITLE}${first ? '' : ' (continued)'}`, '24pt Carlito', 22 * CM, 1), x: G.x, y: 1.65, w: 22, font: 'Carlito', pt: 24, lh: 1.08, color: '#1F2733' });
     T.push({ str: `${n} compan${n === 1 ? 'y' : 'ies'}  ·  ${np} project${np === 1 ? '' : 's'}  ·  ${date}`, x: G.x, y: 2.75, w: 18, font: 'Carlito', pt: 10.5, color: '#566070' });
     R.push({ x: G.x, y: 3.5, w: 2.0, h: 0.11, color: CRED });
     pg = { texts: T, rects: R, images: [], logo: { dark: false, x: 28.4 - 1.15 * LOGO_AR, y: 1.25, h: 1.15 } }; pages.push(pg); y = G.top;
@@ -2916,7 +2914,6 @@ function downloadPdf() {
 }
 async function buildPdf(sheets, cover, summary, refs) {
   const doc = new window.jspdf.jsPDF({ orientation: 'landscape', unit: 'cm', format: 'a4', compress: true });
-  doc.addFileToVFS('Caladea.ttf', FONT_B64.caladea); doc.addFont('Caladea.ttf', 'Caladea', 'normal');
   doc.addFileToVFS('Carlito.ttf', FONT_B64.carlito); doc.addFont('Carlito.ttf', 'Carlito', 'normal');
   doc.addFileToVFS('CarlitoB.ttf', FONT_B64.carlitoBold); doc.addFont('CarlitoB.ttf', 'Carlito', 'bold');
   const icons = await iconPngs();
@@ -2930,7 +2927,7 @@ async function buildPdf(sheets, cover, summary, refs) {
     }
     const L = layoutSheet(sh);
     if (L.eyebrow.length) { const s = EYE_PT * PT; doc.setFont('Carlito', 'bold'); doc.setFontSize(EYE_PT); doc.setTextColor(216, 31, 39); doc.text(L.eyebrow[0], TX, EYE_TOP + 0.9417 * s); }
-    if (L.name.lines.length) { const s = L.name.pt * PT; doc.setFont('Caladea', 'normal'); doc.setFontSize(L.name.pt); doc.setTextColor(43, 43, 43); L.name.lines.forEach((ln, k) => doc.text(ln, TX, NAME_TOP + k * 1.08 * s + 0.865 * s)); }
+    if (L.name.lines.length) { const s = L.name.pt * PT; doc.setFont('Carlito', 'normal'); doc.setFontSize(L.name.pt); doc.setTextColor(43, 43, 43); L.name.lines.forEach((ln, k) => doc.text(ln, TX, NAME_TOP + k * 1.08 * s + 0.8817 * s)); }
     if (L.scope.length) { const s = 10 * PT; doc.setFont('Carlito', 'normal'); doc.setFontSize(10); doc.setTextColor(110, 110, 110); L.scope.forEach((ln, k) => doc.text(ln, TX, L.scopeTop + k * 1.25 * s + 0.9667 * s)); }
     doc.setFont('Carlito', 'normal'); doc.setFontSize(10); doc.setTextColor(43, 43, 43);
     for (const d of L.details) {
@@ -2967,7 +2964,7 @@ async function buildPptx(sheets, cover, summary, refs) {
     }
     const L = layoutSheet(sh); const base = { fontFace: 'Calibri', margin: 0, valign: 'top', fit: 'none', paraSpaceBefore: 0, paraSpaceAfter: 0 };
     if (L.eyebrow.length) sl.addText(L.eyebrow[0], { ...base, x: I(TX), y: I(EYE_TOP), w: I(TW), h: I(0.45), fontSize: EYE_PT, bold: true, color: 'D81F27' });
-    if (L.name.lines.length) sl.addText(L.name.lines.join('\n'), { ...base, fontFace: 'Cambria', x: I(TX), y: I(NAME_TOP), w: I(TW), h: I(L.name.lines.length * L.name.pt * 1.08 * PT + 0.1), fontSize: L.name.pt, color: '2B2B2B', lineSpacing: Math.round(L.name.pt * 1.08 * 10) / 10 });
+    if (L.name.lines.length) sl.addText(L.name.lines.join('\n'), { ...base, x: I(TX), y: I(NAME_TOP), w: I(TW), h: I(L.name.lines.length * L.name.pt * 1.08 * PT + 0.1), fontSize: L.name.pt, color: '2B2B2B', lineSpacing: Math.round(L.name.pt * 1.08 * 10) / 10 });
     if (L.scope.length) sl.addText(L.scope.join('\n'), { ...base, x: I(TX), y: I(L.scopeTop), w: I(TW), h: I(L.scope.length * 12.5 * PT + 0.1), fontSize: 10, color: '6E6E6E', lineSpacing: 12.5 });
     for (const d of L.details) {
       if (!d.lines.length) continue;
@@ -3259,6 +3256,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.15.0', '31 Oct 2026', 'Calibri in the whole app: every screen, the presentation pages (project names and page titles too) with their PDF and PowerPoint, and the MSRA Log sheet with its Excel and PDF. Where Calibri is not installed (phones, tablets) the app shows Carlito, which has the same letter widths; the PDFs carry Carlito too, as Calibri cannot be built into a file.'],
   ['1.14.0', '31 Oct 2026', 'References page as the last page of every presentation: the logos of the main contractors, consultants and clients in a grid, on a faded Oxypro pattern, a faded library photo or no background. Logos can be left out or added from your device.'],
   ['1.13.0', '30 Oct 2026', 'QA/QC > Generate MSRA: a project file for the MSRA Generator with the project details, the client, consultant and main contractor logos and a cover photo. Company logos on each project, kept once per company.'],
   ['1.12.2', '29 Oct 2026', 'New app icon: the Oxypro Library open book, for the page, the shortcuts and the GitHub edition.'],
@@ -3325,7 +3323,7 @@ ${GH ? `<li>This is the GitHub edition: the projects and photos are a copy of th
       <section><h3>What's new</h3>
         <dl class="about-changes">${ABOUT_CHANGES.map(([v, d, t]) => `<div><dt>${esc(v)}<small>${esc(d)}</small></dt><dd>${esc(t)}</dd></div>`).join('')}</dl></section>
       <p class="about-credit">Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-        Fonts: Barlow; Caladea and Carlito on the presentation sheets; Open Sans by Steve Matteson in the MSRA Log. Built with jsPDF, jsPDF-AutoTable, PptxGenJS, SheetJS and ExcelJS.</p>
+        Font: Calibri in the whole app, the presentation pages, the MSRA Log and the files they save (Carlito, a free font with the same letter widths as Calibri, where Calibri is not installed and inside the PDFs). Built with jsPDF, jsPDF-AutoTable, PptxGenJS, SheetJS and ExcelJS.</p>
     </div>
     <div class="dialog-foot"><button type="button" class="btn btn-primary" data-close>Close</button></div>
   </div>`);

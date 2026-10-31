@@ -3,7 +3,7 @@
 One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, QA/QC (the Project Quality Plan hand-off to PQP Maker and each project's Method Statement Log) and HSE (the hand-off to HSE Plan Maker).
 
 **Use the app:** [Oxypro Project Library on Claude](https://claude.ai/artifact/T3U712ufURSuMQTfsGDkMy) (shared as "Anyone with the link")
-**Version:** 1.14.0 (31 Oct 2026)
+**Version:** 1.15.0 (31 Oct 2026)
 **Developed by** Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.
 
 This repository holds the source code and the GitHub edition website. The app runs as a Claude artifact: its project list, photos and MSRA Logs live in the artifact's shared database and storage.
@@ -30,7 +30,7 @@ This repository holds the source code and the GitHub edition website. The app ru
 - **Company logos:** one logo per company (client, consultant, contractor), shown on every project with that company; editors add, replace or remove them on the project.
 - **PQP details and file:** opens [PQP Maker](https://markwendelllontocdotcom.github.io/MEP-PQP-Maker/) with the project's PQP already created (the cover photo goes by copy and paste), or saves a PQP file.
 - **HSE:** sends the project's details to HSE Plan Maker for the Project HSE Plan, with the main photo, another library photo or no photo as the cover. **Save HSE Plan file** saves them as `<code> - <name> - HSE Plan details.json`; in HSE Plan Maker choose Import project and pick the file. **Open in HSE Plan Maker** opens [HSE Plan Maker](https://markwendelllontocdotcom.github.io/HSE-Plan-Maker/) with the project in its link and copies the cover photo: HSE Plan Maker asks you to paste it (Ctrl+V), as PQP Maker does.
-- **MSRA Log:** each project's Method Statement Submittal Log in the Oxypro template (The Borough): Summary, seven discipline logs (MEC, PLU, ELE, ELV, FF, LPG, MEP), the planner's MSL and the master list. Start from the standard list of 72 method statements, the project's MSL or an empty log; edit, save to the library, save as Excel or PDF and print. Set in Open Sans.
+- **MSRA Log:** each project's Method Statement Submittal Log in the Oxypro template (The Borough): Summary, seven discipline logs (MEC, PLU, ELE, ELV, FF, LPG, MEP), the planner's MSL and the master list. Start from the standard list of 72 method statements, the project's MSL or an empty log; edit, save to the library, save as Excel or PDF and print. Set in Calibri, like the rest of the app.
 - **Master List:** add projects, import from the Projects Master List (Excel) and export the whole list in the same layout.
 - **View:** Light, Dark or Auto. The PROJECT LIBRARY title goes back to the list from any page. About explains the app and lists the changes.
 - **Icon:** the Oxypro Library open book, used for the browser tab, the home-screen shortcut and About (the book alone at 16 to 32 px, where the words cannot be read).
@@ -48,9 +48,9 @@ This repository holds the source code and the GitHub edition website. The app ru
 | `src/library.html` | The Library page (HTML, CSS and JavaScript in one file) with placeholders for the embedded assets |
 | `src/msra/` | The MSRA Log: `core.js` (standard list, counts, MSL reading and matching), `xlsx.js` (Excel in the template layout, ExcelJS), `pdf.js` (PDF, jsPDF + AutoTable), `ui.js` (the page), `msra.css` |
 | `build.py` | Builds `dist/Oxypro Project Library.html` (Claude) and `docs/` (GitHub edition): inlines the logos, fonts, MSRA code and the MSRA standard |
-| `build/assets.json` | Logos (light and dark) and the sheet fonts Caladea and Carlito, base64 |
+| `build/assets.json` | Logos (light and dark) and Carlito regular and bold (Calibri's letter widths), base64 |
 | `build/app-icon-512.png`, `build/app-icon.json`, `build/favicon.ico` | The app icon (512 px), its 32, 128 and 180 px versions (base64) and the website's favicon |
-| `build/msra-assets.json` | The MSRA standard (72 method statements and The Borough's material list), the Oxypro logo used in the log and Open Sans (regular and bold), base64 |
+| `build/msra-assets.json` | The MSRA standard (72 method statements and The Borough's material list), the Oxypro logo used in the log, base64 (its Open Sans fonts are no longer used) |
 | `dist/` | The built page, as published to Claude |
 | `docs/` | The GitHub edition website: `index.html`, `photos/`, `logos/`, `.nojekyll` and the icons `favicon.ico`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png` (built by `build.py`) |
 | `src/github/runtime.js` | The GitHub edition's stand-in for Claude's runtime: snapshot projects, MSRA Logs in the browser, downloads |
@@ -71,8 +71,8 @@ Shared data in the artifact's database:
 - `mslogs/<project no.>`: the whole MSRA Log; `mslogmeta/<project no.>`: `{no, n, updatedAt}` for the project list
 - `logos/<company key>`: `{name, id, w, h, updatedAt}`, one per company (key = the name in lower case without punctuation or endings such as LLC / Co.; the image in the asset store)
 
-Libraries are loaded from cdnjs when first needed: jsPDF 2.5.1, PptxGenJS 3.12.0, SheetJS 0.18.5, ExcelJS 4.4.0 and jsPDF-AutoTable 3.8.4. Page fonts: Barlow and Barlow Condensed (Google Fonts).
+Libraries are loaded from cdnjs when first needed: jsPDF 2.5.1, PptxGenJS 3.12.0, SheetJS 0.18.5, ExcelJS 4.4.0 and jsPDF-AutoTable 3.8.4. No web fonts are loaded: the app is set in Calibri, with the built-in Carlito where Calibri is not installed.
 
 ## Credits
 
-Fonts: Barlow; Caladea (Apache 2.0) and Carlito (SIL OFL) on the presentation sheets; Open Sans by Steve Matteson (SIL OFL) in the MSRA Log. Built with jsPDF, jsPDF-AutoTable, PptxGenJS, SheetJS and ExcelJS.
+Font: Calibri in the whole app, the presentation pages and the MSRA Log, and in the PowerPoint and Excel files; Carlito (SIL OFL), which has the same letter widths, where Calibri is not installed and inside the PDFs (Calibri cannot be built into a file). Built with jsPDF, jsPDF-AutoTable, PptxGenJS, SheetJS and ExcelJS.

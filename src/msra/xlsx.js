@@ -1,5 +1,5 @@
 /* ---------- MSRA Log: Excel workbook in the template's layout (ExcelJS) ---------- */
-const MS_FONT = 'Open Sans';
+const MS_FONT = 'Calibri';
 const MS_LIBS = { exceljs: 'https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js', autotable: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js' };
 const MS_ARGB = c => 'FF' + c.replace('#', '').toUpperCase();
 const MS_THIN = { style: 'thin', color: { argb: 'FF000000' } };
@@ -9,7 +9,7 @@ let msMctx = null;
 function msTextPx(text, pt, bold) {
   if (typeof document === 'undefined') return String(text).length * pt * 96 / 72 * (bold ? 0.6 : 0.56);
   if (!msMctx) msMctx = document.createElement('canvas').getContext('2d');
-  msMctx.font = `${bold ? '700 ' : ''}${pt * 96 / 72}px "Open Sans", Arial, sans-serif`;
+  msMctx.font = `${bold ? '700 ' : ''}${pt * 96 / 72}px Carlito, Calibri, Arial, sans-serif`;
   return msMctx.measureText(String(text)).width;
 }
 function msLines(text, pt, px, bold) {
@@ -22,10 +22,10 @@ function msLines(text, pt, px, bold) {
   }
   return Math.max(1, n);
 }
-// the rows' fixed 30 pt height, or more when a title or remark needs a third line in Open Sans
+// the rows' fixed 30 pt height, or more when a title or remark needs a third line in Calibri
 function msRowPt(it) {
   const lines = Math.max(msLines(it.t, 10, msColPx(70.71) - 8), msLines(it.rem, 10, msColPx(34.29) - 8), msLines(it.ref, 10, msColPx(35.71) - 8), msLines(it.b, 10, msColPx(12.71) - 8));
-  return lines <= 2 ? 30 : Math.ceil(lines * 13.7 + 3);
+  return lines <= 2 ? 30 : Math.ceil(lines * 12.75 + 3);
 }
 const msXDate = iso => { const d = msDay(iso); return d == null ? null : new Date(d * 86400000); };
 const msNum = v => /^\d+(\.\d+)?$/.test(String(v).trim()) ? Number(v) : v;
