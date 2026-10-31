@@ -338,7 +338,19 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 .t.ph{color:var(--paper-ph);font-style:italic}
 .cover-bg{position:absolute;left:0;top:0;width:29.7cm;height:21cm;display:block}
 .cv{position:absolute;white-space:pre}
-.cv-logo,.cv-rect{position:absolute;display:block}
+.cv-logo,.cv-rect,.cv-img{position:absolute;display:block}
+.ref-groups{display:flex;flex-direction:column;gap:14px}
+.ref-group h4{margin:0 0 6px;font:600 12px var(--f-cond);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px}
+.ref-group h4 .btn{margin-left:auto;text-transform:none;letter-spacing:0}
+.ref-chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px}
+.ref-chip{display:flex;align-items:center;gap:8px;padding:5px 7px;border:1px solid var(--line);border-radius:4px;font-size:12.5px;cursor:pointer;min-width:0;background:var(--surface)}
+.ref-chip.off{opacity:.5}
+.ref-chip input{flex:none;margin:0}
+.ref-chip .rt{flex:none;width:60px;height:30px;background:#FFFFFF;border:1px solid var(--line);border-radius:3px;display:grid;place-items:center;overflow:hidden;color:#8A8F98;font-size:10px}
+.ref-chip .rt img{max-width:54px;max-height:24px;object-fit:contain}
+.ref-chip .rn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}
+.ref-chip .rm{flex:none;border:0;background:none;padding:0 2px;color:var(--danger);cursor:pointer;font-size:12px}
+.ref-chip .tag{flex:none}
 .sheet-wrap.excluded .sheet{opacity:.35}
 .sheet-wrap.excluded::after{content:"Not included in the PDF and PowerPoint";position:absolute;right:12px;bottom:12px;background:var(--chip-on-bg);color:var(--chip-on-fg);padding:6px 10px;border-radius:4px;font-size:13px;font-weight:600}
 .designs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
@@ -755,7 +767,7 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.13.0 (30 Oct 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.14.0 (31 Oct 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -819,8 +831,8 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.13.0';
-const APP_DATE = '30 Oct 2026';   // shown in the footer and in About
+const APP_VERSION = '1.14.0';
+const APP_DATE = '31 Oct 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
 const SNAP_DATE = String(window.__OPL_SNAPSHOT || '');
@@ -1205,6 +1217,7 @@ async function logoPng(file) {
 }
 async function onLogoFile(e) {
   const file = e.target.files && e.target.files[0]; const tgt = S.logoTarget; S.logoTarget = null;
+  if (file && tgt && tgt.kind === 'ref') return addRefLogo(file, tgt.group);
   if (!file || !tgt || !S.assets || !DB) return;
   const p = S.projects.get(tgt.no), name = p && realName(p[tgt.f]), key = companyKey(name);
   if (!key) return;
@@ -2049,6 +2062,7 @@ function openPres(nos) {
   if (!sheets.length) return;
   S.pres.sheets = sheets; S.pres.cover = mergeCover(S.pres.cover, sheets);
   S.pres.summary = { include: true, title: (S.pres.summary && S.pres.summary.title) || 'Project Summary', page: 0 };
+  S.pres.refs = refsDefaults(S.pres.refs);
   S.pres.cur = -1; S.view = 'pres'; S.detailOpen = false;
   $('#view-library').hidden = true; $('#view-pres').hidden = false; renderSelbar(); renderDetail();
   window.scrollTo(0, 0);
@@ -2062,11 +2076,15 @@ function closePres() {
 const curSheet = () => S.pres.sheets[S.pres.cur];
 function markDirty(sh) { S.pres.dirty.add(sh.no); const d = $('#dirty'); if (d) d.hidden = false; }
 function renderPres() {
-  const n = S.pres.sheets.length, cv = S.pres.cover, sm = S.pres.summary;
-  $('#pres-count').textContent = `${cv && cv.include ? 'Top sheet + ' : ''}${n} project sheet${n === 1 ? '' : 's'}${sm && sm.include ? ' + summary' : ''} · A4 landscape`;
+  const n = S.pres.sheets.length, cv = S.pres.cover, sm = S.pres.summary, rf = S.pres.refs;
+  $('#pres-count').textContent = `${cv && cv.include ? 'Top sheet + ' : ''}${n} project sheet${n === 1 ? '' : 's'}${sm && sm.include ? ' + summary' : ''}${rf && rf.include ? ' + references' : ''} · A4 landscape`;
   renderRail(); $('#chooser').hidden = true;
-  const onCover = S.pres.cur === -1, onSum = S.pres.cur === -2;
-  $('#sheet-wrap').classList.toggle('excluded', (onCover && !cv.include) || (onSum && !sm.include)); $('#sheet-wrap').classList.remove('cover-photo');
+  const onCover = S.pres.cur === -1, onSum = S.pres.cur === -2, onRefs = S.pres.cur === -3;
+  $('#sheet-wrap').classList.toggle('excluded', (onCover && !cv.include) || (onSum && !sm.include) || (onRefs && !rf.include)); $('#sheet-wrap').classList.remove('cover-photo');
+  if (onRefs) {
+    $('#stage-hint').textContent = 'The references page is the last page of the PDF and PowerPoint: the logos of the main contractors, consultants and clients. Untick a logo to leave it out, or add one from your device.';
+    $('#slots').innerHTML = ''; buildRefs(); renderRefsForm(); return;
+  }
   if (onSum) {
     $('#stage-hint').textContent = 'The summary is the last page of the PDF and PowerPoint. Its rows follow the order of the sheets; long lists continue on a second page.';
     $('#slots').innerHTML = ''; buildSummary(); renderSummaryForm(); return;
@@ -2080,7 +2098,7 @@ function renderRail() {
   $('#rail').innerHTML = '<span class="rail-label">Sheets</span>' + coverRailItem() + sh.map((s, i) => `<div class="rail-item${i === S.pres.cur ? ' cur' : ''}">
     <button type="button" class="rail-open" data-cur="${i}"><span class="rail-no">${i + 1} · ${esc(s.no)}</span><span class="rail-name">${esc(s.name || 'Untitled')}</span></button>
     <div class="rail-tools"><button type="button" data-up="${i}" aria-label="Move ${esc(s.no)} up"${i === 0 ? ' disabled' : ''}>▲</button><button type="button" data-down="${i}" aria-label="Move ${esc(s.no)} down"${i === sh.length - 1 ? ' disabled' : ''}>▼</button><button type="button" data-rm="${i}" aria-label="Remove ${esc(s.no)} from this presentation">✕</button></div></div>`).join('')
-    + summaryRailItem() + '<button type="button" class="btn btn-sm" data-add-more style="align-self:flex-start">Add projects</button>';
+    + summaryRailItem() + refsRailItem() + '<button type="button" class="btn btn-sm" data-add-more style="align-self:flex-start">Add projects</button>';
 }
 function buildSheet() {
   const sh = curSheet(); if (!sh) return;
@@ -2189,6 +2207,7 @@ function bindPres() {
   });
   $('#sheet-form').addEventListener('input', e => {
     if (e.target.dataset.sk || e.target.dataset.scol) { summaryInput(e.target); return; }
+    if (e.target.dataset.rk || e.target.dataset.rfHide) { refsInput(e.target); return; }
     if (e.target.dataset.ck) { coverInput(e.target); return; }
     const k = e.target.dataset.k; const sh = curSheet(); if (!k || !sh) return;
     sh[k] = e.target.value; markDirty(sh); updateSheetText();
@@ -2201,6 +2220,10 @@ function bindPres() {
     if (e.target.closest('[data-sum-all]')) return setSummaryCols(sumCatalog().map(c => c.key));
     if (e.target.closest('[data-sum-default]')) return setSummaryCols(SUM_DEFAULT.slice());
     const pg = e.target.closest('[data-sum-page]'); if (pg) { S.pres.summary.page += +pg.dataset.sumPage; buildSummary(); renderSummaryForm(); return; }
+    const rp = e.target.closest('[data-ref-page]'); if (rp) { S.pres.refs.page += +rp.dataset.refPage; buildRefs(); return; }
+    const rb = e.target.closest('[data-rbg]'); if (rb) { S.pres.refs.bg = rb.dataset.rbg; buildRefs(); renderRefsForm(); return; }
+    const ra = e.target.closest('[data-rf-add]'); if (ra) { S.logoTarget = { kind: 'ref', group: ra.dataset.rfAdd }; $('#file-logo').value = ''; $('#file-logo').click(); return; }
+    const rr = e.target.closest('[data-rf-rm]'); if (rr) { const cfg = S.pres.refs, d = cfg.extra.find(x => x.key === rr.dataset.rfRm); cfg.extra = cfg.extra.filter(x => x !== d); if (d && d.src) URL.revokeObjectURL(d.src); buildRefs(); renderRefsForm(); return; }
     const p = e.target.closest('[data-cph]'); if (p) return setCoverPhoto(p.dataset.cph);
     if (e.target.closest('[data-cph-upload]')) { S.fileTarget = { kind: 'cover' }; $('#file-photo').value = ''; $('#file-photo').click(); }
   });
@@ -2736,13 +2759,17 @@ const summaryOut = () => S.pres.summary && S.pres.summary.include ? summaryPages
 // generic drawing of a laid-out page (texts, rects, logo) to HTML, PDF and PowerPoint
 function specHTML(sp) {
   const lg = sp.logo;
-  return (lg ? `<img class="cv-logo" src="${logoSrc(lg.dark)}" alt="Oxypro" style="left:${lg.x.toFixed(3)}cm;top:${lg.y}cm;height:${lg.h}cm;width:${(lg.h * LOGO_AR).toFixed(3)}cm">` : '')
+  return (sp.bg ? `<img class="cover-bg" src="${sp.bg}" alt="" draggable="false">` : '')
+    + (lg ? `<img class="cv-logo" src="${logoSrc(lg.dark)}" alt="Oxypro" style="left:${lg.x.toFixed(3)}cm;top:${lg.y}cm;height:${lg.h}cm;width:${(lg.h * LOGO_AR).toFixed(3)}cm">` : '')
     + sp.rects.map(r => `<span class="cv-rect" style="left:${r.x.toFixed(3)}cm;top:${r.y.toFixed(3)}cm;width:${r.w.toFixed(3)}cm;height:${r.h.toFixed(3)}cm;background:${r.color}"></span>`).join('')
+    + (sp.images || []).map(m => `<img class="cv-img" src="${esc(m.src)}" alt="${esc(m.name || '')}" draggable="false" style="left:${m.x.toFixed(3)}cm;top:${m.y.toFixed(3)}cm;width:${m.w.toFixed(3)}cm;height:${m.h.toFixed(3)}cm">`).join('')
     + sp.texts.map(t => `<div class="cv" style="left:${t.x.toFixed(3)}cm;top:${t.y.toFixed(3)}cm;width:${t.w.toFixed(3)}cm;font:${t.bold ? 700 : 400} ${t.pt}pt/${(t.pt * (t.lh || 1.2)).toFixed(2)}pt ${t.font === 'Caladea' ? 'Caladea,Cambria,Georgia,serif' : 'Carlito,Calibri,sans-serif'};color:${t.color};${t.ls ? `letter-spacing:${t.ls}em;` : ''}${t.align ? `text-align:${t.align};` : ''}">${esc((t.lines || [t.str]).join('\n'))}</div>`).join('');
 }
 async function specPdf(doc, sp) {
+  if (sp.bg) doc.addImage(sp.bg, 'JPEG', 0, 0, 29.7, 21, undefined, 'FAST');
   if (sp.logo) { const lg = sp.logo, logos = await logoPngs(); doc.addImage(logos[lg.dark ? 'dark' : 'light'], 'PNG', lg.x, lg.y, lg.h * LOGO_AR, lg.h, undefined, 'FAST'); }
   for (const r of sp.rects) { doc.setFillColor(r.color); doc.rect(r.x, r.y, r.w, r.h, 'F'); }
+  for (const m of sp.images || []) { try { doc.addImage(await refImgData(m.src), 'PNG', m.x, m.y, m.w, m.h, 'ri-' + m.key, 'FAST'); } catch (e) { /* missing logo: left out */ } }
   for (const t of sp.texts) {
     const lh = t.lh || 1.2, [asc, desc] = FM[t.font], sz = t.pt * PT;
     doc.setFont(t.font, t.bold ? 'bold' : 'normal'); doc.setFontSize(t.pt); doc.setTextColor(t.color);
@@ -2750,8 +2777,10 @@ async function specPdf(doc, sp) {
   }
 }
 async function specPptx(pptx, sl, sp, I, strip) {
+  if (sp.bg) sl.addImage({ data: strip(sp.bg), x: 0, y: 0, w: I(29.7), h: I(21), altText: 'Background' });
   if (sp.logo) { const lg = sp.logo, logos = await logoPngs(); sl.addImage({ data: strip(logos[lg.dark ? 'dark' : 'light']), x: I(lg.x), y: I(lg.y), w: I(lg.h * LOGO_AR), h: I(lg.h), altText: 'Oxypro Electromechanical Contractors' }); }
   for (const r of sp.rects) sl.addShape(pptx.ShapeType.rect, { x: I(r.x), y: I(r.y), w: I(r.w), h: I(Math.max(r.h, 0.02)), fill: { color: r.color.slice(1) }, line: { type: 'none' } });
+  for (const m of sp.images || []) { try { sl.addImage({ data: strip(await refImgData(m.src)), x: I(m.x), y: I(m.y), w: I(m.w), h: I(m.h), altText: m.name || 'Logo' }); } catch (e) { /* left out */ } }
   for (const t of sp.texts) {
     const lines = t.lines || [t.str], lh = t.lh || 1.2;
     sl.addText(lines.join('\n'), {
@@ -2763,7 +2792,7 @@ async function specPptx(pptx, sl, sp, I, strip) {
 }
 function summaryRailItem() {
   const sm = S.pres.summary; if (!sm) return '';
-  return `<div class="rail-item cover${S.pres.cur === -2 ? ' cur' : ''}"><button type="button" class="rail-open" data-cur="-2"><span class="rail-no">Last page</span><span class="rail-name">${sm.include ? 'Project summary' : 'Summary · not included'}</span></button></div>`;
+  return `<div class="rail-item cover${S.pres.cur === -2 ? ' cur' : ''}"><button type="button" class="rail-open" data-cur="-2"><span class="rail-no">Summary</span><span class="rail-name">${sm.include ? 'Project summary' : 'Summary · not included'}</span></button></div>`;
 }
 let sumPagesCache = [];
 async function buildSummary() {
@@ -2820,6 +2849,205 @@ function summaryInput(el) {
   if (el.dataset.sk === 'title') { sm.title = el.value; buildSummary(); }
 }
 
+/* ---------- references page (last page): main contractors, consultants and clients ---------- */
+// Logos come from Company logos (one per company). The companies are those of every project in the library, or of the
+// projects in this presentation; Oxypro itself is left out. Per presentation: logos can be left out or added from the
+// device, companies without a logo can show as names, and the background is off, a faded Oxypro pattern or a faded
+// library photo.
+const REF_GROUPS = [['mc', 'Main Contractors', ['mainContractor']], ['cons', 'Consultants', ['mepConsultant', 'leadConsultant']], ['client', 'Clients', ['client']]];
+const REF_TITLE = 'Main Contractors, Consultants & Clients';
+const REF_FADE = { light: [0.88, 'Very faint'], medium: [0.8, 'Faint'], strong: [0.68, 'Stronger'] };   // white veil over a photo
+const REF_GEO = { x: 1.3, w: 27.1, top: 4.3, bottom: 19.55, gap: 0.3, lab: 0.78, grp: 0.42, ar: 0.55 };
+const isOxypro = n => /^oxyp(?:o)?ro\b/i.test(String(n || '').trim());
+function refsDefaults(old) {
+  return { include: true, title: (old && old.title) || REF_TITLE, scope: (old && old.scope) || 'library', bg: old ? old.bg : 'pattern', fade: (old && old.fade) || 'light',
+    names: !!(old && old.names), hidden: old ? old.hidden.slice() : [], extra: old ? old.extra.slice() : [], page: 0 };
+}
+const refProjects = cfg => cfg.scope === 'pres' ? S.pres.sheets.map(sh => S.projects.get(sh.no)).filter(Boolean) : [...S.projects.values()];
+function refCompanies(cfg) {
+  const out = {};
+  for (const [g, , fields] of REF_GROUPS) {
+    const m = new Map();
+    for (const p of refProjects(cfg)) for (const f of fields) {
+      const n = realName(p[f]), k = companyKey(n);
+      if (!k || isOxypro(n) || m.has(k)) continue;
+      m.set(k, { key: g + ':' + k, name: n, logo: S.logos.get(k) || null });
+    }
+    out[g] = [...m.values()].sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
+  }
+  return out;
+}
+function refItems(cfg) {
+  const cs = refCompanies(cfg), hid = new Set(cfg.hidden), groups = [];
+  for (const [g, label] of REF_GROUPS) {
+    const items = cs[g].filter(c => !hid.has(c.key) && (c.logo || cfg.names))
+      .map(c => c.logo ? { kind: 'logo', key: c.key, name: c.name, src: logoUrl(c.logo.id), w: +c.logo.w || 600, h: +c.logo.h || 200 } : { kind: 'name', key: c.key, name: c.name });
+    for (const d of cfg.extra) if (d.group === g) items.push({ kind: 'logo', key: d.key, name: d.name, src: d.src, w: d.w, h: d.h });
+    if (items.length) groups.push({ g, label, items });
+  }
+  return groups;
+}
+function refsPages(cfg) {
+  const groups = refItems(cfg); if (!groups.length) return [];
+  const G = REF_GEO, H = G.bottom - G.top, n = groups.reduce((t, gr) => t + gr.items.length, 0);
+  // the fewest columns (largest tiles) that fit on one page; very long lists continue on another page
+  const total = cols => { const tw = (G.w - (cols - 1) * G.gap) / cols, th = tw * G.ar; return groups.reduce((t, gr, i) => { const r = Math.ceil(gr.items.length / cols); return t + G.lab + r * th + (r - 1) * G.gap + (i ? G.grp : 0); }, 0); };
+  let cols = 5; while (cols < 12 && total(cols) > H) cols++;
+  const tw = (G.w - (cols - 1) * G.gap) / cols, th = tw * G.ar, pad = th * 0.15;
+  const np = refProjects(cfg).length, date = (S.pres.cover && S.pres.cover.date) || (MONTHS[new Date().getMonth()] + ' ' + new Date().getFullYear());
+  const pages = []; let pg = null, y = 0;
+  const newPage = () => {
+    const T = [], R = [], first = !pages.length;
+    T.push({ str: 'REFERENCES', x: G.x, y: 1.2, w: 14, font: 'Carlito', bold: true, pt: 8.5, ls: 0.14, color: CRED });
+    T.push({ lines: wrap(`${cfg.title || REF_TITLE}${first ? '' : ' (continued)'}`, '24pt Caladea', 22 * CM, 1), x: G.x, y: 1.65, w: 22, font: 'Caladea', pt: 24, lh: 1.08, color: '#1F2733' });
+    T.push({ str: `${n} compan${n === 1 ? 'y' : 'ies'}  ·  ${np} project${np === 1 ? '' : 's'}  ·  ${date}`, x: G.x, y: 2.75, w: 18, font: 'Carlito', pt: 10.5, color: '#566070' });
+    R.push({ x: G.x, y: 3.5, w: 2.0, h: 0.11, color: CRED });
+    pg = { texts: T, rects: R, images: [], logo: { dark: false, x: 28.4 - 1.15 * LOGO_AR, y: 1.25, h: 1.15 } }; pages.push(pg); y = G.top;
+  };
+  newPage();
+  groups.forEach((gr, gi) => {
+    const label = (cont) => {
+      pg.texts.push({ str: gr.label.toUpperCase() + (cont ? '  (CONTINUED)' : ''), x: G.x, y, w: 16, font: 'Carlito', bold: true, pt: 9, ls: 0.14, color: NAVY });
+      pg.rects.push({ x: G.x, y: y + 0.5, w: G.w, h: 0.018, color: '#C9D1DC' }); y += G.lab;
+    };
+    if (gi) y += G.grp;
+    if (y + G.lab + th > G.bottom) newPage();
+    label(false);
+    gr.items.forEach((it, i) => {
+      const c = i % cols;
+      if (c === 0 && i) { y += th + G.gap; if (y + th > G.bottom) { newPage(); label(true); } }
+      const x = G.x + c * (tw + G.gap);
+      pg.rects.push({ x, y, w: tw, h: th, color: '#D5DCE5' }, { x: x + 0.025, y: y + 0.025, w: tw - 0.05, h: th - 0.05, color: '#FFFFFF' });
+      if (it.kind === 'logo') {
+        const bw = tw - 2 * pad, bh = th - 2 * pad, k = Math.min(bw / it.w, bh / it.h), iw = it.w * k, ih = it.h * k;
+        pg.images.push({ src: it.src, key: it.key.replace(/[^a-z0-9]+/gi, '-'), name: it.name, x: x + (tw - iw) / 2, y: y + (th - ih) / 2, w: iw, h: ih });
+      } else {
+        const pt = clamp(Math.round(th * 5.2 * 2) / 2, 7.5, 11), ls = wrap(it.name, `${pt}pt Carlito`, (tw - 2 * pad) * CM, 3);
+        pg.texts.push({ lines: ls, x: x + pad, y: y + (th - ls.length * pt * 1.2 * PT) / 2, w: tw - 2 * pad, align: 'center', font: 'Carlito', pt, color: '#566070' });
+      }
+    });
+    y += th;
+  });
+  pages.forEach((p, j) => {
+    p.rects.push({ x: G.x, y: 19.95, w: G.w, h: 0.02, color: '#C9D1DC' });
+    p.texts.push({ str: `${COMPANY.name}  ·  ${COMPANY.web}`, x: G.x, y: 20.1, w: 18, font: 'Carlito', pt: 8, color: '#6E7785' });
+    if (pages.length > 1) p.texts.push({ str: `Page ${j + 1} of ${pages.length}`, x: 20.4, y: 20.1, w: 8, align: 'right', font: 'Carlito', pt: 8, color: '#6E7785' });
+  });
+  return pages;
+}
+// a logo as PNG for the PDF and PowerPoint (kept while the page is open)
+const REF_IMG = new Map();
+async function refImgData(src) {
+  if (REF_IMG.has(src)) return REF_IMG.get(src);
+  const img = await loadImg(src), k = Math.min(1, 900 / img.naturalWidth), c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(img.naturalWidth * k)); c.height = Math.max(1, Math.round(img.naturalHeight * k));
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  const d = c.toDataURL('image/png'); REF_IMG.set(src, d); return d;
+}
+// the faded background: Oxypro dot pattern, or a library photo under a white veil
+const REF_BG = new Map();
+async function refsBgUrl(cfg, dpi) {
+  if (!cfg.bg || cfg.bg === 'off') return null;
+  const key = `${cfg.bg}|${cfg.fade}|${dpi}`; if (REF_BG.has(key)) return REF_BG.get(key);
+  const k = dpi / 2.54, W = Math.round(29.7 * k), H = Math.round(21 * k), c = document.createElement('canvas'); c.width = W; c.height = H;
+  const g = c.getContext('2d'); g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, W, H);
+  if (cfg.bg === 'pattern') {
+    const ring = (cx, cy, r0, r1, alpha) => {
+      for (let r = r0; r <= r1; r += 0.45) {
+        const t = (r - r0) / (r1 - r0), n = Math.max(6, Math.round(2 * Math.PI * r / 0.45)), dr = 0.09 * (1 - 0.6 * t);
+        g.fillStyle = `rgba(19,41,75,${(alpha * (1 - 0.6 * t)).toFixed(3)})`;
+        for (let i = 0; i < n; i++) { const a = (i + (Math.round(r / 0.45) % 2) * 0.5) / n * Math.PI * 2; g.beginPath(); g.arc((cx + r * Math.cos(a)) * k, (cy + r * Math.sin(a)) * k, dr * k, 0, Math.PI * 2); g.fill(); }
+      }
+    };
+    const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, 'rgba(19,41,75,0)'); gr.addColorStop(1, 'rgba(19,41,75,0.05)'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+    ring(29.2, 20.4, 1.2, 9.5, 0.10); ring(0.4, 6.5, 1.2, 5.5, 0.06);
+  } else {
+    const [no, slot] = String(cfg.bg).split(':'), x = photosOf(S.projects.get(no))[+slot];
+    if (x) {
+      try {
+        const img = await loadPhoto(blobUrl(x.id)), s = Math.max(W / img.naturalWidth, H / img.naturalHeight), dw = img.naturalWidth * s, dh = img.naturalHeight * s;
+        g.drawImage(img, (W - dw) * (+x.x || 50) / 100, (H - dh) * (+x.y || 50) / 100, dw, dh);
+        g.fillStyle = `rgba(255,255,255,${(REF_FADE[cfg.fade] || REF_FADE.light)[0]})`; g.fillRect(0, 0, W, H);
+      } catch (e) { /* photo missing: plain white */ }
+    }
+  }
+  const url = c.toDataURL('image/jpeg', 0.88); if (REF_BG.size > 12) REF_BG.clear(); REF_BG.set(key, url); return url;
+}
+async function refsOut(dpi = 150) {
+  const cfg = S.pres.refs; if (!cfg || !cfg.include) return null;
+  const pages = refsPages(cfg); if (!pages.length) return null;
+  const bg = await refsBgUrl(cfg, dpi); pages.forEach(p => { p.bg = bg; });
+  return pages;
+}
+function refsRailItem() {
+  const rf = S.pres.refs; if (!rf) return '';
+  return `<div class="rail-item cover${S.pres.cur === -3 ? ' cur' : ''}"><button type="button" class="rail-open" data-cur="-3"><span class="rail-no">Last page</span><span class="rail-name">${rf.include ? 'References' : 'References · not included'}</span></button></div>`;
+}
+let refPagesCache = [], refTok = 0;
+async function buildRefs() {
+  const tok = ++refTok;
+  if (!$('#ref-fg')) { $('#sheet').innerHTML = '<div id="ref-fg"></div>'; fitSheet(); }
+  await fontsReady; if (tok !== refTok || S.pres.cur !== -3) return;
+  const cfg = S.pres.refs; refPagesCache = refsPages(cfg); cfg.page = clamp(cfg.page || 0, 0, Math.max(0, refPagesCache.length - 1));
+  const pi = $('#ref-pager'); if (pi) pi.innerHTML = refPagerHTML();
+  if (!refPagesCache.length) { const fg = $('#ref-fg'); if (fg) fg.innerHTML = '<div class="frame-empty" style="pointer-events:none"><span>Tick at least one logo, or show the companies without a logo as names</span></div>'; return; }
+  const bg = await refsBgUrl(cfg, 90); if (tok !== refTok || S.pres.cur !== -3) return;
+  const fg = $('#ref-fg'); if (fg) fg.innerHTML = specHTML({ ...refPagesCache[cfg.page], bg });
+}
+function refPagerHTML() {
+  const n = refPagesCache.length, p = S.pres.refs.page || 0;
+  return n > 1 ? `<span>Preview: page ${p + 1} of ${n}</span><button type="button" class="btn btn-sm" data-ref-page="-1"${p === 0 ? ' disabled' : ''}>Previous</button><button type="button" class="btn btn-sm" data-ref-page="1"${p >= n - 1 ? ' disabled' : ''}>Next</button>` : '';
+}
+function renderRefsForm() {
+  const cfg = S.pres.refs, cs = refCompanies(cfg), hid = new Set(cfg.hidden);
+  const bgTiles = [['off', 'Off', 'Plain white'], ['pattern', 'Faded pattern', 'Oxypro dots']];
+  for (const no of sortedNos(S.projects)) photosOf(S.projects.get(no)).forEach((x, j) => { if (x) bgTiles.push([`${no}:${j}`, `${no} ${SLOT_NAMES[j].toLowerCase()}`, blobUrl(x.id)]); });
+  const photo = cfg.bg && cfg.bg !== 'off' && cfg.bg !== 'pattern';
+  const chip = c => `<label class="ref-chip${hid.has(c.key) ? ' off' : ''}"><input type="checkbox" data-rf-hide="${esc(c.key)}"${hid.has(c.key) ? '' : ' checked'}><span class="rt">${c.logo ? `<img src="${esc(logoUrl(c.logo.id))}" alt="">` : 'No logo'}</span><span class="rn" title="${esc(c.name)}">${esc(c.name)}</span></label>`;
+  const dev = d => `<div class="ref-chip"><span class="rt"><img src="${esc(d.src)}" alt=""></span><span class="rn" title="${esc(d.name)}">${esc(d.name)}</span><span class="tag">Device</span><button type="button" class="rm" data-rf-rm="${esc(d.key)}" aria-label="Remove ${esc(d.name)}">Remove</button></div>`;
+  const groups = REF_GROUPS.map(([g, label]) => {
+    const withLogo = cs[g].filter(c => c.logo), without = cs[g].filter(c => !c.logo), devs = cfg.extra.filter(d => d.group === g);
+    const shown = cfg.names ? cs[g] : withLogo;
+    return `<div class="ref-group"><h4>${esc(label)} <span class="hint" style="text-transform:none;letter-spacing:0">${withLogo.length} with a logo${without.length ? `, ${without.length} without` : ''}</span><button type="button" class="btn btn-sm" data-rf-add="${g}">Add logo</button></h4>
+      <div class="ref-chips">${shown.map(chip).join('')}${devs.map(dev).join('')}</div>
+      ${!cfg.names && without.length ? `<span class="hint">No logo yet: ${esc(joinAnd(without.map(c => c.name)))}.</span>` : ''}</div>`;
+  }).join('');
+  $('#sheet-form').innerHTML = `<h3>References page</h3>
+    <label class="check-row"><input type="checkbox" data-rk="include"${cfg.include ? ' checked' : ''}> Include as the last page</label>
+    <div class="field"><label for="r-title">Title</label><input class="inp" id="r-title" data-rk="title" value="${esc(cfg.title)}"></div>
+    <div class="pager" id="ref-pager">${refPagerHTML()}</div>
+    <div class="field"><span class="flabel">Companies from</span>
+      <label class="check-row"><input type="radio" name="r-scope" data-rk="scope" value="library"${cfg.scope !== 'pres' ? ' checked' : ''}> All projects in the library</label>
+      <label class="check-row"><input type="radio" name="r-scope" data-rk="scope" value="pres"${cfg.scope === 'pres' ? ' checked' : ''}> Only the projects in this presentation</label></div>
+    <div class="field"><span class="flabel">Background</span>
+      <div class="ptiles" role="group" aria-label="Background">${bgTiles.map(([k, label, a]) => `<button type="button" class="ptile" data-rbg="${esc(k)}" aria-pressed="${(cfg.bg || 'off') === k}" title="${esc(label)}">${k === 'off' || k === 'pattern' ? `${esc(label)}<small>${esc(a)}</small>` : `<img src="${esc(a)}" alt="${esc(label)}">`}</button>`).join('')}</div>
+      ${photo ? `<label class="check-row" style="gap:10px">Photo strength <select class="inp" data-rk="fade" style="width:auto">${Object.entries(REF_FADE).map(([k, [, l]]) => `<option value="${k}"${cfg.fade === k ? ' selected' : ''}>${l}</option>`).join('')}</select></label>` : ''}
+      <span class="hint">The logos sit on white tiles, so they stay clear on any background.</span></div>
+    <label class="check-row"><input type="checkbox" data-rk="names"${cfg.names ? ' checked' : ''}> Show companies without a logo as names</label>
+    <div class="field"><span class="flabel">Logos (untick to leave one out)</span><div class="ref-groups">${groups}</div>
+      <span class="hint">Logos come from Company logos on each project; add one there to keep it for every presentation. Logos added here from your device stay with this presentation only. Oxypro itself is not listed.</span></div>`;
+}
+function refsInput(el) {
+  const cfg = S.pres.refs, k = el.dataset.rk;
+  if (el.dataset.rfHide) {
+    const set = new Set(cfg.hidden); el.checked ? set.delete(el.dataset.rfHide) : set.add(el.dataset.rfHide); cfg.hidden = [...set];
+    const ch = el.closest('.ref-chip'); if (ch) ch.classList.toggle('off', !el.checked);
+    buildRefs(); return;
+  }
+  if (k === 'include') { cfg.include = el.checked; renderPres(); return; }
+  if (k === 'title') { cfg.title = el.value; buildRefs(); return; }
+  if (k === 'scope') { cfg.scope = el.value; cfg.page = 0; buildRefs(); renderRefsForm(); return; }
+  if (k === 'names') { cfg.names = el.checked; cfg.page = 0; buildRefs(); renderRefsForm(); return; }
+  if (k === 'fade') { cfg.fade = el.value; buildRefs(); }
+}
+async function addRefLogo(file, group) {
+  let png; try { png = await logoPng(file); } catch (e) { toast('This logo could not be read. Save it as PNG or JPG and try again.'); return; }
+  const id = 'dev' + Date.now(), name = String(file.name || 'Logo').replace(/\.[a-z0-9]+$/i, '').replace(/^logo\s*[-–]?\s*/i, '').trim() || 'Logo';
+  S.pres.refs.extra.push({ key: 'dev:' + id, id, group, name, src: URL.createObjectURL(png.blob), w: png.w, h: png.h });
+  if (S.pres.cur === -3) { buildRefs(); renderRefsForm(); }
+  toast(`${name} added to the references page of this presentation`);
+}
+
 /* ---------- PDF and PowerPoint ---------- */
 async function cropPhoto(ph, wcm, hcm, dpi = 200) {
   const img = await loadImg(ph.src);
@@ -2852,11 +3080,11 @@ async function busyRun(btnSel, label, fn) {
 function downloadPdf() {
   return busyRun('#dl-pdf', 'Preparing PDF…', async () => {
     await Promise.all([loadScript(LIBS.jspdf), fontsReady]);
-    const blob = await buildPdf(S.pres.sheets, S.pres.cover && S.pres.cover.include ? S.pres.cover : null, summaryOut());
+    const blob = await buildPdf(S.pres.sheets, S.pres.cover && S.pres.cover.include ? S.pres.cover : null, summaryOut(), await refsOut(150));
     await saveFile(fileBase('pdf'), blob);
   });
 }
-async function buildPdf(sheets, cover, summary) {
+async function buildPdf(sheets, cover, summary, refs) {
   const doc = new window.jspdf.jsPDF({ orientation: 'landscape', unit: 'cm', format: 'a4', compress: true });
   doc.addFileToVFS('Caladea.ttf', FONT_B64.caladea); doc.addFont('Caladea.ttf', 'Caladea', 'normal');
   doc.addFileToVFS('Carlito.ttf', FONT_B64.carlito); doc.addFont('Carlito.ttf', 'Carlito', 'normal');
@@ -2882,17 +3110,18 @@ async function buildPdf(sheets, cover, summary) {
     }
   }
   for (const pg of summary || []) { doc.addPage('a4', 'landscape'); await specPdf(doc, pg); }
+  for (const pg of refs || []) { doc.addPage('a4', 'landscape'); await specPdf(doc, pg); }
   doc.setProperties({ title: sheets.length === 1 ? `Oxypro Project Details - ${sheets[0].name}` : 'Oxypro Project References', author: 'Oxypro Electromechanical Works LLC', creator: 'Oxypro Project Library', subject: sheets.map(s => s.no).join(', ') });
   return doc.output('blob');
 }
 function downloadPptx() {
   return busyRun('#dl-pptx', 'Preparing PowerPoint…', async () => {
     await Promise.all([loadScript(LIBS.pptx), fontsReady]);
-    const blob = await buildPptx(S.pres.sheets, S.pres.cover && S.pres.cover.include ? S.pres.cover : null, summaryOut());
+    const blob = await buildPptx(S.pres.sheets, S.pres.cover && S.pres.cover.include ? S.pres.cover : null, summaryOut(), await refsOut(150));
     await saveFile(fileBase('pptx'), blob);
   });
 }
-async function buildPptx(sheets, cover, summary) {
+async function buildPptx(sheets, cover, summary, refs) {
   const pptx = new window.PptxGenJS();
   pptx.defineLayout({ name: 'A4L', width: 29.7 / 2.54, height: 21 / 2.54 }); pptx.layout = 'A4L';
   pptx.author = 'Oxypro Electromechanical Works LLC'; pptx.company = 'Oxypro Electromechanical Works LLC';
@@ -2917,6 +3146,7 @@ async function buildPptx(sheets, cover, summary) {
     }
   }
   for (const pg of summary || []) { const sl = pptx.addSlide(); sl.background = { color: 'FFFFFF' }; await specPptx(pptx, sl, pg, I, strip); }
+  for (const pg of refs || []) { const sl = pptx.addSlide(); sl.background = { color: 'FFFFFF' }; await specPptx(pptx, sl, pg, I, strip); }
   return await pptx.write({ outputType: 'blob' });
 }
 
@@ -2973,6 +3203,8 @@ async function buildShowPages() {
   sheets.forEach((sh, i) => out.push({ label: `${sh.no} · ${sh.name || 'Untitled'}`, go: { cur: i }, html: sheetPageHTML(sh) }));
   const sum = summaryOut() || [];
   sum.forEach((pg, j) => out.push({ label: sum.length > 1 ? `Project summary · page ${j + 1} of ${sum.length}` : 'Project summary', go: { cur: -2, page: j }, html: specHTML(pg) }));
+  const rfs = (await refsOut(150)) || [];
+  rfs.forEach((pg, j) => out.push({ label: rfs.length > 1 ? `References · page ${j + 1} of ${rfs.length}` : 'References', go: { cur: -3, page: j }, html: specHTML(pg) }));
   return out;
 }
 // a photo that fails to load is left out, as in the PDF
@@ -3075,8 +3307,8 @@ async function closeShow(stay) {
   const pg = SH.pages[SH.cur]; SH.pages = [];
   // land on the page you were looking at, ready to fix it
   if (!stay && pg && S.view === 'pres') {
-    if (pg.go.cur === -1 ? S.pres.cover : pg.go.cur === -2 ? S.pres.summary : S.pres.sheets[pg.go.cur]) {
-      S.pres.cur = pg.go.cur; if (pg.go.page != null) S.pres.summary.page = pg.go.page; renderPres();
+    if (pg.go.cur === -1 ? S.pres.cover : pg.go.cur === -2 ? S.pres.summary : pg.go.cur === -3 ? S.pres.refs : S.pres.sheets[pg.go.cur]) {
+      S.pres.cur = pg.go.cur; if (pg.go.page != null) (pg.go.cur === -3 ? S.pres.refs : S.pres.summary).page = pg.go.page; renderPres();
     }
   }
   const b = $('#show-btn'); if (b) b.focus({ preventScroll: true });
@@ -3197,6 +3429,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.14.0', '31 Oct 2026', 'References page as the last page of every presentation: the logos of the main contractors, consultants and clients in a grid, on a faded Oxypro pattern, a faded library photo or no background. Logos can be left out or added from your device.'],
   ['1.13.0', '30 Oct 2026', 'QA/QC > Generate MSRA: a project file for the MSRA Generator with the project details, the client, consultant and main contractor logos and a cover photo. Company logos on each project, kept once per company.'],
   ['1.12.2', '29 Oct 2026', 'New app icon: the Oxypro Library open book, for the page, the shortcuts and the GitHub edition.'],
   ['1.12.1', '29 Oct 2026', 'HSE Plan Maker is online: HSE > Open in HSE Plan Maker opens it with the project and copies the cover photo for pasting there.'],
@@ -3228,7 +3461,7 @@ function openAbout() {
       <section><h3>What it does</h3>
         <ul>
           <li><b>Projects:</b> search and filter by emirate, status and sector; each project shows its details from the Projects Master List and up to five photos.</li>
-          <li><b>Presentations:</b> select one or more projects for a top sheet, an Oxypro Project Presentation Sheet per project and a summary page, as PDF or PowerPoint; View / Present runs them full screen first.</li>
+          <li><b>Presentations:</b> select one or more projects for a top sheet, an Oxypro Project Presentation Sheet per project, a summary page and a references page with the logos of the main contractors, consultants and clients, as PDF or PowerPoint; View / Present runs them full screen first.</li>
           <li><b>QA/QC:</b> <b>PQP details and file</b> opens PQP Maker with the project's PQP already created, or saves a PQP file. <b>MSRA Log</b> is the project's Method Statement Submittal Log in the Oxypro template, with the Summary, seven discipline logs and the planner's MSL, saved as Excel or PDF. <b>Generate MSRA</b> saves a project file for the MSRA Generator with the project's details, the client, consultant and main contractor logos and a cover photo.</li>
           <li><b>Company logos:</b> one logo per client, consultant and contractor, shown on every project with that company.</li>
           <li><b>HSE:</b> sends the project's details and a cover photo of your choice to HSE Plan Maker for the Project HSE Plan.</li>
@@ -4497,6 +4730,7 @@ async function boot() {
   DB.collection('logos').onSnapshot(snap => {
     const m = new Map(); snap.docs.forEach(d => { if (d.exists) { const x = d.data(); if (x && x.id) m.set(d.id, x); } });
     S.logos = m; if (S.view === 'library') renderDetail();
+    else if (S.view === 'pres' && S.pres.cur === -3 && !document.activeElement.closest('#sheet-form')) { buildRefs(); renderRefsForm(); }
   }, () => {});
   DB.collection('mslogmeta').onSnapshot(snap => {
     const m = new Map(); snap.docs.forEach(d => { if (d.exists) m.set(d.id, d.data()); });

@@ -3,7 +3,7 @@
 One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, QA/QC (the Project Quality Plan hand-off to PQP Maker and each project's Method Statement Log) and HSE (the hand-off to HSE Plan Maker).
 
 **Use the app:** [Oxypro Project Library on Claude](https://claude.ai/artifact/T3U712ufURSuMQTfsGDkMy) (shared as "Anyone with the link")
-**Version:** 1.13.0 (30 Oct 2026)
+**Version:** 1.14.0 (31 Oct 2026)
 **Developed by** Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.
 
 This repository holds the source code and the GitHub edition website. The app runs as a Claude artifact: its project list, photos and MSRA Logs live in the artifact's shared database and storage.
@@ -23,7 +23,8 @@ This repository holds the source code and the GitHub edition website. The app ru
 ## What it does
 
 - **Projects:** search and filter by emirate, status and sector. Each project shows its details from the Projects Master List and up to five photos.
-- **Presentations:** select one or more projects for a top sheet (four designs), an Oxypro Project Presentation Sheet per project and a summary page, as PDF or PowerPoint. View / Present runs them full screen first.
+- **Presentations:** select one or more projects for a top sheet (four designs), an Oxypro Project Presentation Sheet per project, a summary page and a references page, as PDF or PowerPoint. View / Present runs them full screen first.
+- **References page:** the last page of every presentation, a grid of the logos of the Main Contractors, Consultants (lead and MEP) and Clients we worked for (Oxypro itself left out). The companies come from the whole library or only the presentation's projects. Background: off, a faded pattern (the default) or any library project photo, faded (very faint, faint or stronger). Untick a logo to leave it out, add a logo from the device for that presentation, show companies without a logo as names and change the title. More logos go on to a second page (continued). It can be left out of the presentation.
 - **QA/QC:** a menu on each project with **PQP details and file**, the **MSRA Log** and **Generate MSRA**.
 - **Generate MSRA:** saves `MS Project - <code> - <name>.json`, a whole project for the Oxypro MSRA Generator (its project file format, version 1): the project name, code, emirate, client, consultant (the lead consultant, or the MEP consultant; a choice when there are both), main contractor and MEP contractor in capitals, the client, consultant and main contractor logos (PNG, up to 700 px), a cover photo of your choice and the Generator's standard list of 76 Method Statements (`build/msra-gen-std.json`, from its repository data). In the Generator: **Open project** (it replaces the project open there). The two apps are not linked: the file is the hand-off.
 - **Company logos:** one logo per company (client, consultant, contractor), shown on every project with that company; editors add, replace or remove them on the project.
