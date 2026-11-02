@@ -1,6 +1,6 @@
 {
- "date": "31 Oct 2026",
- "taken": "2026-10-27T14:00:00Z",
+ "date": "2 Nov 2026",
+ "taken": "2026-11-02T10:50:00Z",
  "projects": {
   "P100": {
    "area": "Bur Dubai, Dubai",
@@ -90,7 +90,7 @@
    "scopeType": "",
    "sectors": "Residential & Commercial Building",
    "status": "Completed",
-   "updatedAt": "2026-10-27T09:30:00.000Z",
+   "updatedAt": "2026-11-02T10:30:00.000Z",
    "value": "",
    "year": "2024-26"
   },
@@ -140,7 +140,7 @@
    "scopeType": "",
    "sectors": "Residential & Commercial Building",
    "status": "Completed",
-   "updatedAt": "2026-10-27T13:08:44.245Z",
+   "updatedAt": "2026-11-02T10:30:00.000Z",
    "value": "",
    "year": "2024-26"
   },
@@ -240,7 +240,7 @@
    "scopeType": "",
    "sectors": "Residential & Commercial Building",
    "status": "Handover Stage",
-   "updatedAt": "2026-10-27T09:30:00.000Z",
+   "updatedAt": "2026-11-02T10:30:00.000Z",
    "value": "",
    "year": "2024-26"
   },
@@ -290,7 +290,7 @@
    "scopeType": "",
    "sectors": "Residential & Commercial Building",
    "status": "Handover Stage",
-   "updatedAt": "2026-10-27T09:30:00.000Z",
+   "updatedAt": "2026-11-02T10:30:00.000Z",
    "value": "",
    "year": "2024-26"
   },
@@ -336,7 +336,7 @@
    "scopeType": "",
    "sectors": "Smart Parking Facility",
    "status": "Handover Stage",
-   "updatedAt": "2026-10-31T06:20:00.000Z",
+   "updatedAt": "2026-11-02T10:30:00.000Z",
    "value": "",
    "year": "2025-26"
   },
@@ -382,7 +382,7 @@
    "scopeType": "",
    "sectors": "Residential & Commercial Building",
    "status": "Ongoing",
-   "updatedAt": "2026-10-27T09:30:00.000Z",
+   "updatedAt": "2026-11-02T10:30:00.000Z",
    "value": "",
    "year": "2025-27"
   },
@@ -432,7 +432,7 @@
    "scopeType": "",
    "sectors": "Residential & Commercial Building",
    "status": "Ongoing",
-   "updatedAt": "2026-10-27T09:30:00.000Z",
+   "updatedAt": "2026-11-02T10:30:00.000Z",
    "value": "",
    "year": "2025-27"
   },
@@ -478,7 +478,7 @@
    "scopeType": "",
    "sectors": "Residential & Commercial Building",
    "status": "Ongoing",
-   "updatedAt": "2026-10-27T12:50:00.000Z",
+   "updatedAt": "2026-11-02T10:30:00.000Z",
    "value": "",
    "year": "2026-28"
   },
@@ -528,7 +528,7 @@
    "scopeType": "",
    "sectors": "Residential & Commercial Building",
    "status": "Ongoing",
-   "updatedAt": "2026-10-27T12:50:00.000Z",
+   "updatedAt": "2026-11-02T10:30:00.000Z",
    "value": "",
    "year": "2026-28"
   },
@@ -616,7 +616,7 @@
    "scopeType": "",
    "sectors": "Residential & Commercial Building",
    "status": "Ongoing",
-   "updatedAt": "2026-10-27T12:50:00.000Z",
+   "updatedAt": "2026-11-02T10:30:00.000Z",
    "value": "",
    "year": "2026-28"
   },
@@ -764,8 +764,10 @@
   },
   "P122": {
    "area": "Plot No. JVC17TCP001B, Jumeirah Village Circle, Al Barsha South Fourth, Dubai",
+   "authorities": "DM, DEWA, DCD, DDA, RTA, Etisalat/DU",
    "client": "MIRFA | ICONIC",
    "code": "DXB-243",
+   "codes": "DCD, DEWA, DM, UAE Fire and Life Safety Code of Practice, BS, IIEE, ASHRAE",
    "createdAt": "2026-10-24T06:15:00.000Z",
    "duration": "",
    "emirate": "DXB",
@@ -806,9 +808,203 @@
    "scopeType": "",
    "sectors": "Residential & Commercial Building",
    "status": "Ongoing",
-   "updatedAt": "2026-10-27T09:30:00.000Z",
+   "updatedAt": "2026-11-02T10:30:00.000Z",
    "value": "",
    "year": "2026-28"
+  },
+  "P123": {
+   "area": "Sobha Hartland, Meydan / Mohammed Bin Rashid (MBR) City, Dubai",
+   "authorities": "DM, DEWA, DCD, DDA, RTA, Etisalat/DU",
+   "client": "Ellington Properties Development",
+   "code": "",
+   "codes": "DCD, DEWA, DM, UAE Fire and Life Safety Code of Practice, BS, IIEE, ASHRAE",
+   "createdAt": "2026-11-02T10:45:00.000Z",
+   "duration": "",
+   "emirate": "DXB",
+   "handoverDate": "",
+   "leadConsultant": "JT & Partners",
+   "levels": "G+2P+12+R",
+   "mainContractor": "Aroma International Building Contracting",
+   "mepConsultant": "JT & Partners",
+   "name": "TheBerkely Place",
+   "no": "P123",
+   "photos": [
+    {
+     "id": "b0f54702aa0008ba0030ca93f0b94cbd",
+     "x": 50,
+     "y": 50
+    },
+    {
+     "id": "792595c8752ef18cd674dcabf4262acd",
+     "x": 50,
+     "y": 72
+    },
+    {
+     "id": "d034ea33927a29cc3b5de62ea4c6bfdd",
+     "x": 50,
+     "y": 55
+    },
+    {
+     "id": "91e8c591529b476684877984e27f8bc0",
+     "x": 50,
+     "y": 55
+    },
+    null
+   ],
+   "scope": "All MEP Scope of Works",
+   "scopeType": "",
+   "sectors": "Residential Building",
+   "startDate": "",
+   "status": "Completed",
+   "updatedAt": "2026-11-02T10:45:00.000Z",
+   "value": "",
+   "year": ""
+  },
+  "P124": {
+   "area": "Al Falak St, Al Sufouh 2, Al Sufouh, Dubai",
+   "authorities": "DM, DEWA, DCD, DDA, RTA, Etisalat/DU",
+   "client": "Sweid & Sweid",
+   "code": "",
+   "codes": "DCD, DEWA, DM, UAE Fire and Life Safety Code of Practice, BS, IIEE, ASHRAE",
+   "createdAt": "2026-11-02T10:45:00.000Z",
+   "duration": "",
+   "emirate": "DXB",
+   "extra": {
+    "building_classification": "LEED Gold Certified"
+   },
+   "handoverDate": "",
+   "leadConsultant": "",
+   "levels": "B+G+6",
+   "mainContractor": "McLaren Construction Group",
+   "mepConsultant": "",
+   "name": "Falak 6 Building",
+   "no": "P124",
+   "photos": [
+    {
+     "id": "445cf2a918c144a617e9ce8e7380327a",
+     "x": 50,
+     "y": 50
+    },
+    {
+     "id": "bbd801bc72ef4907d037f73836e6106f",
+     "x": 50,
+     "y": 55
+    },
+    {
+     "id": "b24e2625eff3e40cbacbf31b820f8065",
+     "x": 50,
+     "y": 50
+    },
+    {
+     "id": "99872ae6a51e156f8e519469c50c2f69",
+     "x": 50,
+     "y": 50
+    },
+    {
+     "id": "405b5367246b1d9f8dafa28795c1638d",
+     "x": 50,
+     "y": 50
+    }
+   ],
+   "scope": "All MEP Scope of Works",
+   "scopeType": "",
+   "sectors": "Commercial Office Building",
+   "startDate": "",
+   "status": "Completed",
+   "updatedAt": "2026-11-02T10:45:00.000Z",
+   "value": "",
+   "year": ""
+  },
+  "P125": {
+   "area": "Aldar Headquarters, Al Raha, Abu Dhabi",
+   "authorities": "Etihad WE, ADM, ADDC, ADCD, Etisalat/DU",
+   "client": "",
+   "code": "",
+   "codes": "Etihad WE, ADM, ADDC, ADCD, Etisalat/DU",
+   "createdAt": "2026-11-02T10:45:00.000Z",
+   "duration": "",
+   "emirate": "AUH",
+   "extra": {
+    "building_classification": "3 Pearl Design Rating"
+   },
+   "handoverDate": "",
+   "leadConsultant": "",
+   "levels": "",
+   "mainContractor": "",
+   "mepConsultant": "",
+   "name": "Beam Trail - Innovation Hub",
+   "no": "P125",
+   "photos": [
+    {
+     "id": "2c7a95bf026afddb188bfd0d0d31b8a9",
+     "x": 50,
+     "y": 50
+    },
+    {
+     "id": "d4d6591ef19247aae02f8959e8aeb928",
+     "x": 50,
+     "y": 52
+    },
+    {
+     "id": "b3096e45d3a5bbd3e5774d2f41432a37",
+     "x": 50,
+     "y": 55
+    },
+    {
+     "id": "e33ae7bb520e8a77478710673022e3ac",
+     "x": 45,
+     "y": 55
+    },
+    null
+   ],
+   "scope": "All MEP Scope of Works",
+   "scopeType": "",
+   "sectors": "Commercial Office Building",
+   "startDate": "",
+   "status": "Completed",
+   "updatedAt": "2026-11-02T10:45:00.000Z",
+   "value": "",
+   "year": ""
+  },
+  "P126": {
+   "area": "",
+   "authorities": "DM, DEWA, DCD, DDA, RTA, Etisalat/DU",
+   "client": "",
+   "code": "",
+   "codes": "DCD, DEWA, DM, UAE Fire and Life Safety Code of Practice, BS, IIEE, ASHRAE",
+   "createdAt": "2026-11-02T10:45:00.000Z",
+   "duration": "",
+   "emirate": "DXB",
+   "handoverDate": "",
+   "leadConsultant": "",
+   "levels": "2B + G + 1 + R",
+   "mainContractor": "",
+   "mepConsultant": "",
+   "name": "Saudi German Hospital",
+   "no": "P126",
+   "photos": [
+    {
+     "id": "d498939aee160e6d0755cd2099827463",
+     "x": 50,
+     "y": 50
+    },
+    {
+     "id": "8bb929efc65e1e0e4fa34afed4fca858",
+     "x": 50,
+     "y": 62
+    },
+    null,
+    null,
+    null
+   ],
+   "scope": "All MEP Scope of Works",
+   "scopeType": "",
+   "sectors": "Health Care",
+   "startDate": "",
+   "status": "Completed",
+   "updatedAt": "2026-11-02T10:45:00.000Z",
+   "value": "",
+   "year": ""
   }
  },
  "logos": {
@@ -832,6 +1028,13 @@
    "name": "Al Masaood National General Contracting LLC",
    "updatedAt": "2026-10-30T13:30:00.000Z",
    "w": 148
+  },
+  "al-shafar-engineering": {
+   "h": 145,
+   "id": "1f7e20dccac5611f4726e25b15b68840",
+   "name": "Al Shafar Engineering LLC",
+   "updatedAt": "2026-11-02T10:45:00.000Z",
+   "w": 700
   },
   "al-wasl-al-jadeed-consultants": {
    "h": 356,
@@ -868,12 +1071,33 @@
    "updatedAt": "2026-10-30T13:30:00.000Z",
    "w": 276
   },
+  "beam-trail": {
+   "h": 242,
+   "id": "8d93364f9f0f6d533a3f4076a5ec3315",
+   "name": "Beam Trail",
+   "updatedAt": "2026-11-02T10:45:00.000Z",
+   "w": 700
+  },
   "bur-juman-centre": {
-   "name": "Bur Juman Centre LLC",
-   "id": "ca66d31c7e1730d7161f5eac107ceac3",
-   "w": 700,
    "h": 168,
-   "updatedAt": "2026-10-31T06:20:00.000Z"
+   "id": "ca66d31c7e1730d7161f5eac107ceac3",
+   "name": "Bur Juman Centre LLC",
+   "updatedAt": "2026-10-31T06:20:00.000Z",
+   "w": 700
+  },
+  "consistent-engineering-consultants": {
+   "h": 314,
+   "id": "325d3a70821d30ac42e7edec403aafaf",
+   "name": "Consistent Engineering Consultants",
+   "updatedAt": "2026-11-02T10:45:00.000Z",
+   "w": 700
+  },
+  "cystal-five": {
+   "h": 208,
+   "id": "091beb4a911143479a4bc76e7c896c48",
+   "name": "Cystal Five",
+   "updatedAt": "2026-11-02T10:45:00.000Z",
+   "w": 700
   },
   "dutco-constructions": {
    "h": 340,
@@ -903,6 +1127,13 @@
    "updatedAt": "2026-10-30T13:30:00.000Z",
    "w": 695
   },
+  "gce-consultants": {
+   "h": 292,
+   "id": "f07051b76aafd9fffc8ae2b5dcfa34b9",
+   "name": "GCE Consultants",
+   "updatedAt": "2026-11-02T10:45:00.000Z",
+   "w": 614
+  },
   "high-beam-contracting": {
    "h": 577,
    "id": "887144a5597893b05a868098d5b67c3c",
@@ -917,12 +1148,26 @@
    "updatedAt": "2026-10-30T13:30:00.000Z",
    "w": 671
   },
+  "khatib-and-alami": {
+   "h": 416,
+   "id": "d390177b2479f5f0309417b5bc8b26e9",
+   "name": "Khatib & Alami",
+   "updatedAt": "2026-11-02T10:45:00.000Z",
+   "w": 700
+  },
   "lacasa-architects-and-engineering-consultants": {
    "h": 108,
    "id": "b85e5ec10e24ce74ff607a59714086a1",
    "name": "LACASA Architects & Engineering Consultants",
    "updatedAt": "2026-10-30T13:30:00.000Z",
    "w": 700
+  },
+  "loci": {
+   "h": 481,
+   "id": "926713ddc269eb15b848c565e88ecf78",
+   "name": "Loci",
+   "updatedAt": "2026-11-02T10:45:00.000Z",
+   "w": 636
   },
   "mclaren-construction-group": {
    "h": 217,
@@ -959,6 +1204,13 @@
    "updatedAt": "2026-10-30T13:30:00.000Z",
    "w": 700
   },
+  "palm-jebel-ali": {
+   "h": 193,
+   "id": "d96cadd469b5cd76c5246fe8a95c141e",
+   "name": "Palm Jebel Ali",
+   "updatedAt": "2026-11-02T10:45:00.000Z",
+   "w": 700
+  },
   "roberts-and": {
    "h": 1028,
    "id": "7278a4d81c3a79329e35e33419d8fecc",
@@ -973,6 +1225,13 @@
    "updatedAt": "2026-10-30T13:30:00.000Z",
    "w": 665
   },
+  "saudi-german-hospital": {
+   "h": 214,
+   "id": "e6766803794b3bc4eec03f31275f57ed",
+   "name": "Saudi German Hospital",
+   "updatedAt": "2026-11-02T10:45:00.000Z",
+   "w": 700
+  },
   "transemitares-contracting": {
    "h": 193,
    "id": "acde9c4487b751c300f518af80b3ead2",
@@ -981,11 +1240,11 @@
    "w": 700
   },
   "wsp": {
-   "name": "WSP",
-   "id": "980478f6022da994a17b306cfd511dd7",
-   "w": 700,
    "h": 333,
-   "updatedAt": "2026-10-31T06:20:00.000Z"
+   "id": "980478f6022da994a17b306cfd511dd7",
+   "name": "WSP",
+   "updatedAt": "2026-10-31T06:20:00.000Z",
+   "w": 700
   }
  }
 }

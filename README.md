@@ -3,7 +3,7 @@
 One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, QA/QC (the Project Quality Plan hand-off to PQP Maker and each project's Method Statement Log) and HSE (the hand-off to HSE Plan Maker).
 
 **Use the app:** [Oxypro Project Library on Claude](https://claude.ai/artifact/T3U712ufURSuMQTfsGDkMy) (shared as "Anyone with the link")
-**Version:** 1.15.0 (31 Oct 2026)
+**Version:** 1.15.1 (2 Nov 2026)
 **Developed by** Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.
 
 This repository holds the source code and the GitHub edition website. The app runs as a Claude artifact: its project list, photos and MSRA Logs live in the artifact's shared database and storage.
@@ -12,7 +12,7 @@ This repository holds the source code and the GitHub edition website. The app ru
 
 `docs/` is the same Library as a plain website that runs without Claude, for GitHub Pages:
 
-- The projects, photos and company logos are a copy of the library as of 31 Oct 2026 (`github/snapshot.json`, `docs/photos/`). They are read-only here: no Add, Import, Edit or photo upload. Changes are made in the Claude library and copied here with a new snapshot.
+- The projects, photos and company logos are a copy of the library as of 2 Nov 2026 (`github/snapshot.json`, `docs/photos/`, `docs/logos/`). Contract values are left out of this public copy (`build.py` blanks them). They are read-only here: no Add, Import, Edit or photo upload. Changes are made in the Claude library and copied here with a new snapshot.
 - Presentations (PDF, PowerPoint), Export to Excel, QA/QC (PQP details and file, the MSRA Log) and HSE all work. MSRA Logs are saved in the visitor's browser on that device; Save as gives the Excel or PDF to keep or share. Print opens the PDF in a new tab.
 - `src/github/runtime.js` stands in for Claude's runtime (`window.claude`); the page code is the same as the Claude edition.
 

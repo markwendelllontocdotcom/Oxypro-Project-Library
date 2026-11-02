@@ -765,7 +765,7 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.15.0 (31 Oct 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.15.1 (2 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -829,8 +829,8 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.15.0';
-const APP_DATE = '31 Oct 2026';   // shown in the footer and in About
+const APP_VERSION = '1.15.1';
+const APP_DATE = '2 Nov 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
 const SNAP_DATE = String(window.__OPL_SNAPSHOT || '');
@@ -885,7 +885,9 @@ const blobUrl = id => GH ? 'photos/' + encodeURIComponent(id) + '.jpg' : '/_blob
 const safeName = s => String(s || '').replace(/[\\/:*?"<>|]+/g, '-').replace(/\s+/g, ' ').trim().slice(0, 120);
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const isNum = v => /^-?\d[\d,]*(\.\d+)?$/.test(String(v == null ? '' : v).trim());
-function fmtValue(v) { const s = String(v == null ? '' : v).trim(); if (!isNum(s)) return s; return 'AED ' + Number(s.replace(/,/g, '')).toLocaleString('en-US', { maximumFractionDigits: 2 }); }
+// a plain number shows as AED 24,500,000; a short form typed in the Master List (22 M, 1.5 bn, 750 K) gets AED in front
+const SHORT_VALUE = /^\d[\d,]*(\.\d+)?\s*(k|m|mn|mil|million|b|bn|billion)\.?$/i;
+function fmtValue(v) { const s = String(v == null ? '' : v).trim(); if (!isNum(s)) return SHORT_VALUE.test(s) ? 'AED ' + s : s; return 'AED ' + Number(s.replace(/,/g, '')).toLocaleString('en-US', { maximumFractionDigits: 2 }); }
 function fmtDuration(v) { const s = String(v == null ? '' : v).trim(); if (!/^\d+(\.\d+)?$/.test(s)) return s; return s + (Number(s) === 1 ? ' month' : ' months'); }
 function fmtDate(v) { const s = String(v == null ? '' : v).trim(); const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/); return m ? `${+m[3]} ${MON[+m[2] - 1]} ${m[1]}` : s; }
 const STATUSES = [['Completed', 'st-done', 'completed'], ['Handover Stage', 'st-hand', 'at handover'], ['Ongoing', 'st-on', 'ongoing']];
@@ -1916,7 +1918,7 @@ const slugKey = t => String(t).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace
 const SKIP_HDR = /^(s\.?\s?no\.?|sr\.?\s?no\.?|sl\.?\s?no\.?|#|no\.?|serial( no\.?)?)$/i;
 function extraList() {
   const out = S.extraCols.filter(c => c && c.key).slice(), seen = new Set(out.map(c => c.key));
-  for (const p of S.projects.values()) for (const k of Object.keys(p.extra || {})) if (!seen.has(k)) { seen.add(k); out.push({ key: k, label: k.replace(/_/g, ' ') }); }
+  for (const p of S.projects.values()) for (const k of Object.keys(p.extra || {})) if (!seen.has(k)) { seen.add(k); out.push({ key: k, label: k.replace(/_/g, ' ').replace(/\b[a-z]/g, c => c.toUpperCase()) }); }
   return out;
 }
 async function onXlsxFile(e) {
@@ -3426,6 +3428,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.15.1', '2 Nov 2026', 'Contract values typed as "22 M" in the Master List show as "AED 22 M" on the sheets, the summary and the project details. The GitHub edition leaves contract values out.'],
   ['1.15.0', '31 Oct 2026', 'Calibri in the whole app: every screen, the presentation pages (project names and page titles too) with their PDF and PowerPoint, and the MSRA Log sheet with its Excel and PDF. Where Calibri is not installed (phones, tablets) the app shows Carlito, which has the same letter widths; the PDFs carry Carlito too, as Calibri cannot be built into a file.'],
   ['1.14.0', '31 Oct 2026', 'References page as the last page of every presentation: the logos of the main contractors, consultants and clients in a grid, on a faded Oxypro pattern, a faded library photo or no background. Logos can be left out or added from your device.'],
   ['1.13.0', '30 Oct 2026', 'QA/QC > Generate MSRA: a project file for the MSRA Generator with the project details, the client, consultant and main contractor logos and a cover photo. Company logos on each project, kept once per company.'],
@@ -3477,7 +3480,7 @@ function openAbout() {
         </ol></section>
       <section><h3>Your data</h3>
         <ul>
-${GH ? `<li>This is the GitHub edition: the projects and photos are a copy of the library as of ${esc(SNAP_DATE)} and cannot be changed here. The live library, where editors add and change projects, is <a href="${CLAUDE_URL}" target="_blank" rel="noopener">in Claude</a>.</li>
+${GH ? `<li>This is the GitHub edition: the projects and photos are a copy of the library as of ${esc(SNAP_DATE)} and cannot be changed here. Contract values are left out of this copy. The live library, where editors add and change projects, is <a href="${CLAUDE_URL}" target="_blank" rel="noopener">in Claude</a>.</li>
           <li>MSRA Logs you save here stay in this browser on this device only. Use Save as to keep them as Excel or PDF files, or to pass them on.</li>
           <li>Files you make (PDF, PowerPoint, Excel, PQP files) are downloaded to your device; Print opens the PDF for printing.</li>` : `<li>Projects, photos and MSRA Logs are kept in this shared library in Claude. Everyone with the link sees the same, up-to-date list.</li>
           <li>Only the library's owner and editors can add or change projects, photos and MSRA Logs${w ? ' (you can)' : ' (you can view, make presentations and download files)'}.</li>

@@ -33,6 +33,8 @@ snap_path=os.path.join(here,'github','snapshot.json')
 if os.path.exists(snap_path):
     snap=json.load(open(snap_path))
     rt=open(os.path.join(here,'src','github','runtime.js')).read()
+    # contract values stay in the Claude library only: the GitHub website is public (user's choice 2 Nov 2026)
+    for p in snap['projects'].values(): p['value']=''
     data=json.dumps(snap['projects'],ensure_ascii=False,separators=(',',':')).replace('</','<\\/')
     assert '__PROJECTS__' in rt and '__SNAPSHOT_DATE__' in rt
     logos=json.dumps(snap.get('logos',{}),ensure_ascii=False,separators=(',',':')).replace('</','<\\/')
