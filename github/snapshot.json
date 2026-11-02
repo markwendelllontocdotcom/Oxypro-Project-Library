@@ -1,7 +1,201 @@
 {
  "date": "2 Nov 2026",
- "taken": "2026-11-02T10:50:00Z",
+ "taken": "2026-11-02T12:15:00Z",
  "projects": {
+  "P096": {
+   "area": "Sobha Hartland, Meydan / Mohammed Bin Rashid (MBR) City, Dubai",
+   "authorities": "DM, DEWA, DCD, DDA, RTA, Etisalat/DU",
+   "client": "Ellington Properties Development",
+   "code": "P096",
+   "codes": "DCD, DEWA, DM, UAE Fire and Life Safety Code of Practice, BS, IIEE, ASHRAE",
+   "createdAt": "2026-11-02T10:45:00.000Z",
+   "duration": "",
+   "emirate": "DXB",
+   "handoverDate": "",
+   "leadConsultant": "JT & Partners",
+   "levels": "G+2P+12+R",
+   "mainContractor": "Aroma International Building Contracting",
+   "mepConsultant": "JT & Partners",
+   "name": "TheBerkely Place",
+   "no": "P096",
+   "photos": [
+    {
+     "id": "b0f54702aa0008ba0030ca93f0b94cbd",
+     "x": 50,
+     "y": 50
+    },
+    {
+     "id": "792595c8752ef18cd674dcabf4262acd",
+     "x": 50,
+     "y": 72
+    },
+    {
+     "id": "d034ea33927a29cc3b5de62ea4c6bfdd",
+     "x": 50,
+     "y": 55
+    },
+    {
+     "id": "91e8c591529b476684877984e27f8bc0",
+     "x": 50,
+     "y": 55
+    },
+    null
+   ],
+   "scope": "All MEP Scope of Works",
+   "scopeType": "",
+   "sectors": "Residential Building",
+   "startDate": "",
+   "status": "Completed",
+   "updatedAt": "2026-11-02T12:10:00.000Z",
+   "value": "",
+   "year": ""
+  },
+  "P097": {
+   "area": "Al Falak St, Al Sufouh 2, Al Sufouh, Dubai",
+   "authorities": "DM, DEWA, DCD, DDA, RTA, Etisalat/DU",
+   "client": "Sweid & Sweid",
+   "code": "P097",
+   "codes": "DCD, DEWA, DM, UAE Fire and Life Safety Code of Practice, BS, IIEE, ASHRAE",
+   "createdAt": "2026-11-02T10:45:00.000Z",
+   "duration": "",
+   "emirate": "DXB",
+   "extra": {
+    "building_classification": "LEED Gold Certified"
+   },
+   "handoverDate": "",
+   "leadConsultant": "",
+   "levels": "B+G+6",
+   "mainContractor": "McLaren Construction Group",
+   "mepConsultant": "",
+   "name": "Falak 6 Building",
+   "no": "P097",
+   "photos": [
+    {
+     "id": "445cf2a918c144a617e9ce8e7380327a",
+     "x": 50,
+     "y": 50
+    },
+    {
+     "id": "bbd801bc72ef4907d037f73836e6106f",
+     "x": 50,
+     "y": 55
+    },
+    {
+     "id": "b24e2625eff3e40cbacbf31b820f8065",
+     "x": 50,
+     "y": 50
+    },
+    {
+     "id": "99872ae6a51e156f8e519469c50c2f69",
+     "x": 50,
+     "y": 50
+    },
+    {
+     "id": "405b5367246b1d9f8dafa28795c1638d",
+     "x": 50,
+     "y": 50
+    }
+   ],
+   "scope": "All MEP Scope of Works",
+   "scopeType": "",
+   "sectors": "Commercial Office Building",
+   "startDate": "",
+   "status": "Completed",
+   "updatedAt": "2026-11-02T12:10:00.000Z",
+   "value": "",
+   "year": ""
+  },
+  "P098": {
+   "area": "Aldar Headquarters, Al Raha, Abu Dhabi",
+   "authorities": "Etihad WE, ADM, ADDC, ADCD, Etisalat/DU",
+   "client": "",
+   "code": "P098",
+   "codes": "Etihad WE, ADM, ADDC, ADCD, Etisalat/DU",
+   "createdAt": "2026-11-02T10:45:00.000Z",
+   "duration": "",
+   "emirate": "AUH",
+   "extra": {
+    "building_classification": "3 Pearl Design Rating"
+   },
+   "handoverDate": "",
+   "leadConsultant": "",
+   "levels": "",
+   "mainContractor": "",
+   "mepConsultant": "",
+   "name": "Beam Trail - Innovation Hub",
+   "no": "P098",
+   "photos": [
+    {
+     "id": "2c7a95bf026afddb188bfd0d0d31b8a9",
+     "x": 50,
+     "y": 50
+    },
+    {
+     "id": "d4d6591ef19247aae02f8959e8aeb928",
+     "x": 50,
+     "y": 52
+    },
+    {
+     "id": "b3096e45d3a5bbd3e5774d2f41432a37",
+     "x": 50,
+     "y": 55
+    },
+    {
+     "id": "e33ae7bb520e8a77478710673022e3ac",
+     "x": 45,
+     "y": 55
+    },
+    null
+   ],
+   "scope": "All MEP Scope of Works",
+   "scopeType": "",
+   "sectors": "Commercial Office Building",
+   "startDate": "",
+   "status": "Completed",
+   "updatedAt": "2026-11-02T12:10:00.000Z",
+   "value": "",
+   "year": ""
+  },
+  "P099": {
+   "area": "",
+   "authorities": "DM, DEWA, DCD, DDA, RTA, Etisalat/DU",
+   "client": "",
+   "code": "P099",
+   "codes": "DCD, DEWA, DM, UAE Fire and Life Safety Code of Practice, BS, IIEE, ASHRAE",
+   "createdAt": "2026-11-02T10:45:00.000Z",
+   "duration": "",
+   "emirate": "DXB",
+   "handoverDate": "",
+   "leadConsultant": "",
+   "levels": "2B + G + 1 + R",
+   "mainContractor": "",
+   "mepConsultant": "",
+   "name": "Saudi German Hospital",
+   "no": "P099",
+   "photos": [
+    {
+     "id": "d498939aee160e6d0755cd2099827463",
+     "x": 50,
+     "y": 50
+    },
+    {
+     "id": "8bb929efc65e1e0e4fa34afed4fca858",
+     "x": 50,
+     "y": 62
+    },
+    null,
+    null,
+    null
+   ],
+   "scope": "All MEP Scope of Works",
+   "scopeType": "",
+   "sectors": "Health Care",
+   "startDate": "",
+   "status": "Completed",
+   "updatedAt": "2026-11-02T12:10:00.000Z",
+   "value": "",
+   "year": ""
+  },
   "P100": {
    "area": "Bur Dubai, Dubai",
    "authorities": "DM, DEWA, DCD, DDA, RTA, Etisalat/DU",
@@ -811,200 +1005,6 @@
    "updatedAt": "2026-11-02T10:30:00.000Z",
    "value": "",
    "year": "2026-28"
-  },
-  "P123": {
-   "area": "Sobha Hartland, Meydan / Mohammed Bin Rashid (MBR) City, Dubai",
-   "authorities": "DM, DEWA, DCD, DDA, RTA, Etisalat/DU",
-   "client": "Ellington Properties Development",
-   "code": "",
-   "codes": "DCD, DEWA, DM, UAE Fire and Life Safety Code of Practice, BS, IIEE, ASHRAE",
-   "createdAt": "2026-11-02T10:45:00.000Z",
-   "duration": "",
-   "emirate": "DXB",
-   "handoverDate": "",
-   "leadConsultant": "JT & Partners",
-   "levels": "G+2P+12+R",
-   "mainContractor": "Aroma International Building Contracting",
-   "mepConsultant": "JT & Partners",
-   "name": "TheBerkely Place",
-   "no": "P123",
-   "photos": [
-    {
-     "id": "b0f54702aa0008ba0030ca93f0b94cbd",
-     "x": 50,
-     "y": 50
-    },
-    {
-     "id": "792595c8752ef18cd674dcabf4262acd",
-     "x": 50,
-     "y": 72
-    },
-    {
-     "id": "d034ea33927a29cc3b5de62ea4c6bfdd",
-     "x": 50,
-     "y": 55
-    },
-    {
-     "id": "91e8c591529b476684877984e27f8bc0",
-     "x": 50,
-     "y": 55
-    },
-    null
-   ],
-   "scope": "All MEP Scope of Works",
-   "scopeType": "",
-   "sectors": "Residential Building",
-   "startDate": "",
-   "status": "Completed",
-   "updatedAt": "2026-11-02T10:45:00.000Z",
-   "value": "",
-   "year": ""
-  },
-  "P124": {
-   "area": "Al Falak St, Al Sufouh 2, Al Sufouh, Dubai",
-   "authorities": "DM, DEWA, DCD, DDA, RTA, Etisalat/DU",
-   "client": "Sweid & Sweid",
-   "code": "",
-   "codes": "DCD, DEWA, DM, UAE Fire and Life Safety Code of Practice, BS, IIEE, ASHRAE",
-   "createdAt": "2026-11-02T10:45:00.000Z",
-   "duration": "",
-   "emirate": "DXB",
-   "extra": {
-    "building_classification": "LEED Gold Certified"
-   },
-   "handoverDate": "",
-   "leadConsultant": "",
-   "levels": "B+G+6",
-   "mainContractor": "McLaren Construction Group",
-   "mepConsultant": "",
-   "name": "Falak 6 Building",
-   "no": "P124",
-   "photos": [
-    {
-     "id": "445cf2a918c144a617e9ce8e7380327a",
-     "x": 50,
-     "y": 50
-    },
-    {
-     "id": "bbd801bc72ef4907d037f73836e6106f",
-     "x": 50,
-     "y": 55
-    },
-    {
-     "id": "b24e2625eff3e40cbacbf31b820f8065",
-     "x": 50,
-     "y": 50
-    },
-    {
-     "id": "99872ae6a51e156f8e519469c50c2f69",
-     "x": 50,
-     "y": 50
-    },
-    {
-     "id": "405b5367246b1d9f8dafa28795c1638d",
-     "x": 50,
-     "y": 50
-    }
-   ],
-   "scope": "All MEP Scope of Works",
-   "scopeType": "",
-   "sectors": "Commercial Office Building",
-   "startDate": "",
-   "status": "Completed",
-   "updatedAt": "2026-11-02T10:45:00.000Z",
-   "value": "",
-   "year": ""
-  },
-  "P125": {
-   "area": "Aldar Headquarters, Al Raha, Abu Dhabi",
-   "authorities": "Etihad WE, ADM, ADDC, ADCD, Etisalat/DU",
-   "client": "",
-   "code": "",
-   "codes": "Etihad WE, ADM, ADDC, ADCD, Etisalat/DU",
-   "createdAt": "2026-11-02T10:45:00.000Z",
-   "duration": "",
-   "emirate": "AUH",
-   "extra": {
-    "building_classification": "3 Pearl Design Rating"
-   },
-   "handoverDate": "",
-   "leadConsultant": "",
-   "levels": "",
-   "mainContractor": "",
-   "mepConsultant": "",
-   "name": "Beam Trail - Innovation Hub",
-   "no": "P125",
-   "photos": [
-    {
-     "id": "2c7a95bf026afddb188bfd0d0d31b8a9",
-     "x": 50,
-     "y": 50
-    },
-    {
-     "id": "d4d6591ef19247aae02f8959e8aeb928",
-     "x": 50,
-     "y": 52
-    },
-    {
-     "id": "b3096e45d3a5bbd3e5774d2f41432a37",
-     "x": 50,
-     "y": 55
-    },
-    {
-     "id": "e33ae7bb520e8a77478710673022e3ac",
-     "x": 45,
-     "y": 55
-    },
-    null
-   ],
-   "scope": "All MEP Scope of Works",
-   "scopeType": "",
-   "sectors": "Commercial Office Building",
-   "startDate": "",
-   "status": "Completed",
-   "updatedAt": "2026-11-02T10:45:00.000Z",
-   "value": "",
-   "year": ""
-  },
-  "P126": {
-   "area": "",
-   "authorities": "DM, DEWA, DCD, DDA, RTA, Etisalat/DU",
-   "client": "",
-   "code": "",
-   "codes": "DCD, DEWA, DM, UAE Fire and Life Safety Code of Practice, BS, IIEE, ASHRAE",
-   "createdAt": "2026-11-02T10:45:00.000Z",
-   "duration": "",
-   "emirate": "DXB",
-   "handoverDate": "",
-   "leadConsultant": "",
-   "levels": "2B + G + 1 + R",
-   "mainContractor": "",
-   "mepConsultant": "",
-   "name": "Saudi German Hospital",
-   "no": "P126",
-   "photos": [
-    {
-     "id": "d498939aee160e6d0755cd2099827463",
-     "x": 50,
-     "y": 50
-    },
-    {
-     "id": "8bb929efc65e1e0e4fa34afed4fca858",
-     "x": 50,
-     "y": 62
-    },
-    null,
-    null,
-    null
-   ],
-   "scope": "All MEP Scope of Works",
-   "scopeType": "",
-   "sectors": "Health Care",
-   "startDate": "",
-   "status": "Completed",
-   "updatedAt": "2026-11-02T10:45:00.000Z",
-   "value": "",
-   "year": ""
   }
  },
  "logos": {
