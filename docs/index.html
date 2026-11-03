@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Oxypro Project Library</title>
-<link rel="icon" href="favicon.ico?v=1.16.0" sizes="any">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=1.16.0">
+<link rel="icon" href="favicon.ico?v=1.16.1" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=1.16.1">
 <meta name="theme-color" content="#D81F27">
 <meta name="description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP and Method Statement Logs) and HSE Plans.">
 <meta property="og:type" content="website">
@@ -13,12 +13,12 @@
 <meta property="og:title" content="Oxypro Project Library">
 <meta property="og:description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP and Method Statement Logs) and HSE Plans.">
 <meta property="og:url" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/">
-<meta property="og:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.16.0">
+<meta property="og:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.16.1">
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
 <meta property="og:image:alt" content="Oxypro Library logo">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.16.0">
+<meta name="twitter:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.16.1">
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 </head>
 <body>
@@ -800,7 +800,7 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.16.0 (3 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.16.1 (3 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -934,7 +934,7 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.16.0';
+const APP_VERSION = '1.16.1';
 const APP_DATE = '3 Nov 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
@@ -1256,6 +1256,7 @@ function renderDetail() {
         ${w ? '<button type="button" class="btn" data-act="edit">Edit</button>' : ''}
         ${qaqcHTML(p)}
         <button type="button" class="btn" data-act="hse" title="HSE Plan: send this project to HSE Plan Maker">${GLYPH.hse}HSE</button>
+        ${GH ? '' : '<button type="button" class="btn" data-act="pq" title="Pre-Qualification: open the company PQ for this project in the PQ Generator">PQ</button>'}
       </div>
       <dl class="dl">
         ${dRow('Project code', p.code)}${dRow('Level / floors', p.levels)}${dRow('Area', p.area)}${dRow('Year', p.year)}
@@ -1441,14 +1442,13 @@ function openMsraGen(no) {
   });
 }
 
-/* QA/QC on a project: a menu with the PQP and the MSRA Log */
+/* QA/QC on a project: a menu with the PQP, the MSRA Log and the MSRA Generator */
 function qaqcHTML(p) {
   return `<div class="qmenu"><button type="button" class="btn" id="btn-qaqc" data-act="qaqc" aria-haspopup="menu" aria-expanded="false" aria-controls="qaqc-menu">${GLYPH.qaqc}QA/QC${GLYPH.chev}</button>
     <div class="menu" id="qaqc-menu" role="menu" aria-label="QA/QC" hidden>
       <button type="button" class="menu-item" role="menuitem" data-act="pqp"><span><b>PQP details and file</b><small>Project Quality Plan in PQP Maker, or a PQP file</small></span></button>
       ${msMenuItemHTML(p)}
       <button type="button" class="menu-item" role="menuitem" data-act="msragen"><span><b>Generate MSRA</b><small>Project file for the MSRA Generator: details and logos</small></span></button>
-      ${GH ? '' : '<button type="button" class="menu-item" role="menuitem" data-act="pq"><span><b>Pre-Qualification (PQ)</b><small>Company Pre-Qualification for this project in the PQ Generator</small></span></button>'}
     </div></div>`;
 }
 function closeQaqc(focus) {
@@ -1545,7 +1545,7 @@ async function handleAct(act) {
     case 'pqp': closeQaqc(); if (p) openPqp(p.no); return;
     case 'msra': closeQaqc(); if (p) openMsra(p.no); return;
     case 'msragen': closeQaqc(); if (p) openMsraGen(p.no); return;
-    case 'pq': closeQaqc(); if (p) openPq(p.no); return;
+    case 'pq': if (p) openPq(p.no); return;
     case 'lg-rm-yes': return removeLogo();
     case 'lg-rm-no': S.lgConfirm = null; return renderDetail();
     case 'hse': if (p) openHse(p.no); return;
@@ -3535,6 +3535,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.16.1', '3 Nov 2026', 'Pre-Qualification has its own PQ button next to HSE (it was in the QA/QC menu).'],
   ['1.16.0', '3 Nov 2026', 'QA/QC > Pre-Qualification (PQ): the PQ Generator is part of the Library. It opens on the project with its details and Library page, uses the live projects and photos, and takes the company documents kept in the Library (editors replace them from the Company Documents folder). Word and PDF are saved through Claude; Print saves the PDF to print. Not in the GitHub edition.'],
   ['1.15.1', '2 Nov 2026', 'Contract values typed as "22 M" in the Master List show as "AED 22 M" on the sheets, the summary and the project details. The GitHub edition leaves contract values out.'],
   ['1.15.0', '31 Oct 2026', 'Calibri in the whole app: every screen, the presentation pages (project names and page titles too) with their PDF and PowerPoint, and the MSRA Log sheet with its Excel and PDF. Where Calibri is not installed (phones, tablets) the app shows Carlito, which has the same letter widths; the PDFs carry Carlito too, as Calibri cannot be built into a file.'],
@@ -3571,7 +3572,7 @@ function openAbout() {
         <ul>
           <li><b>Projects:</b> search and filter by emirate, status and sector; each project shows its details from the Projects Master List and up to five photos.</li>
           <li><b>Presentations:</b> select one or more projects for a top sheet, an Oxypro Project Presentation Sheet per project, a summary page and a references page with the logos of the main contractors, consultants and clients, as PDF or PowerPoint; View / Present runs them full screen first.</li>
-          <li><b>QA/QC:</b> <b>PQP details and file</b> opens PQP Maker with the project's PQP already created, or saves a PQP file. <b>MSRA Log</b> is the project's Method Statement Submittal Log in the Oxypro template, with the Summary, seven discipline logs and the planner's MSL, saved as Excel or PDF. <b>Generate MSRA</b> saves a project file for the MSRA Generator with the project's details, the client, consultant and main contractor logos and a cover photo.${GH ? '' : ' <b>Pre-Qualification (PQ)</b> opens the PQ Generator inside the Library for the project: the company Pre-Qualification in the standard format with the project details and its Library page, the company documents kept in the Library, editable organization chart and CVs, saved as Word or PDF.'}</li>
+          <li><b>QA/QC:</b> <b>PQP details and file</b> opens PQP Maker with the project's PQP already created, or saves a PQP file. <b>MSRA Log</b> is the project's Method Statement Submittal Log in the Oxypro template, with the Summary, seven discipline logs and the planner's MSL, saved as Excel or PDF. <b>Generate MSRA</b> saves a project file for the MSRA Generator with the project's details, the client, consultant and main contractor logos and a cover photo.${GH ? '' : ' <b>PQ</b> (its own button, next to <b>HSE</b>) opens the PQ Generator inside the Library for the project: the company Pre-Qualification in the standard format with the project details and its Library page, the company documents kept in the Library, editable organization chart and CVs, saved as Word or PDF.'}</li>
           <li><b>Company logos:</b> one logo per client, consultant and contractor, shown on every project with that company.</li>
           <li><b>HSE:</b> sends the project's details and a cover photo of your choice to HSE Plan Maker for the Project HSE Plan.</li>
           <li><b>Master List:</b> add projects, import from the Projects Master List (Excel) and export the whole list in the same layout.</li>
@@ -3582,7 +3583,7 @@ function openAbout() {
           <li>For a presentation, tick the projects and choose <b>Make presentation</b>, or use <b>New presentation sheet</b> on one project. Adjust photos and text, then <b>View / Present</b>, <b>Download PDF</b> or <b>Download PowerPoint</b>.</li>
           <li>For a PQP, open the project, choose <b>QA/QC</b> and then <b>PQP details and file</b>, pick the cover photo, then <b>Open in PQP Maker</b>.</li>
           <li>For the Method Statement Log, choose <b>QA/QC</b> and then <b>Create MSRA Log</b> (or <b>Open MSRA Log</b>). Use <b>Edit</b> to change it, <b>Save to library</b> to keep it, <b>Save as</b> for Excel or PDF and <b>Print</b> for a print-ready PDF.</li>
-          ${GH ? '' : '<li>For a Pre-Qualification, choose <b>QA/QC</b> and then <b>Pre-Qualification (PQ)</b>. The first PQ of a project starts with its details and Library page; the next time the same PQ opens again (New starts another one). PQs are kept in that browser; Save gives a .pqg.json file the PQ Generator opens. The company documents are the ones kept in the Library; editors replace them in Company documents.</li>'}
+          ${GH ? '' : '<li>For a Pre-Qualification, choose <b>PQ</b> (next to <b>HSE</b>). The first PQ of a project starts with its details and Library page; the next time the same PQ opens again (New starts another one). PQs are kept in that browser; Save gives a .pqg.json file the PQ Generator opens. The company documents are the ones kept in the Library; editors replace them in Company documents.</li>'}
           <li>For the MSRA Generator, choose <b>QA/QC</b> and then <b>Generate MSRA</b>, pick the consultant (when there are two) and the cover photo, then <b>Save MSRA project file</b>. In the MSRA Generator choose <b>Open project</b> and pick the file (save the project open there first).</li>
           <li>For an HSE Plan, choose <b>HSE</b>, keep the main photo or pick another one (or no photo), then <b>Open in HSE Plan Maker</b> and paste the photo there with Ctrl+V. Or <b>Save HSE Plan file</b>, then in HSE Plan Maker choose <b>Import project</b> and pick the file.</li>
           <li>Click <b>Project Library</b> at the top to come back to the list from any page. <b>View</b> switches between Light, Dark and Auto.</li>
