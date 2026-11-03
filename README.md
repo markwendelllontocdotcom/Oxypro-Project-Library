@@ -3,10 +3,12 @@
 One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, QA/QC (the Project Quality Plan hand-off to PQP Maker and each project's Method Statement Log) and HSE (the hand-off to HSE Plan Maker).
 
 **Use the app:** [Oxypro Project Library on Claude](https://claude.ai/artifact/T3U712ufURSuMQTfsGDkMy) (shared as "Anyone with the link")
-**Version:** 1.15.1 (2 Nov 2026)
+**Version:** 1.16.0 (3 Nov 2026)
 **Developed by** Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.
 
 This repository holds the source code and the GitHub edition website. The app runs as a Claude artifact: its project list, photos and MSRA Logs live in the artifact's shared database and storage.
+
+The Claude edition also has QA/QC > Pre-Qualification (PQ), which opens the PQ Generator inside the Library. The PQ Generator page and the company documents it uses are kept in Claude only and are not part of this repository or the GitHub edition.
 
 ## GitHub edition
 

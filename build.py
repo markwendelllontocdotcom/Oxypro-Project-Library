@@ -1,4 +1,4 @@
-import json, os
+import json, os, shutil
 here=os.path.dirname(os.path.abspath(__file__))
 a=json.load(open(os.path.join(here,'build','assets.json')))
 s=open(os.path.join(here,'src','library.html')).read()
@@ -25,6 +25,15 @@ os.makedirs(os.path.join(here,'dist'),exist_ok=True)
 out=os.path.join(here,'dist','Oxypro Project Library.html')
 open(out,'w').write(s)
 print(out, round(len(s)/1024),'KB')
+# the PQ Generator page (Claude edition only): build/pq-generator.html is the PQ Generator build (1.0.5 or later)
+pq=os.path.join(here,'build','pq-generator.html')
+if os.path.exists(pq):
+    # claude.ai refuses a published file with the character U+FFFD; in the PQ build it occurs only inside JavaScript
+    # string literals (character tables of the bundled libraries), where the escape \uFFFD is the same character
+    # (checked with tools/check-fffd.cjs of the PQ Generator source)
+    t=open(pq,encoding='utf-8').read(); n=t.count('\ufffd'); t=t.replace('\ufffd','\\uFFFD')
+    open(os.path.join(here,'dist','pq-generator.html'),'w',encoding='utf-8').write(t)
+    print('dist/pq-generator.html', round(len(t.encode())/1024),'KB', '(%d U+FFFD escaped)'%n)
 
 # GitHub edition: the same page as a static website (site/), with runtime.js standing in for Claude's runtime,
 # the project snapshot inlined and the photos as files
