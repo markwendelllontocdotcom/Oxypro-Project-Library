@@ -1,6 +1,6 @@
 {
  "date": "6 Nov 2026",
- "taken": "2026-11-06T10:55:00Z",
+ "taken": "2026-11-06T11:05:00Z",
  "projects": {
   "P096": {
    "area": "Sobha Hartland, Meydan / Mohammed Bin Rashid (MBR) City, Dubai",
@@ -1309,6 +1309,13 @@
    "w": 671,
    "h": 296,
    "updatedAt": "2026-11-06T10:55:00.000Z"
+  },
+  "jt-and-partners": {
+   "name": "JT & Partners",
+   "id": "6f6f1569baaf4493cc3e0399600d307e",
+   "w": 524,
+   "h": 349,
+   "updatedAt": "2026-11-06T11:05:00.000Z"
   }
  }
 }
