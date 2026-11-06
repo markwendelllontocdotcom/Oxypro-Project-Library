@@ -236,9 +236,9 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 .pm-rm{border:0;background:none;padding:0;color:var(--danger);font-size:11.5px;cursor:pointer;text-align:left}
 .lg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
 .lg-tile{display:flex;flex-direction:column;gap:5px;min-width:0}
-.lg-img{height:78px;border-radius:4px;background:#FFFFFF;border:1px solid var(--line);display:grid;place-items:center;padding:8px;color:#8A8F98;font-size:12px;overflow:hidden}
+.lg-img{height:78px;border-radius:4px;background:#FFFFFF;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:8px;color:#8A8F98;font-size:12px;overflow:hidden}
 .lg-img.none{background:var(--surface-2);border-style:dashed;border-color:var(--line-strong);color:var(--faint)}
-.lg-img img{max-width:100%;max-height:100%;object-fit:contain}
+.lg-img img{display:block;width:100%;height:100%;object-fit:contain}
 .lg-cap{font-size:12px;line-height:1.3;min-width:0}
 .lg-cap b{display:block;font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
 .lg-cap span{display:block;overflow-wrap:anywhere}
@@ -380,6 +380,9 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 .slot-img img{display:block;width:100%;height:100%;object-fit:cover}
 .slot-name{font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .slot-actions{display:flex;flex-wrap:wrap;gap:4px}
+.slot-zoom{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);min-width:0}
+.slot-zoom input{flex:1;min-width:0;margin:0;accent-color:var(--red)}
+.slot-zoom output{flex:none;min-width:3.4em;text-align:right;font-variant-numeric:tabular-nums}
 .chooser{background:var(--surface);border:1px solid var(--line-strong);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:10px}
 .chooser h3{margin:0;font:600 16px var(--f-cond);letter-spacing:.04em;text-transform:uppercase}
 .chooser-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
@@ -744,7 +747,7 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
       <nav class="rail" id="rail" aria-label="Sheets in this presentation"></nav>
       <div class="stage">
         <div class="sheet-wrap" id="sheet-wrap"><div class="sheet" id="sheet"></div></div>
-        <p class="hint" id="stage-hint">Drag a photo inside its frame to choose what shows. Empty frames and grey placeholder text are left out of the PDF and PowerPoint.</p>
+        <p class="hint" id="stage-hint">Drag a photo inside its frame to choose what shows. Zoom in or out with the Zoom slider below, Ctrl + mouse wheel, a pinch or the + and − keys. Empty frames and grey placeholder text are left out of the PDF and PowerPoint.</p>
         <div class="slots" id="slots"></div>
         <div class="chooser" id="chooser" hidden></div>
       </div>
@@ -777,7 +780,7 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.16.1 (3 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.16.2 (6 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -841,8 +844,8 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.16.1';
-const APP_DATE = '3 Nov 2026';   // shown in the footer and in About
+const APP_VERSION = '1.16.2';
+const APP_DATE = '6 Nov 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
 const SNAP_DATE = String(window.__OPL_SNAPSHOT || '');
@@ -2067,7 +2070,7 @@ function sheetFromProject(p) {
   return {
     no: p.no, sector: p.sectors || '', name: p.name || '', scope: p.scope || '', location: p.area || '', client: p.client || '', mc: p.mainContractor || '',
     building: p.levels || '', scopeType: p.scopeType || '', value: p.value || '', duration: p.duration || '',
-    photos: photosOf(p).map(x => x ? { id: x.id, src: blobUrl(x.id), x: +x.x || 50, y: +x.y || 50 } : null)
+    photos: photosOf(p).map(x => x ? { id: x.id, src: blobUrl(x.id), x: +x.x || 50, y: +x.y || 50, ...(+x.z > 1 ? { z: zoomOf(x) } : {}) } : null)
   };
 }
 function openPres(nos) {
@@ -2103,7 +2106,7 @@ function renderPres() {
     $('#stage-hint').textContent = 'The summary is the last page of the PDF and PowerPoint. Its rows follow the order of the sheets; long lists continue on a second page.';
     $('#slots').innerHTML = ''; buildSummary(); renderSummaryForm(); return;
   }
-  $('#stage-hint').textContent = onCover ? 'The top sheet is page 1 of the PDF and PowerPoint. Drag its photo to choose what shows. The project list follows the order of the sheets.' : 'Drag a photo inside its frame to choose what shows. Empty frames and grey placeholder text are left out of the PDF and PowerPoint.';
+  $('#stage-hint').textContent = onCover ? 'The top sheet is page 1 of the PDF and PowerPoint. Drag its photo to choose what shows. The project list follows the order of the sheets.' : 'Drag a photo inside its frame to choose what shows. Zoom in or out with the Zoom slider below, Ctrl + mouse wheel, a pinch or the + and − keys. Empty frames and grey placeholder text are left out of the PDF and PowerPoint.';
   if (onCover) { $('#slots').innerHTML = ''; buildCover(); renderCoverForm(); }
   else { buildSheet(); renderSlots(); renderForm(); }
 }
@@ -2119,8 +2122,8 @@ function buildSheet() {
   let h = '';
   FRAMES.forEach((f, i) => {
     const ph = sh.photos[i];
-    h += `<div class="frame${ph ? ' has' : ''}" data-slot="${i}" style="left:${f.x}cm;top:${f.y}cm;width:${f.w}cm;height:${f.h}cm"${ph ? ` tabindex="0" role="img" aria-label="${SLOT_NAMES[i]}. Drag or use the arrow keys to adjust."` : ''}>`
-      + (ph ? `<img src="${esc(ph.src)}" alt="" draggable="false" style="object-position:${ph.x}% ${ph.y}%">` : `<button type="button" class="frame-empty" data-add="${i}"><span>${SLOT_NAMES[i]}</span><small>Click to add a photo</small></button>`)
+    h += `<div class="frame${ph ? ' has' : ''}" data-slot="${i}" style="left:${f.x}cm;top:${f.y}cm;width:${f.w}cm;height:${f.h}cm"${ph ? ` tabindex="0" role="img" aria-label="${SLOT_NAMES[i]}. Drag or use the arrow keys to move it; + and − zoom."` : ''}>`
+      + (ph ? `<img src="${esc(ph.src)}" alt="" draggable="false" style="${phStyle(ph)}">` : `<button type="button" class="frame-empty" data-add="${i}"><span>${SLOT_NAMES[i]}</span><small>Click to add a photo</small></button>`)
       + '</div>';
   });
   h += `<div class="t t-eyebrow" id="t-eyebrow" style="left:${TX}cm;top:${EYE_TOP}cm;width:${TW}cm"></div>`;
@@ -2148,9 +2151,9 @@ function renderSlots() {
   const sh = curSheet(); if (!sh) return;
   $('#slots').innerHTML = FRAMES.map((f, i) => {
     const ph = sh.photos[i];
-    return `<div class="slot"><div class="slot-img">${ph ? `<img src="${esc(ph.src)}" alt="" style="object-position:${ph.x}% ${ph.y}%">` : ''}</div>
+    return `<div class="slot"><div class="slot-img" data-slot-img="${i}">${ph ? `<img src="${esc(ph.src)}" alt="" style="${phStyle(ph)}">` : ''}</div>
       <div class="slot-name">${SLOT_NAMES[i]}${ph && !ph.id ? ' <span class="tag">From device</span>' : ''}</div>
-      <div class="slot-actions"><button type="button" class="btn btn-sm" data-choose="${i}">${ph ? 'Change' : 'Add'}</button>${ph ? `<button type="button" class="btn btn-sm btn-ghost" data-clear="${i}" aria-label="Remove ${SLOT_NAMES[i]}">Remove</button>` : ''}</div></div>`;
+      <div class="slot-actions"><button type="button" class="btn btn-sm" data-choose="${i}">${ph ? 'Change' : 'Add'}</button>${ph ? `<button type="button" class="btn btn-sm btn-ghost" data-clear="${i}" aria-label="Remove ${SLOT_NAMES[i]}">Remove</button>` : ''}</div>${ph ? `<label class="slot-zoom"><span>Zoom</span><input type="range" min="100" max="${ZMAX * 100}" step="5" value="${Math.round(zoomOf(ph) * 100)}" data-zoom="${i}" aria-label="Zoom ${SLOT_NAMES[i]}"><output data-zoom-out="${i}">${Math.round(zoomOf(ph) * 100)}%</output></label>` : ''}</div>`;
   }).join('');
 }
 function openChooser(slot) {
@@ -2195,7 +2198,7 @@ async function saveSheetToLibrary() {
       const ph = sh.photos[i];
       if (!ph) { photos.push(null); continue; }
       if (!ph.id && ph.blob && S.assets) { const r = await S.assets.upload(ph.blob, { type: 'image/jpeg' }); ph.id = r.id; }
-      if (ph.id) photos.push({ id: ph.id, x: Math.round(ph.x * 10) / 10, y: Math.round(ph.y * 10) / 10 });
+      if (ph.id) photos.push({ id: ph.id, x: Math.round(ph.x * 10) / 10, y: Math.round(ph.y * 10) / 10, ...(zoomOf(ph) > 1 ? { z: zoomOf(ph) } : {}) });
       else { photos.push(old[i]); kept++; }
     }
     await DB.collection('projects').doc(sh.no).update({
@@ -2246,45 +2249,87 @@ function bindPres() {
     const c = e.target.closest('[data-choose]'); if (c) { openChooser(+c.dataset.choose); return; }
     const x = e.target.closest('[data-clear]'); if (x) { const sh = curSheet(); sh.photos[+x.dataset.clear] = null; markDirty(sh); buildSheet(); renderSlots(); }
   });
+  $('#slots').addEventListener('input', e => { const r = e.target.closest('[data-zoom]'); if (r) setZoom(+r.dataset.zoom, +r.value / 100); });
   $('#chooser').addEventListener('click', e => {
     const ch = $('#chooser'); const slot = +ch.dataset.slot; const sh = curSheet();
     const lib = e.target.closest('[data-lib]');
-    if (lib) { const x = photosOf(S.projects.get(sh.no))[+lib.dataset.lib]; if (x) { sh.photos[slot] = { id: x.id, src: blobUrl(x.id), x: +x.x || 50, y: +x.y || 50 }; markDirty(sh); } ch.hidden = true; buildSheet(); renderSlots(); return; }
+    if (lib) { const x = photosOf(S.projects.get(sh.no))[+lib.dataset.lib]; if (x) { sh.photos[slot] = { id: x.id, src: blobUrl(x.id), x: +x.x || 50, y: +x.y || 50, ...(+x.z > 1 ? { z: zoomOf(x) } : {}) }; markDirty(sh); } ch.hidden = true; buildSheet(); renderSlots(); return; }
     if (e.target.closest('[data-dev]')) { S.fileTarget = { kind: 'sheet', slot }; $('#file-photo').value = ''; $('#file-photo').click(); return; }
     if (e.target.closest('[data-cancel]')) ch.hidden = true;
   });
-  const sheet = $('#sheet'); let drag = null;
+  const sheet = $('#sheet'); let drag = null, pinch = null; const pts = new Map();
   sheet.addEventListener('click', e => { const a = e.target.closest('[data-add]'); if (a) openChooser(+a.dataset.add); });
   sheet.addEventListener('pointerdown', e => {
     const fr = e.target.closest('.frame.has'); if (!fr) return;
     const slot = +fr.dataset.slot; const img = fr.querySelector('img'); const ph = curSheet().photos[slot]; if (!img || !ph) return;
-    e.preventDefault(); fr.setPointerCapture(e.pointerId);
-    const o = overflowFor(img, slot);
+    e.preventDefault(); fr.setPointerCapture(e.pointerId); pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    // a second finger on the same photo: pinch to zoom
+    if (pts.size === 2 && drag && drag.fr === fr) { const [a, b] = [...pts.values()]; pinch = { slot, d0: Math.hypot(a.x - b.x, a.y - b.y) || 1, z0: zoomOf(ph) }; drag.moved = true; return; }
+    if (pts.size > 1) return;
+    const o = overflowFor(img, slot, zoomOf(ph));
     drag = { fr, img, ph, sx: e.clientX, sy: e.clientY, x0: ph.x, y0: ph.y, ox: o.ox, oy: o.oy, k: parseFloat(getComputedStyle(sheet).getPropertyValue('--k')) || 0.5, moved: false };
   });
   sheet.addEventListener('pointermove', e => {
+    if (pts.has(e.pointerId)) pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pinch) { if (pts.size >= 2) { const [a, b] = [...pts.values()]; setZoom(pinch.slot, pinch.z0 * Math.hypot(a.x - b.x, a.y - b.y) / pinch.d0); } return; }
     if (!drag) return;
     const dx = (e.clientX - drag.sx) / drag.k, dy = (e.clientY - drag.sy) / drag.k;
     if (Math.abs(dx) + Math.abs(dy) > 2) drag.moved = true;
     if (drag.ox > 0.5) drag.ph.x = clamp(drag.x0 - dx / drag.ox * 100, 0, 100);
     if (drag.oy > 0.5) drag.ph.y = clamp(drag.y0 - dy / drag.oy * 100, 0, 100);
-    drag.img.style.objectPosition = `${drag.ph.x}% ${drag.ph.y}%`;
+    applyPh(drag.img, drag.ph);
   });
-  const end = () => { if (!drag) return; if (drag.moved) { markDirty(curSheet()); renderSlots(); } drag = null; };
+  const end = e => {
+    pts.delete(e.pointerId);
+    if (pinch) { if (pts.size < 2) { pinch = null; drag = null; pts.clear(); renderSlots(); } return; }
+    if (!drag) return; if (drag.moved) { markDirty(curSheet()); renderSlots(); } drag = null;
+  };
   sheet.addEventListener('pointerup', end); sheet.addEventListener('pointercancel', end);
   sheet.addEventListener('keydown', e => {
     const fr = e.target.closest('.frame.has'); if (!fr) return;
+    const zk = { '+': 1.1, '=': 1.1, '-': 1 / 1.1, '_': 1 / 1.1, '−': 1 / 1.1 }[e.key];
+    if (zk || e.key === '0') { e.preventDefault(); const slot = +fr.dataset.slot; setZoom(slot, e.key === '0' ? 1 : zoomOf(curSheet().photos[slot]) * zk); return; }
     const step = { ArrowLeft: [-3, 0], ArrowRight: [3, 0], ArrowUp: [0, -3], ArrowDown: [0, 3] }[e.key]; if (!step) return;
     e.preventDefault(); const ph = curSheet().photos[+fr.dataset.slot];
     ph.x = clamp(ph.x + step[0], 0, 100); ph.y = clamp(ph.y + step[1], 0, 100);
-    fr.querySelector('img').style.objectPosition = `${ph.x}% ${ph.y}%`; markDirty(curSheet()); renderSlots();
+    applyPh(fr.querySelector('img'), ph); markDirty(curSheet()); renderSlots();
   });
+  // Ctrl (or ⌘) + mouse wheel, and a trackpad pinch, zoom the photo under the pointer
+  sheet.addEventListener('wheel', e => {
+    if (!(e.ctrlKey || e.metaKey)) return; const fr = e.target.closest('.frame.has'); if (!fr) return;
+    e.preventDefault(); const slot = +fr.dataset.slot; const ph = curSheet().photos[slot]; if (!ph) return;
+    setZoom(slot, zoomOf(ph) * Math.exp(-clamp(e.deltaY, -60, 60) * 0.004));
+  }, { passive: false });
   if (window.ResizeObserver) new ResizeObserver(fitSheet).observe($('#sheet-wrap')); else window.addEventListener('resize', fitSheet);
   bindCoverDrag();
 }
-function overflowFor(img, slot) {
+function overflowFor(img, slot, z) {
   const f = FRAMES[slot]; const bw = f.w * CM, bh = f.h * CM; const nw = img.naturalWidth || 1, nh = img.naturalHeight || 1;
-  const s = Math.max(bw / nw, bh / nh); return { ox: nw * s - bw, oy: nh * s - bh };
+  const s = Math.max(bw / nw, bh / nh) * (z || 1); return { ox: nw * s - bw, oy: nh * s - bh };
+}
+/* zoom of a photo in its frame: 1 = the photo just fills the frame, up to 4 times. With object-fit cover and
+   object-position x% y%, scale(z) around the same x% y% gives the crop that cropPhoto() draws for the PDF and PowerPoint. */
+const ZMAX = 4;
+const zoomOf = ph => clamp(+(ph && ph.z) || 1, 1, ZMAX);
+function phStyle(ph) {
+  const z = zoomOf(ph);
+  return `object-position:${ph.x}% ${ph.y}%` + (z > 1 ? `;transform:scale(${z});transform-origin:${ph.x}% ${ph.y}%` : '');
+}
+function applyPh(img, ph) {
+  const z = zoomOf(ph);
+  img.style.objectPosition = `${ph.x}% ${ph.y}%`;
+  img.style.transformOrigin = `${ph.x}% ${ph.y}%`;
+  img.style.transform = z > 1 ? `scale(${z})` : '';
+}
+function setZoom(slot, z) {
+  const sh = curSheet(); const ph = sh && sh.photos[slot]; if (!ph) return;
+  const nz = Math.round(clamp(z, 1, ZMAX) * 100) / 100;
+  if (nz === zoomOf(ph)) return;
+  if (nz > 1) ph.z = nz; else delete ph.z;
+  document.querySelectorAll(`#sheet .frame[data-slot="${slot}"] img, #slots [data-slot-img="${slot}"] img`).forEach(img => applyPh(img, ph));
+  const r = $(`#slots [data-zoom="${slot}"]`); if (r && +r.value !== Math.round(nz * 100)) r.value = Math.round(nz * 100);
+  const o = $(`#slots [data-zoom-out="${slot}"]`); if (o) o.textContent = Math.round(nz * 100) + '%';
+  markDirty(sh);
 }
 
 /* ---------- top sheet (cover) ---------- */
@@ -3068,7 +3113,7 @@ async function cropPhoto(ph, wcm, hcm, dpi = 200) {
   const cw = Math.round(wcm / 2.54 * dpi), ch = Math.round(hcm / 2.54 * dpi);
   const c = document.createElement('canvas'); c.width = cw; c.height = ch; const g = c.getContext('2d');
   g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, cw, ch); g.imageSmoothingQuality = 'high';
-  const s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight); const dw = img.naturalWidth * s, dh = img.naturalHeight * s;
+  const s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight) * zoomOf(ph); const dw = img.naturalWidth * s, dh = img.naturalHeight * s;
   g.drawImage(img, (cw - dw) * ph.x / 100, (ch - dh) * ph.y / 100, dw, dh);
   return c.toDataURL('image/jpeg', 0.88);
 }
@@ -3191,7 +3236,7 @@ function sheetPageHTML(sh) {
   const L = layoutSheet(sh); let h = '';
   FRAMES.forEach((f, i) => {
     const ph = sh.photos[i]; if (!ph) return;
-    h += `<div class="frame" style="left:${f.x}cm;top:${f.y}cm;width:${f.w}cm;height:${f.h}cm"><img src="${esc(ph.src)}" alt="" draggable="false" style="object-position:${ph.x}% ${ph.y}%"></div>`;
+    h += `<div class="frame" style="left:${f.x}cm;top:${f.y}cm;width:${f.w}cm;height:${f.h}cm"><img src="${esc(ph.src)}" alt="" draggable="false" style="${phStyle(ph)}"></div>`;
   });
   if (L.eyebrow.length) h += `<div class="t t-eyebrow" style="left:${TX}cm;top:${EYE_TOP}cm;width:${TW}cm">${esc(L.eyebrow[0])}</div>`;
   if (L.name.lines.length) h += `<div class="t t-name" style="left:${TX}cm;top:${NAME_TOP}cm;width:${TW}cm;font-size:${L.name.pt}pt">${esc(L.name.lines.join('\n'))}</div>`;
@@ -3442,6 +3487,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.16.2', '6 Nov 2026', 'Company logos show whole in their boxes. Photos on the presentation pages zoom in and out: the Zoom slider under each photo, Ctrl + mouse wheel or a pinch on the photo, or the + and − keys. The zoom goes into the PDF, the PowerPoint and View / Present, and Save to the project keeps it.'],
   ['1.16.1', '3 Nov 2026', 'Pre-Qualification has its own PQ button (it was in the QA/QC menu); the project buttons are in the order PQ, QA/QC, HSE, Edit.'],
   ['1.16.0', '3 Nov 2026', 'QA/QC > Pre-Qualification (PQ): the PQ Generator is part of the Library. It opens on the project with its details and Library page, uses the live projects and photos, and takes the company documents kept in the Library (editors replace them from the Company Documents folder). Word and PDF are saved through Claude; Print saves the PDF to print. Not in the GitHub edition.'],
   ['1.15.1', '2 Nov 2026', 'Contract values typed as "22 M" in the Master List show as "AED 22 M" on the sheets, the summary and the project details. The GitHub edition leaves contract values out.'],
@@ -3478,7 +3524,7 @@ function openAbout() {
       <section><h3>What it does</h3>
         <ul>
           <li><b>Projects:</b> search and filter by emirate, status and sector; each project shows its details from the Projects Master List and up to five photos.</li>
-          <li><b>Presentations:</b> select one or more projects for a top sheet, an Oxypro Project Presentation Sheet per project, a summary page and a references page with the logos of the main contractors, consultants and clients, as PDF or PowerPoint; View / Present runs them full screen first.</li>
+          <li><b>Presentations:</b> select one or more projects for a top sheet, an Oxypro Project Presentation Sheet per project (drag each photo in its frame and zoom it in or out), a summary page and a references page with the logos of the main contractors, consultants and clients, as PDF or PowerPoint; View / Present runs them full screen first.</li>
           <li><b>QA/QC:</b> <b>PQP details and file</b> opens PQP Maker with the project's PQP already created, or saves a PQP file. <b>MSRA Log</b> is the project's Method Statement Submittal Log in the Oxypro template, with the Summary, seven discipline logs and the planner's MSL, saved as Excel or PDF. <b>Generate MSRA</b> saves a project file for the MSRA Generator with the project's details, the client, consultant and main contractor logos and a cover photo.${GH ? '' : ' <b>PQ</b> (its own button, before <b>QA/QC</b>) opens the PQ Generator inside the Library for the project: the company Pre-Qualification in the standard format with the project details and its Library page, the company documents kept in the Library, editable organization chart and CVs, saved as Word or PDF.'}</li>
           <li><b>Company logos:</b> one logo per client, consultant and contractor, shown on every project with that company.</li>
           <li><b>HSE:</b> sends the project's details and a cover photo of your choice to HSE Plan Maker for the Project HSE Plan.</li>
