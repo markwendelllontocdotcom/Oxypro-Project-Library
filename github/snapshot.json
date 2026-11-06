@@ -1,6 +1,6 @@
 {
  "date": "6 Nov 2026",
- "taken": "2026-11-06T11:05:00Z",
+ "taken": "2026-11-06T11:10:00Z",
  "projects": {
   "P096": {
    "area": "Sobha Hartland, Meydan / Mohammed Bin Rashid (MBR) City, Dubai",
@@ -1316,6 +1316,13 @@
    "w": 524,
    "h": 349,
    "updatedAt": "2026-11-06T11:05:00.000Z"
+  },
+  "ellington-properties-development": {
+   "name": "Ellington Properties Development",
+   "id": "c7999a34daa03fbbb41b1f32fa7fce54",
+   "w": 700,
+   "h": 279,
+   "updatedAt": "2026-11-06T11:10:00.000Z"
   }
  }
 }
