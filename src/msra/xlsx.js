@@ -91,15 +91,16 @@ function msXlsxLog(wb, logos, log, d, matText, proj) {
     }
     msBoxRange(ws, r, 1, r, 3);
   }
-  // the logo boxes: Client, Consultant, Main Contractor, Subcontractor (D2:J7)
+  // the logo boxes: Client, Consultant, Main Contractor, Subcontractor (names in row 2, logos in rows 3-5), rows 6-7 under them one blank area
   const boxes = [[4, 4], [5, 6], [7, 8], [9, 10]];
   MS_LOGO_BOX.forEach(([k, label], i) => {
     const [c1, c2] = boxes[i];
     if (c2 > c1) ws.mergeCells(2, c1, 2, c2);
     const l = ws.getCell(2, c1); l.value = label; msF(l, { font: { size: 11 }, al: { horizontal: 'center', vertical: 'middle' } });
-    ws.mergeCells(3, c1, 7, c2); msF(ws.getCell(3, c1), { al: { horizontal: 'center', vertical: 'middle' } });
-    const img = logos[k]; if (img) msImageIn(ws, img.id, img.w, img.h, 3, c1, 7, c2, 12);
+    ws.mergeCells(3, c1, 5, c2); msF(ws.getCell(3, c1), { al: { horizontal: 'center', vertical: 'middle' } });
+    const img = logos[k]; if (img) msImageIn(ws, img.id, img.w, img.h, 3, c1, 5, c2, 6);
   });
+  ws.mergeCells(6, 4, 7, 10);
   msBoxRange(ws, 2, 4, 7, 10);
   // the legends: code in K, meaning in L:M
   MS_LEGEND.forEach(([k, txt], i) => {

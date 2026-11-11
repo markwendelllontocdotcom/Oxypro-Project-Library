@@ -114,7 +114,7 @@ function msStartHTML() {
 }
 
 /* the sheet head, laid out on the sheet's own columns as in the Excel file:
-   row 1 the project bar and LEGENDS; rows 2-7 the block, the logo boxes and the legends; rows 9-10 date, the log's title and the code counter */
+   row 1 the project bar and LEGENDS; rows 2-7 the block, the logo boxes (logos in rows 3-5, a blank area in rows 6-7) and the legends; rows 9-10 date, the log's title and the code counter */
 function msHeadHTML(title, c) {
   const log = MSV.log, e = MSV.mode === 'edit', p = msProj(), head = msHeadRows(log, p), names = msLogoNames(p);
   const proj = e && head.pi >= 0
@@ -137,9 +137,9 @@ function msHeadHTML(title, c) {
   const rows = [
     `<tr><td colspan="10" class="t-proj">${proj}</td><td colspan="3" class="t-legh">LEGENDS</td></tr>`,
     `<tr>${blockRow(0)}${MS_LOGO_BOX.map(([, l], i) => `<td${spans[i] > 1 ? ` colspan="${spans[i]}"` : ''} class="t-ll${i === 0 ? ' l' : ''}${i === 3 ? ' r' : ''}">${l}</td>`).join('')}${legend(0)}</tr>`,
-    `<tr>${blockRow(1)}${MS_LOGO_BOX.map(([k], i) => `<td${spans[i] > 1 ? ` colspan="${spans[i]}"` : ''} rowspan="5" class="t-logo${i === 0 ? ' l' : ''}${i === 3 ? ' r' : ''}">${logo(k)}</td>`).join('')}${legend(1)}</tr>`
+    `<tr>${blockRow(1)}${MS_LOGO_BOX.map(([k], i) => `<td${spans[i] > 1 ? ` colspan="${spans[i]}"` : ''} rowspan="3" class="t-logo${i === 0 ? ' l' : ''}${i === 3 ? ' r' : ''}">${logo(k)}</td>`).join('')}${legend(1)}</tr>`
   ];
-  for (let i = 2; i < 6; i++) rows.push(`<tr>${blockRow(i)}${legend(i)}</tr>`);
+  for (let i = 2; i < 6; i++) rows.push(`<tr>${blockRow(i)}${i === 4 ? '<td colspan="7" rowspan="2" class="t-blank"></td>' : ''}${legend(i)}</tr>`);
   rows.push('<tr class="t-gap"><td colspan="13"></td></tr>');
   rows.push(`<tr><td rowspan="2" class="t-date l">Date:</td><td rowspan="2" class="t-date r">${esc(msFmtLong(msFromDay(msToday())))}</td><td colspan="3" rowspan="2" class="t-title">${esc(title)}</td>
     <th class="t-sh">CODE</th>${MS_COUNTED.map(k => `<td class="t-sh st-${msCls(k)}">${k}</td>`).join('')}<th class="t-sh">TOTAL</th></tr>`);

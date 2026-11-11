@@ -34,14 +34,14 @@ function msPdfHead(doc, log, d, c, logos) {
     const r = 2 + i, b = head.rows[i]; box(1, r, 3, r);
     if (b) { text(b.label, 1, 2, r, r, { size: 6, min: 4.5, bold: true, left: true }); text(': ' + b.value, 3, 3, r, r, { size: 6, min: 4.5, bold: true, left: true }); }
   }
-  // the logo boxes
+  // the logo boxes: names in row 2, logos in rows 3-5 (rows 6-7 blank)
   const spans = [[4, 4], [5, 6], [7, 8], [9, 10]];
   box(4, 2, 10, 7);
   MS_LOGO_BOX.forEach(([k, label], i) => {
     const [c1, c2] = spans[i]; text(label, c1, c2, 2, 2, { size: 6 });
     const lg = logos && logos[k]; if (!lg) return;
-    const bw = X[c2] - X[c1 - 1] - 10, bh = 5 * rh - 8, s = Math.min(bw / lg.w, bh / lg.h), w = lg.w * s, h = lg.h * s;
-    try { doc.addImage(lg.data, 'PNG', (X[c1 - 1] + X[c2] - w) / 2, y(3) + (5 * rh - h) / 2, w, h, 'mslogo-' + k, 'FAST'); } catch (e) { /* left out */ }
+    const bw = X[c2] - X[c1 - 1] - 6, bh = 3 * rh - 4, s = Math.min(bw / lg.w, bh / lg.h), w = lg.w * s, h = lg.h * s;
+    try { doc.addImage(lg.data, 'PNG', (X[c1 - 1] + X[c2] - w) / 2, y(3) + (3 * rh - h) / 2, w, h, 'mslogo-' + k, 'FAST'); } catch (e) { /* left out */ }
   });
   // the legends
   MS_LEGEND.forEach(([k, t], i) => { const r = 2 + i; box(11, r, 11, r, MS_FILL[k]); text(k, 11, 11, r, r, { size: 7.6, bold: true }); box(12, r, 13, r); text(t, 12, 13, r, r, { size: 6.5, left: true }); });

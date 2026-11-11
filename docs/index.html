@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Oxypro Project Library</title>
-<link rel="icon" href="favicon.ico?v=1.17.0" sizes="any">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=1.17.0">
+<link rel="icon" href="favicon.ico?v=1.17.1" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=1.17.1">
 <meta name="theme-color" content="#D81F27">
 <meta name="description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP and Method Statement Logs) and HSE Plans.">
 <meta property="og:type" content="website">
@@ -13,12 +13,12 @@
 <meta property="og:title" content="Oxypro Project Library">
 <meta property="og:description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP and Method Statement Logs) and HSE Plans.">
 <meta property="og:url" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/">
-<meta property="og:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.17.0">
+<meta property="og:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.17.1">
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
 <meta property="og:image:alt" content="Oxypro Library logo">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.17.0">
+<meta name="twitter:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.17.1">
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 </head>
 <body>
@@ -564,10 +564,11 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 .ms-top .t-lab{font-weight:700;border-top:1px solid #000000;border-bottom:1px solid #000000;border-left:1px solid #000000}
 .ms-top .t-val{font-weight:700;border-top:1px solid #000000;border-bottom:1px solid #000000;border-right:1px solid #000000}
 .ms-top .t-ll{text-align:center;font-size:13px;border-top:1px solid #000000}
-.ms-top .t-logo{text-align:center;border-bottom:1px solid #000000;padding:8px 10px;height:auto}
+.ms-top .t-logo{text-align:center;padding:6px 10px;height:auto}
+.ms-top .t-blank{border-bottom:1px solid #000000;border-left:1px solid #000000;border-right:1px solid #000000}
 .ms-top .t-ll.l,.ms-top .t-logo.l{border-left:1px solid #000000}
 .ms-top .t-ll.r,.ms-top .t-logo.r{border-right:1px solid #000000}
-.ms-top .t-logo img{display:inline-block;max-width:100%;max-height:96px;width:auto;height:auto;vertical-align:middle}
+.ms-top .t-logo img{display:inline-block;max-width:100%;max-height:64px;width:auto;height:auto;vertical-align:middle}
 .ms-top .t-code{border:1px solid #000000;text-align:center;font-weight:700;font-size:17px}
 .ms-top .t-desc{border:1px solid #000000;font-size:14px}
 .ms-top .t-gap td{height:7px;padding:0}
@@ -811,7 +812,7 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.17.0 (11 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.17.1 (11 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -945,7 +946,7 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.17.0';
+const APP_VERSION = '1.17.1';
 const APP_DATE = '11 Nov 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
@@ -3588,6 +3589,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.17.1', '11 Nov 2026', 'MSRA Log: the client, consultant, main contractor and subcontractor logos sit in rows 3 to 5, each one inside its own box under its name; rows 6 and 7 under the logos are one blank area. Same in Excel, PDF and on the page.'],
   ['1.17.0', '11 Nov 2026', 'MSRA Log in the updated Oxypro format: the project in a black bar across the top, the client, consultant, main contractor and subcontractor (Oxypro) logo boxes beside the project block, the legends on the right, then the date and the log\'s title above the code counter; SN column and the new column widths. The logos come from the library. The summary shows the date under its title. Same in Excel, PDF and on the page.'],
   ['1.16.2', '6 Nov 2026', 'Company logos show whole in their boxes. Photos on the presentation pages zoom in and out: the Zoom slider under each photo, Ctrl + mouse wheel or a pinch on the photo, or the + and − keys. The zoom goes into the PDF, the PowerPoint and View / Present, and Save to the project keeps it.'],
   ['1.16.1', '3 Nov 2026', 'Pre-Qualification has its own PQ button (it was in the QA/QC menu); the project buttons are in the order PQ, QA/QC, HSE, Edit.'],
@@ -4135,15 +4137,16 @@ function msXlsxLog(wb, logos, log, d, matText, proj) {
     }
     msBoxRange(ws, r, 1, r, 3);
   }
-  // the logo boxes: Client, Consultant, Main Contractor, Subcontractor (D2:J7)
+  // the logo boxes: Client, Consultant, Main Contractor, Subcontractor (names in row 2, logos in rows 3-5), rows 6-7 under them one blank area
   const boxes = [[4, 4], [5, 6], [7, 8], [9, 10]];
   MS_LOGO_BOX.forEach(([k, label], i) => {
     const [c1, c2] = boxes[i];
     if (c2 > c1) ws.mergeCells(2, c1, 2, c2);
     const l = ws.getCell(2, c1); l.value = label; msF(l, { font: { size: 11 }, al: { horizontal: 'center', vertical: 'middle' } });
-    ws.mergeCells(3, c1, 7, c2); msF(ws.getCell(3, c1), { al: { horizontal: 'center', vertical: 'middle' } });
-    const img = logos[k]; if (img) msImageIn(ws, img.id, img.w, img.h, 3, c1, 7, c2, 12);
+    ws.mergeCells(3, c1, 5, c2); msF(ws.getCell(3, c1), { al: { horizontal: 'center', vertical: 'middle' } });
+    const img = logos[k]; if (img) msImageIn(ws, img.id, img.w, img.h, 3, c1, 5, c2, 6);
   });
+  ws.mergeCells(6, 4, 7, 10);
   msBoxRange(ws, 2, 4, 7, 10);
   // the legends: code in K, meaning in L:M
   MS_LEGEND.forEach(([k, txt], i) => {
@@ -4395,14 +4398,14 @@ function msPdfHead(doc, log, d, c, logos) {
     const r = 2 + i, b = head.rows[i]; box(1, r, 3, r);
     if (b) { text(b.label, 1, 2, r, r, { size: 6, min: 4.5, bold: true, left: true }); text(': ' + b.value, 3, 3, r, r, { size: 6, min: 4.5, bold: true, left: true }); }
   }
-  // the logo boxes
+  // the logo boxes: names in row 2, logos in rows 3-5 (rows 6-7 blank)
   const spans = [[4, 4], [5, 6], [7, 8], [9, 10]];
   box(4, 2, 10, 7);
   MS_LOGO_BOX.forEach(([k, label], i) => {
     const [c1, c2] = spans[i]; text(label, c1, c2, 2, 2, { size: 6 });
     const lg = logos && logos[k]; if (!lg) return;
-    const bw = X[c2] - X[c1 - 1] - 10, bh = 5 * rh - 8, s = Math.min(bw / lg.w, bh / lg.h), w = lg.w * s, h = lg.h * s;
-    try { doc.addImage(lg.data, 'PNG', (X[c1 - 1] + X[c2] - w) / 2, y(3) + (5 * rh - h) / 2, w, h, 'mslogo-' + k, 'FAST'); } catch (e) { /* left out */ }
+    const bw = X[c2] - X[c1 - 1] - 6, bh = 3 * rh - 4, s = Math.min(bw / lg.w, bh / lg.h), w = lg.w * s, h = lg.h * s;
+    try { doc.addImage(lg.data, 'PNG', (X[c1 - 1] + X[c2] - w) / 2, y(3) + (3 * rh - h) / 2, w, h, 'mslogo-' + k, 'FAST'); } catch (e) { /* left out */ }
   });
   // the legends
   MS_LEGEND.forEach(([k, t], i) => { const r = 2 + i; box(11, r, 11, r, MS_FILL[k]); text(k, 11, 11, r, r, { size: 7.6, bold: true }); box(12, r, 13, r); text(t, 12, 13, r, r, { size: 6.5, left: true }); });
@@ -4618,7 +4621,7 @@ function msStartHTML() {
 }
 
 /* the sheet head, laid out on the sheet's own columns as in the Excel file:
-   row 1 the project bar and LEGENDS; rows 2-7 the block, the logo boxes and the legends; rows 9-10 date, the log's title and the code counter */
+   row 1 the project bar and LEGENDS; rows 2-7 the block, the logo boxes (logos in rows 3-5, a blank area in rows 6-7) and the legends; rows 9-10 date, the log's title and the code counter */
 function msHeadHTML(title, c) {
   const log = MSV.log, e = MSV.mode === 'edit', p = msProj(), head = msHeadRows(log, p), names = msLogoNames(p);
   const proj = e && head.pi >= 0
@@ -4641,9 +4644,9 @@ function msHeadHTML(title, c) {
   const rows = [
     `<tr><td colspan="10" class="t-proj">${proj}</td><td colspan="3" class="t-legh">LEGENDS</td></tr>`,
     `<tr>${blockRow(0)}${MS_LOGO_BOX.map(([, l], i) => `<td${spans[i] > 1 ? ` colspan="${spans[i]}"` : ''} class="t-ll${i === 0 ? ' l' : ''}${i === 3 ? ' r' : ''}">${l}</td>`).join('')}${legend(0)}</tr>`,
-    `<tr>${blockRow(1)}${MS_LOGO_BOX.map(([k], i) => `<td${spans[i] > 1 ? ` colspan="${spans[i]}"` : ''} rowspan="5" class="t-logo${i === 0 ? ' l' : ''}${i === 3 ? ' r' : ''}">${logo(k)}</td>`).join('')}${legend(1)}</tr>`
+    `<tr>${blockRow(1)}${MS_LOGO_BOX.map(([k], i) => `<td${spans[i] > 1 ? ` colspan="${spans[i]}"` : ''} rowspan="3" class="t-logo${i === 0 ? ' l' : ''}${i === 3 ? ' r' : ''}">${logo(k)}</td>`).join('')}${legend(1)}</tr>`
   ];
-  for (let i = 2; i < 6; i++) rows.push(`<tr>${blockRow(i)}${legend(i)}</tr>`);
+  for (let i = 2; i < 6; i++) rows.push(`<tr>${blockRow(i)}${i === 4 ? '<td colspan="7" rowspan="2" class="t-blank"></td>' : ''}${legend(i)}</tr>`);
   rows.push('<tr class="t-gap"><td colspan="13"></td></tr>');
   rows.push(`<tr><td rowspan="2" class="t-date l">Date:</td><td rowspan="2" class="t-date r">${esc(msFmtLong(msFromDay(msToday())))}</td><td colspan="3" rowspan="2" class="t-title">${esc(title)}</td>
     <th class="t-sh">CODE</th>${MS_COUNTED.map(k => `<td class="t-sh st-${msCls(k)}">${k}</td>`).join('')}<th class="t-sh">TOTAL</th></tr>`);
