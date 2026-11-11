@@ -16,7 +16,7 @@ const MS_COUNTED = ['A', 'B', 'C', 'D', 'E', 'UR'];
 const MS_FILL = { A: '#00B050', B: '#92D050', C: '#FF0000', D: '#C00000', E: '#00B0F0', UR: '#FFFF00', 'n/a': '#D9D9D9' };
 const MS_LEGEND = [['A', 'APPROVED'], ['B', 'APPROVED AS NOTED'], ['C', 'REVISE & RESUBMIT'], ['D', 'REJECTED'], ['E', 'INFORMATION & RECORD'], ['UR', 'UNDER REVIEW BY CONSULTANT']];
 const MS_STAGE = { I: 'INSTALLATION METHOD STATEMENTS', T: 'TESTING & COMMISSIONING METHOD STATEMENTS' };
-const MS_BLOCK_MAX = 6;
+const MS_BLOCK_MAX = 7;   // PROJECT (the title bar) and up to six rows beside the logos
 const msId = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-3);
 const msIso = v => /^\d{4}-\d{2}-\d{2}$/.test(String(v || '')) ? String(v) : '';
 const msDay = iso => { const m = msIso(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/); return m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) / 86400000 : null; };
@@ -70,7 +70,7 @@ function msDefaultBlock(p) {
     { label: 'CLIENT', value: msUp(real(p.client)) },
     { label: 'CONSULTANT', value: msUp(real(p.leadConsultant) || real(p.mepConsultant)) },
     { label: 'MEP CONSULTANT', value: msUp(real(p.mepConsultant)) },
-    { label: 'CONTRACTOR', value: msUp(real(p.mainContractor)) },
+    { label: 'MAIN CONTRACTOR', value: msUp(real(p.mainContractor)) },
     { label: 'MEP CONTRACTOR', value: 'OXYPRO ELECTROMECHANICAL WORK LLC' }
   ];
 }
@@ -82,6 +82,7 @@ function msClean(x, p) {
   const s = v => String(v == null ? '' : v).slice(0, 2000);
   const log = { no: p.no, v: 1, rev: s(x.rev || '00').slice(0, 10), start: s(x.start).slice(0, 20), createdAt: s(x.createdAt), updatedAt: s(x.updatedAt), updatedBy: s(x.updatedBy).slice(0, 120) };
   log.block = Array.isArray(x.block) && x.block.length ? x.block.slice(0, MS_BLOCK_MAX).map(r => ({ label: s(r && r.label).slice(0, 60), value: s(r && r.value).slice(0, 400) })) : msDefaultBlock(p);
+  log.block.forEach(r => { if (r.label.trim().toUpperCase() === 'CONTRACTOR') r.label = 'MAIN CONTRACTOR'; });   // the 1.17.0 format's name for it
   log.items = (Array.isArray(x.items) ? x.items : []).filter(it => it && MS_CODES.includes(it.d)).slice(0, 1500).map(it => ({
     id: s(it.id).slice(0, 24) || msId(), d: it.d, s: it.s === 'T' ? 'T' : 'I', b: s(it.b).slice(0, 80), t: s(it.t).slice(0, 400), ref: s(it.ref).slice(0, 120), rev: s(it.rev).slice(0, 10),
     plan: msIso(it.plan), sub: msIso(it.sub), ret: msIso(it.ret), st: msStatus(it.st), fin: msStatus(it.fin), rem: s(it.rem).slice(0, 400),
@@ -96,6 +97,22 @@ function msClean(x, p) {
   return log;
 }
 const msItemsOf = (log, d, st) => log.items.filter(it => it.d === d && (!st || it.s === st));
+/* the 1.17.0 sheet head: PROJECT goes in the title bar, the other rows (up to six) beside the logos */
+function msHeadRows(log, p) {
+  const i = log.block.findIndex(r => /^project$/i.test(String(r.label).trim()));
+  return { pi: i, title: i >= 0 ? log.block[i].value : msDefaultBlock(p || {})[0].value, rows: log.block.map((r, j) => ({ ...r, j })).filter(r => r.j !== i).slice(0, 6) };
+}
+const msProjTitle = log => (log.block.find(r => /^project$/i.test(String(r.label).trim())) || log.block[0] || { value: '' }).value;
+// d/mmm/yy, as the summary shows today's date
+function msFmtSlash(iso) { const m = msIso(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/); return m ? `${+m[3]}/${MS_MON[+m[2] - 1]}/${m[1].slice(2)}` : ''; }
+/* the logo boxes of the sheet head: Client, Consultant (the lead consultant, else the MEP consultant), Main Contractor and the subcontractor, Oxypro */
+const MS_LOGO_BOX = [['client', 'Client'], ['consultant', 'Consultant'], ['contractor', 'Main Contractor'], ['oxy', 'Subcontractor']];
+function msLogoNames(p) { return { client: realName(p.client), consultant: realName(p.leadConsultant) || realName(p.mepConsultant), contractor: realName(p.mainContractor) }; }
+async function msLogos(p) {
+  const n = msLogoNames(p), out = {};
+  for (const k of ['client', 'consultant', 'contractor']) { try { out[k] = n[k] ? await msgLogo(n[k]) : null; } catch (e) { out[k] = null; } }
+  return out;
+}
 
 /* counts as the workbook's formulas make them */
 function msCounts(items) {

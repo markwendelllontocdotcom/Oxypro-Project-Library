@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Oxypro Project Library</title>
-<link rel="icon" href="favicon.ico?v=1.16.2" sizes="any">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=1.16.2">
+<link rel="icon" href="favicon.ico?v=1.17.0" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=1.17.0">
 <meta name="theme-color" content="#D81F27">
 <meta name="description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP and Method Statement Logs) and HSE Plans.">
 <meta property="og:type" content="website">
@@ -13,12 +13,12 @@
 <meta property="og:title" content="Oxypro Project Library">
 <meta property="og:description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP and Method Statement Logs) and HSE Plans.">
 <meta property="og:url" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/">
-<meta property="og:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.16.2">
+<meta property="og:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.17.0">
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
 <meta property="og:image:alt" content="Oxypro Library logo">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.16.2">
+<meta name="twitter:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.17.0">
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 </head>
 <body>
@@ -556,38 +556,47 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 /* the log as paper: the template's look in Calibri, white in every theme */
 .ms-scroll{overflow:auto;max-height:calc(100vh - 150px);border:1px solid var(--line-strong);border-radius:4px;background:#FFFFFF}
 .ms-paper{--ms-ink:#000000;color:#000000;background:#FFFFFF;font:12px/1.35 Calibri,Carlito,Arial,sans-serif;padding:14px 16px 18px;width:max-content;min-width:100%}
-.ms-head{display:grid;grid-template-columns:minmax(560px,1fr) 230px 360px;gap:14px;align-items:start;margin-bottom:10px;position:sticky;left:16px;width:calc(var(--msw,100%) - 32px);box-sizing:border-box}
+/* the sheet head on the sheet's own columns (1.17.0 format) */
+.ms-top{border-collapse:collapse;table-layout:fixed;width:max-content;font-size:12.5px;color:#000000;margin-bottom:0}
+.ms-top td,.ms-top th{height:27px;padding:0 6px;vertical-align:middle;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ms-top .t-proj{background:#000000;color:#FFFFFF;font:700 18px/1.2 Arial,Helvetica,sans-serif;text-align:center;border:1px solid #000000}
+.ms-top .t-legh{border:1px solid #000000;text-align:center;font-weight:700;font-size:15px}
+.ms-top .t-lab{font-weight:700;border-top:1px solid #000000;border-bottom:1px solid #000000;border-left:1px solid #000000}
+.ms-top .t-val{font-weight:700;border-top:1px solid #000000;border-bottom:1px solid #000000;border-right:1px solid #000000}
+.ms-top .t-ll{text-align:center;font-size:13px;border-top:1px solid #000000}
+.ms-top .t-logo{text-align:center;border-bottom:1px solid #000000;padding:8px 10px;height:auto}
+.ms-top .t-ll.l,.ms-top .t-logo.l{border-left:1px solid #000000}
+.ms-top .t-ll.r,.ms-top .t-logo.r{border-right:1px solid #000000}
+.ms-top .t-logo img{display:inline-block;max-width:100%;max-height:96px;width:auto;height:auto;vertical-align:middle}
+.ms-top .t-code{border:1px solid #000000;text-align:center;font-weight:700;font-size:17px}
+.ms-top .t-desc{border:1px solid #000000;font-size:14px}
+.ms-top .t-gap td{height:7px;padding:0}
+.ms-top .t-date{font-weight:700;font-size:12px;vertical-align:bottom;padding:0 2px 4px;text-align:center;border-top:1px solid #000000;border-bottom:1px solid #000000;text-overflow:clip}
+.ms-top .t-date.l{border-left:1px solid #000000}.ms-top .t-date.r{border-right:1px solid #000000}
+.ms-top .t-title{border:1px solid #000000;text-align:center;font-weight:700;font-size:17px;white-space:normal}
+.ms-top .t-sh{border:1px solid #000000;text-align:center;font-weight:700;font-size:17px}
+.ms-top .t-ed{display:flex;align-items:center;gap:4px}
+.ms-top .ms-in{font-weight:700;padding:1px 4px}
+.editing .ms-top .t-lab,.editing .ms-top .t-val{padding:0 3px}
+.ms-top .t-lab .ms-in{font-size:11.5px;padding:1px 3px}
+.ms-top .ms-in-proj{background:#1C1C1C;color:#FFFFFF;border-color:#5A5A5A;text-align:center;font:700 16px Arial,Helvetica,sans-serif}
 .ms-h-title{font-weight:700;font-size:17px;line-height:1.25;margin:2px 0 10px}
 .ms-h-sub{font-weight:700;font-size:14px}
-.ms-block{border-collapse:collapse;font-weight:700;font-size:12.5px}
-.ms-block th{text-align:left;padding:1px 14px 1px 0;white-space:nowrap;vertical-align:top}
-.ms-block td{padding:1px 0}
-.ms-block .ms-colon{padding:0 4px}
 .ms-in{font:inherit;color:#000000;background:#FFFDF0;border:1px solid #C9CCD1;border-radius:3px;padding:2px 5px;min-width:0;width:100%}
-.ms-block .ms-in[data-f="label"]{width:150px}
-.ms-block .ms-in[data-f="value"]{width:min(640px,52vw)}
 .ms-bl-tools{padding-left:4px}
 .ms-x{display:grid;place-items:center;width:24px;height:24px;border:0;border-radius:3px;background:none;color:#62666C;cursor:pointer;padding:0}
 .ms-x:hover:not(:disabled){background:#F0F1F3;color:#B3151C}
 .ms-x svg{width:14px;height:14px}
 .ms-x:disabled{opacity:.35;cursor:default}
-.ms-bl-add{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:6px;font-size:12.5px}
+.ms-bl-add{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:6px 0 4px;font-size:12.5px}
 .ms-bl-add .btn{color:#232425;border-color:transparent}
 .ms-bl-add .btn:hover{background:#F0F1F3}
 .ms-rev{display:inline-flex;align-items:center;gap:6px;font-weight:600}
 .ms-rev .ms-in{width:64px}
 .ms-date{margin-top:10px;font-size:12.5px}
-.ms-h-logo{display:flex;justify-content:center;padding-top:10px}
-.ms-h-logo img{width:196px;height:auto}
-.ms-legend,.ms-strip{border-collapse:collapse;width:100%;font-size:12px}
-.ms-legend th{border:1px solid #000000;padding:2px;font-weight:700;text-align:center}
-.ms-legend td{border:1px solid #000000;padding:2px 6px}
-.ms-legend td:first-child{width:52px;text-align:center;font-weight:700}
-.ms-strip{margin-top:10px}
-.ms-strip th,.ms-strip td{border:1px solid #000000;padding:3px 2px;text-align:center;font-weight:700;font-size:13px}
 .st-A{background:#00B050}.st-B{background:#92D050}.st-C{background:#FF0000}.st-D{background:#C00000}.st-E{background:#00B0F0}.st-UR{background:#FFFF00}.st-na{background:#D9D9D9}
 .ms-log td.st-A,.ms-log td.st-B,.ms-log td.st-C,.ms-log td.st-D,.ms-log td.st-E,.ms-log td.st-UR,.ms-log td.st-na{font-weight:700}
-.ms-log{border-collapse:separate;border-spacing:0;table-layout:fixed;font-size:12px}
+.ms-log{border-collapse:separate;border-spacing:0;table-layout:fixed;font-size:12px;margin-top:-1px}
 .ms-log th,.ms-log td{border-right:1px solid #000000;border-bottom:1px solid #000000;padding:4px 5px;vertical-align:middle;overflow-wrap:anywhere}
 .ms-log tr>:first-child{border-left:1px solid #000000}
 .ms-log thead th{position:sticky;background:#F8CBAD;font-weight:700;font-size:12px;line-height:1.25;text-align:center;z-index:2}
@@ -614,7 +623,7 @@ td.ms-od .ms-c,td.ms-soon .ms-c{color:inherit}
 /* No., Unifier ref. and Title stay in view while the log scrolls sideways (wide screens) */
 @media (min-width:1000px){
   .ms-log .f1,.ms-log .f2,.ms-log .f3{position:sticky;z-index:1;background:#FFFFFF}
-  .ms-log .f1{left:0}.ms-log .f2{left:50px}.ms-log .f3{left:140px;box-shadow:2px 0 0 rgba(0,0,0,.12)}
+  .ms-log .f1{left:0}.ms-log .f2{left:40px}.ms-log .f3{left:120px;box-shadow:2px 0 0 rgba(0,0,0,.12)}
   .ms-log thead .f1,.ms-log thead .f2,.ms-log thead .f3{z-index:4;background:#F8CBAD}
 }
 .ms-c:hover{border-color:#C9CCD1;background:#FFFFFF}
@@ -685,7 +694,6 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 @media (max-width:700px){
   .ms-title h2{font-size:22px}
   .ms-scroll{max-height:calc(100vh - 120px)}
-  .ms-head{grid-template-columns:minmax(520px,1fr) 200px 340px}
 }
 
 </style>
@@ -803,7 +811,7 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.16.2 (6 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.17.0 (11 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -937,8 +945,8 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.16.2';
-const APP_DATE = '6 Nov 2026';   // shown in the footer and in About
+const APP_VERSION = '1.17.0';
+const APP_DATE = '11 Nov 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
 const SNAP_DATE = String(window.__OPL_SNAPSHOT || '');
@@ -3580,6 +3588,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.17.0', '11 Nov 2026', 'MSRA Log in the updated Oxypro format: the project in a black bar across the top, the client, consultant, main contractor and subcontractor (Oxypro) logo boxes beside the project block, the legends on the right, then the date and the log\'s title above the code counter; SN column and the new column widths. The logos come from the library. The summary shows the date under its title. Same in Excel, PDF and on the page.'],
   ['1.16.2', '6 Nov 2026', 'Company logos show whole in their boxes. Photos on the presentation pages zoom in and out: the Zoom slider under each photo, Ctrl + mouse wheel or a pinch on the photo, or the + and − keys. The zoom goes into the PDF, the PowerPoint and View / Present, and Save to the project keeps it.'],
   ['1.16.1', '3 Nov 2026', 'Pre-Qualification has its own PQ button (it was in the QA/QC menu); the project buttons are in the order PQ, QA/QC, HSE, Edit.'],
   ['1.16.0', '3 Nov 2026', 'QA/QC > Pre-Qualification (PQ): the PQ Generator is part of the Library. It opens on the project with its details and Library page, uses the live projects and photos, and takes the company documents kept in the Library (editors replace them from the Company Documents folder). Word and PDF are saved through Claude; Print saves the PDF to print. Not in the GitHub edition.'],
@@ -3787,7 +3796,7 @@ const MS_COUNTED = ['A', 'B', 'C', 'D', 'E', 'UR'];
 const MS_FILL = { A: '#00B050', B: '#92D050', C: '#FF0000', D: '#C00000', E: '#00B0F0', UR: '#FFFF00', 'n/a': '#D9D9D9' };
 const MS_LEGEND = [['A', 'APPROVED'], ['B', 'APPROVED AS NOTED'], ['C', 'REVISE & RESUBMIT'], ['D', 'REJECTED'], ['E', 'INFORMATION & RECORD'], ['UR', 'UNDER REVIEW BY CONSULTANT']];
 const MS_STAGE = { I: 'INSTALLATION METHOD STATEMENTS', T: 'TESTING & COMMISSIONING METHOD STATEMENTS' };
-const MS_BLOCK_MAX = 6;
+const MS_BLOCK_MAX = 7;   // PROJECT (the title bar) and up to six rows beside the logos
 const msId = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-3);
 const msIso = v => /^\d{4}-\d{2}-\d{2}$/.test(String(v || '')) ? String(v) : '';
 const msDay = iso => { const m = msIso(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/); return m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) / 86400000 : null; };
@@ -3841,7 +3850,7 @@ function msDefaultBlock(p) {
     { label: 'CLIENT', value: msUp(real(p.client)) },
     { label: 'CONSULTANT', value: msUp(real(p.leadConsultant) || real(p.mepConsultant)) },
     { label: 'MEP CONSULTANT', value: msUp(real(p.mepConsultant)) },
-    { label: 'CONTRACTOR', value: msUp(real(p.mainContractor)) },
+    { label: 'MAIN CONTRACTOR', value: msUp(real(p.mainContractor)) },
     { label: 'MEP CONTRACTOR', value: 'OXYPRO ELECTROMECHANICAL WORK LLC' }
   ];
 }
@@ -3853,6 +3862,7 @@ function msClean(x, p) {
   const s = v => String(v == null ? '' : v).slice(0, 2000);
   const log = { no: p.no, v: 1, rev: s(x.rev || '00').slice(0, 10), start: s(x.start).slice(0, 20), createdAt: s(x.createdAt), updatedAt: s(x.updatedAt), updatedBy: s(x.updatedBy).slice(0, 120) };
   log.block = Array.isArray(x.block) && x.block.length ? x.block.slice(0, MS_BLOCK_MAX).map(r => ({ label: s(r && r.label).slice(0, 60), value: s(r && r.value).slice(0, 400) })) : msDefaultBlock(p);
+  log.block.forEach(r => { if (r.label.trim().toUpperCase() === 'CONTRACTOR') r.label = 'MAIN CONTRACTOR'; });   // the 1.17.0 format's name for it
   log.items = (Array.isArray(x.items) ? x.items : []).filter(it => it && MS_CODES.includes(it.d)).slice(0, 1500).map(it => ({
     id: s(it.id).slice(0, 24) || msId(), d: it.d, s: it.s === 'T' ? 'T' : 'I', b: s(it.b).slice(0, 80), t: s(it.t).slice(0, 400), ref: s(it.ref).slice(0, 120), rev: s(it.rev).slice(0, 10),
     plan: msIso(it.plan), sub: msIso(it.sub), ret: msIso(it.ret), st: msStatus(it.st), fin: msStatus(it.fin), rem: s(it.rem).slice(0, 400),
@@ -3867,6 +3877,22 @@ function msClean(x, p) {
   return log;
 }
 const msItemsOf = (log, d, st) => log.items.filter(it => it.d === d && (!st || it.s === st));
+/* the 1.17.0 sheet head: PROJECT goes in the title bar, the other rows (up to six) beside the logos */
+function msHeadRows(log, p) {
+  const i = log.block.findIndex(r => /^project$/i.test(String(r.label).trim()));
+  return { pi: i, title: i >= 0 ? log.block[i].value : msDefaultBlock(p || {})[0].value, rows: log.block.map((r, j) => ({ ...r, j })).filter(r => r.j !== i).slice(0, 6) };
+}
+const msProjTitle = log => (log.block.find(r => /^project$/i.test(String(r.label).trim())) || log.block[0] || { value: '' }).value;
+// d/mmm/yy, as the summary shows today's date
+function msFmtSlash(iso) { const m = msIso(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/); return m ? `${+m[3]}/${MS_MON[+m[2] - 1]}/${m[1].slice(2)}` : ''; }
+/* the logo boxes of the sheet head: Client, Consultant (the lead consultant, else the MEP consultant), Main Contractor and the subcontractor, Oxypro */
+const MS_LOGO_BOX = [['client', 'Client'], ['consultant', 'Consultant'], ['contractor', 'Main Contractor'], ['oxy', 'Subcontractor']];
+function msLogoNames(p) { return { client: realName(p.client), consultant: realName(p.leadConsultant) || realName(p.mepConsultant), contractor: realName(p.mainContractor) }; }
+async function msLogos(p) {
+  const n = msLogoNames(p), out = {};
+  for (const k of ['client', 'consultant', 'contractor']) { try { out[k] = n[k] ? await msgLogo(n[k]) : null; } catch (e) { out[k] = null; } }
+  return out;
+}
 
 /* counts as the workbook's formulas make them */
 function msCounts(items) {
@@ -4042,7 +4068,7 @@ function msLines(text, pt, px, bold) {
 }
 // the rows' fixed 30 pt height, or more when a title or remark needs a third line in Calibri
 function msRowPt(it) {
-  const lines = Math.max(msLines(it.t, 10, msColPx(70.71) - 8), msLines(it.rem, 10, msColPx(34.29) - 8), msLines(it.ref, 10, msColPx(35.71) - 8), msLines(it.b, 10, msColPx(12.71) - 8));
+  const lines = Math.max(msLines(it.t, 10, msColPx(70.71) - 8), msLines(it.rem, 10, msColPx(34.29) - 8), msLines(it.ref, 10, msColPx(30.71) - 8), msLines(it.b, 10, msColPx(12.71) - 8));
   return lines <= 2 ? 30 : Math.ceil(lines * 12.75 + 3);
 }
 const msXDate = iso => { const d = msDay(iso); return d == null ? null : new Date(d * 86400000); };
@@ -4058,37 +4084,81 @@ function msStatusCF(ws, ref, first) {
   const rules = [['UR', `LEFT(TRIM(${first}),2)="UR"`]].concat(['A', 'B', 'C', 'D', 'E'].map(k => [k, `LEFT(TRIM(${first}),1)="${k}"`])).concat([['n/a', `LOWER(TRIM(${first}))="n/a"`]]);
   ws.addConditionalFormatting({ ref, rules: rules.map(([k, f]) => ({ type: 'expression', formulae: [f], stopIfTrue: true, style: { fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: MS_ARGB(MS_FILL[k]) } }, font: { bold: true, color: { argb: 'FF000000' } } } })) });
 }
+// Excel's column width (characters) in pixels, as Excel itself counts them (Calibri 11)
+const msXPx = w => Math.trunc(((256 * w + 18) / 256) * 7);
+const MS_LOG_W = [5.71, 12.71, 70.71, 30.71, 15.71, 15.71, 15.71, 15.71, 15.71, 15.71, 15.71, 15.71, 34.29, 13.71, 9.14, 68.57, 9.14];
+// thin outer border round a block of cells, keeping the borders the cells already have
+function msBoxRange(ws, r1, c1, r2, c2) {
+  for (let r = r1; r <= r2; r++) for (let c = c1; c <= c2; c++) {
+    const cell = ws.getCell(r, c), b = { ...(cell.border || {}) };
+    if (r === r1) b.top = MS_THIN; if (r === r2) b.bottom = MS_THIN; if (c === c1) b.left = MS_THIN; if (c === c2) b.right = MS_THIN;
+    cell.border = b;
+  }
+}
+// an image centred in a box of cells (pixels at 100 %), anchored to the cell its top left corner falls in
+function msImageIn(ws, id, w, h, r1, c1, r2, c2, pad) {
+  const colPx = c => msXPx(ws.getColumn(c).width || 8.43), rowPx = r => (ws.getRow(r).height || 15) * 4 / 3;
+  let bw = 0, bh = 0; for (let c = c1; c <= c2; c++) bw += colPx(c); for (let r = r1; r <= r2; r++) bh += rowPx(r);
+  const k = Math.min(1, (bw - 2 * pad) / w, (bh - 2 * pad) / h), W = w * k, H = h * k;
+  let x = (bw - W) / 2, y = (bh - H) / 2, c = c1, r = r1;
+  while (c < c2 && x >= colPx(c)) { x -= colPx(c); c++; }
+  while (r < r2 && y >= rowPx(r)) { y -= rowPx(r); r++; }
+  ws.addImage(id, { tl: { nativeCol: c - 1, nativeColOff: Math.round(x * 9525), nativeRow: r - 1, nativeRowOff: Math.round(y * 9525) }, ext: { width: W, height: H }, editAs: 'oneCell' });
+}
 function msPage(ws, area, titles) {
   ws.pageSetup = { paperSize: 9, orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0, margins: { left: 0.25, right: 0.25, top: 0.5, bottom: 0.5, header: 0.3, footer: 0.3 }, ...(area ? { printArea: area } : {}), ...(titles ? { printTitlesRow: titles } : {}) };
 }
 /* one discipline log; returns the rows the summary and the master list point at */
-function msXlsxLog(wb, logoId, log, d, matText) {
+function msXlsxLog(wb, logos, log, d, matText, proj) {
   const ws = wb.addWorksheet(d.code, { views: [{ state: 'frozen', xSplit: 0, ySplit: 12, topLeftCell: 'A13', zoomScale: 85, zoomScaleNormal: 85 }], properties: { outlineLevelCol: 1 } });
-  const widths = [6.86, 12.71, 70.71, 35.71, 6.86, 11.43, 18.29, 16, 16, 13.71, 11.43, 13.71, 34.29, 13.71, 9.14, 68.57];
-  widths.forEach((w, i) => { ws.getColumn(i + 1).width = w; });
+  MS_LOG_W.forEach((w, i) => { ws.getColumn(i + 1).width = w; });
   const P = ws.getColumn(16); P.outlineLevel = 1; P.hidden = true;
-  for (let r = 1; r <= 10; r++) ws.getRow(r).height = 20.1;
-  ws.getRow(11).height = 21.95; ws.getRow(12).height = 39.95;
-  // title, project block, legends
-  ws.mergeCells('A1:D2'); const t = ws.getCell('A1'); t.value = `${d.name} METHOD STATEMENT SUBMITTAL LOG`;
-  msF(t, { font: { size: 14, bold: true }, al: { horizontal: 'center', vertical: 'middle' } });
-  log.block.forEach((b, i) => {
-    const r = 3 + i, a = ws.getCell(r, 1), c = ws.getCell(r, 3);
-    a.value = b.label; c.value = ': ' + b.value;
-    const room = msColPx(70.71) + msColPx(35.71) + msColPx(6.86) + msColPx(11.43) + msColPx(18.29) - 12;   // C to G, left of the logo
-    let size = 11; while (size > 8 && msTextPx(c.value, size, true) > room) size -= 0.5;
-    msF(a, { font: { size: 11, bold: true } }); msF(c, { font: { size, bold: true } });
+  for (let r = 1; r <= 11; r++) ws.getRow(r).height = r === 8 ? 5.1 : 20.1;
+  ws.getRow(12).height = 30;
+  const head = msHeadRows(log, proj);
+  // row 1: the project across A:J (white Arial on black) and LEGENDS
+  ws.mergeCells('A1:J1'); const t = ws.getCell('A1'); t.value = head.title;
+  const troom = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce((a, c) => a + msXPx(MS_LOG_W[c - 1]), 0) - 16;
+  let tsize = 14; while (tsize > 9 && msTextPx(head.title, tsize, true) * 1.08 > troom) tsize -= 0.5;   // Arial runs a little wider than Calibri
+  msF(t, { font: { name: 'Arial', size: tsize, bold: true, color: { argb: 'FFFFFFFF' } }, fill: '#000000', al: { horizontal: 'center' } });
+  for (let c = 1; c <= 10; c++) { const cell = ws.getCell(1, c); cell.border = { ...(cell.border || {}), bottom: MS_THIN, ...(c === 1 ? { left: MS_THIN } : {}), ...(c === 10 ? { right: MS_THIN } : {}) }; }
+  ws.mergeCells('K1:M1'); const lg = ws.getCell('K1'); lg.value = 'LEGENDS'; msF(lg, { font: { size: 12, bold: true }, fill: '#FFFFFF', al: { horizontal: 'center', vertical: 'middle' } });
+  msBoxRange(ws, 1, 11, 1, 13);
+  // rows 2 to 7: the project block (label in A, ": value" in C), each row boxed
+  const vroom = msXPx(70.71) - 10;
+  for (let i = 0; i < 6; i++) {
+    const r = 2 + i, b = head.rows[i];
+    if (b) {
+      const a = ws.getCell(r, 1), c = ws.getCell(r, 3); a.value = b.label; c.value = ': ' + b.value;
+      let size = 11; while (size > 8 && msTextPx(c.value, size, true) > vroom) size -= 0.5;
+      msF(a, { font: { size: 11, bold: true } }); msF(c, { font: { size, bold: true } });
+    }
+    msBoxRange(ws, r, 1, r, 3);
+  }
+  // the logo boxes: Client, Consultant, Main Contractor, Subcontractor (D2:J7)
+  const boxes = [[4, 4], [5, 6], [7, 8], [9, 10]];
+  MS_LOGO_BOX.forEach(([k, label], i) => {
+    const [c1, c2] = boxes[i];
+    if (c2 > c1) ws.mergeCells(2, c1, 2, c2);
+    const l = ws.getCell(2, c1); l.value = label; msF(l, { font: { size: 11 }, al: { horizontal: 'center', vertical: 'middle' } });
+    ws.mergeCells(3, c1, 7, c2); msF(ws.getCell(3, c1), { al: { horizontal: 'center', vertical: 'middle' } });
+    const img = logos[k]; if (img) msImageIn(ws, img.id, img.w, img.h, 3, c1, 7, c2, 12);
   });
-  ws.mergeCells('J1:M1'); const lg = ws.getCell('J1'); lg.value = 'LEGENDS'; msF(lg, { font: { size: 12, bold: true }, fill: '#FFFFFF', al: { horizontal: 'center', vertical: 'middle' }, box: true });
-  ['K1', 'L1', 'M1'].forEach(a => { ws.getCell(a).border = MS_BOX; });
+  msBoxRange(ws, 2, 4, 7, 10);
+  // the legends: code in K, meaning in L:M
   MS_LEGEND.forEach(([k, txt], i) => {
-    const r = 2 + i, c = ws.getCell(r, 10); c.value = k; msF(c, { font: { size: 14, bold: true }, fill: MS_FILL[k], al: { horizontal: 'center', vertical: 'middle' }, box: true });
-    ws.mergeCells(r, 11, r, 13); const x = ws.getCell(r, 11); x.value = txt; msF(x, { font: { size: 12 }, al: { horizontal: 'left', vertical: 'middle' }, box: true });
-    [12, 13].forEach(cc => { ws.getCell(r, cc).border = MS_BOX; });
+    const r = 2 + i, c = ws.getCell(r, 11); c.value = k; msF(c, { font: { size: 14, bold: true }, fill: MS_FILL[k], al: { horizontal: 'center', vertical: 'middle' }, box: true });
+    ws.mergeCells(r, 12, r, 13); const x = ws.getCell(r, 12); x.value = txt; msF(x, { font: { size: 12 }, al: { horizontal: 'left', vertical: 'middle' } });
+    msBoxRange(ws, r, 12, r, 13);
   });
-  // date and the code counter
-  const da = ws.getCell('A10'); da.value = 'Date:'; msF(da, { font: { size: 10, bold: true } });
-  const db = ws.getCell('B10'); db.value = { formula: 'TODAY()', result: new Date(msToday() * 86400000) }; msF(db, { font: { size: 10, bold: true }, al: { horizontal: 'left' }, fmt: '[$-en-US]d/mmm/yyyy;@' });
+  // rows 9 and 10: date, the log's title and the code counter
+  ws.mergeCells('A9:A10'); const da = ws.getCell('A9'); da.value = 'Date:'; msF(da, { font: { size: 11, bold: true }, al: { horizontal: 'center' } });
+  ws.mergeCells('B9:B10'); const db = ws.getCell('B9'); db.value = { formula: 'TODAY()', result: new Date(msToday() * 86400000) }; msF(db, { font: { size: 11, bold: true }, al: { horizontal: 'center' }, fmt: '[$-409]d/mmm/yyyy;@' });
+  msBoxRange(ws, 9, 1, 10, 2);
+  ws.mergeCells('C9:E10'); const lt = ws.getCell('C9'); lt.value = `${d.name} METHOD STATEMENT SUBMITTAL LOG`;
+  const lroom = msXPx(70.71) + msXPx(30.71) + msXPx(15.71) - 16; let lsize = 14; while (lsize > 10 && msTextPx(lt.value, lsize, true) > lroom) lsize -= 0.5;
+  msF(lt, { font: { size: lsize, bold: true }, al: { horizontal: 'center', vertical: 'middle' } });
+  msBoxRange(ws, 9, 3, 10, 5);
   const items = msItemsOf(log, d.code), cnt = msCounts(items);
   const f9 = ws.getCell('F9'); f9.value = 'CODE'; const f10 = ws.getCell('F10'); f10.value = 'Total';
   [f9, f10].forEach(c => msF(c, { font: { size: 14, bold: true }, fill: '#FFFFFF', al: { horizontal: 'center', vertical: 'middle' }, box: true }));
@@ -4099,7 +4169,7 @@ function msXlsxLog(wb, logoId, log, d, matText) {
   const m9 = ws.getCell('M9'); m9.value = 'TOTAL'; msF(m9, { font: { size: 14, bold: true }, fill: '#FFFFFF', al: { horizontal: 'center', vertical: 'middle' }, box: true });
   const m10 = ws.getCell('M10'); m10.value = { formula: 'SUM(G10:L10)', result: cnt.sub }; msF(m10, { font: { size: 14, bold: true }, fill: '#FFFFFF', al: { horizontal: 'center', vertical: 'middle' }, box: true, fmt: '0' });
   // headers
-  const H = ['No.', 'Unifier Ref. Number', 'Method Statement Title', 'Method Statement Reference No.', 'Rev.', 'Discipline', 'Planned Submission Date'];
+  const H = ['SN', 'Unifier Ref. Number', 'Method Statement Title', 'Method Statement Reference No.', 'Rev.', 'Discipline', 'Planned Submission Date'];
   H.forEach((h, i) => { ws.mergeCells(11, i + 1, 12, i + 1); ws.getCell(11, i + 1).value = h; });
   ws.mergeCells('H11:K11'); ws.getCell('H11').value = 'Method Statement Status';
   ['Submitted Date', 'Return Date', 'Review Period (in days)', 'Status'].forEach((h, i) => { ws.getCell(12, 8 + i).value = h; });
@@ -4136,19 +4206,18 @@ function msXlsxLog(wb, logoId, log, d, matText) {
   ws.dataValidations.add(`K15:L${last + 200}`, { type: 'list', allowBlank: true, formulae: ['"A,B,C,D,E,UR,n/a"'], showErrorMessage: true, errorTitle: 'Status', error: 'Choose A, B, C, D, E, UR or n/a' });
   ws.autoFilter = `A12:M${Math.max(last, 13)}`;
   msPage(ws, `A1:M${last}`, '11:12');
-  ws.addImage(logoId, { tl: { col: 7, row: 1 }, ext: { width: 195.5, height: 57.6 }, editAs: 'oneCell' });
   return { last, rows };
 }
 function msXlsxSummary(ws, logoId, log, info) {
-  [5.71, 38.86, 12.57, 12.57, 13.71, 11.43, 11.43, 11.43, 11.43, 11.43, 12.57, 22.86, 27.43].forEach((w, i) => { ws.getColumn(i + 1).width = w; });
+  [5.71, 28.29, 12.57, 12.57, 13.71, 11.43, 11.43, 11.43, 11.43, 11.43, 12.57, 15.71, 30.71].forEach((w, i) => { ws.getColumn(i + 1).width = w; });
   ws.getColumn(3).hidden = true; ws.getColumn(5).hidden = true;
   ws.getRow(1).height = 15.75; ws.getRow(2).height = 15.75;
-  const pv = (log.block.find(r => /^project$/i.test(r.label.trim())) || log.block[0] || { value: '' }).value;
+  const pv = msProjTitle(log);
   const a1 = ws.getCell('A1'); a1.value = `PROJECT : ${pv}`; msF(a1, { font: { size: 12, bold: true } });
   const a2 = ws.getCell('A2'); a2.value = 'METHOD STATEMENT OVERALL SUMMARY'; msF(a2, { font: { size: 12, bold: true } });
-  const l4 = ws.getCell('L4'); l4.value = 'DATE:'; msF(l4, { font: { size: 10, bold: true }, al: { horizontal: 'right' } });
-  const m4 = ws.getCell('M4'); m4.value = { formula: 'TODAY()', result: new Date(msToday() * 86400000) }; msF(m4, { font: { size: 10, bold: true }, al: { horizontal: 'left' }, fmt: 'd/mmm/yy' });
-  const head = ['SN', 'Method Statements', 'Planned MS', 'Total MS', 'MS Submitted', "A' Status", "B' Status", "C' Status", "D' Status", "E' Status", 'Under Review', 'To Be Submitted (including resubmissions)', 'Remarks'];
+  const a3 = ws.getCell('A3'); a3.value = 'DATE:'; msF(a3, { font: { size: 10, bold: true }, al: { horizontal: 'left' } });
+  const b3 = ws.getCell('B3'); b3.value = { formula: 'TODAY()', result: new Date(msToday() * 86400000) }; msF(b3, { font: { size: 10, bold: true }, al: { horizontal: 'left' }, fmt: 'd/mmm/yy' });
+  const head = ['SN', 'Method Statements', 'Planned MS', 'Total MS', 'MS Submitted', "A' Status", "B' Status", "C' Status", "D' Status", "E' Status", 'Under Review', 'To Be Submitted\n (including resubmissions)', 'Remarks'];
   const table = (top, title, st) => {
     ws.mergeCells(top, 1, top, 13); const b = ws.getCell(top, 1); b.value = title; msF(b, { font: { size: 11, bold: true, color: { argb: 'FFFFFFFF' } }, fill: '#1F4E78', al: { horizontal: 'center' }, box: true });
     for (let c = 1; c <= 13; c++) ws.getCell(top, c).border = MS_BOX;
@@ -4178,15 +4247,15 @@ function msXlsxSummary(ws, logoId, log, info) {
     const res = [tot.total, tot.total, st ? tot.filled : tot.sub, tot.A, tot.B, tot.C, tot.D, tot.E, tot.UR, st ? tot.toSubSection : tot.toSubOverall];
     for (let c = 3; c <= 13; c++) { const cell = ws.getCell(tr, c), L = String.fromCharCode(64 + c), k = ['A', 'B', 'C', 'D', 'E', 'UR'][c - 6]; if (c < 13) cell.value = { formula: `SUM(${L}${r0}:${L}${r0 + 6})`, result: res[c - 3] }; msF(cell, { font: { size: 10, bold: true }, fill: k ? MS_FILL[k] : '#D9E1F2', al: { horizontal: 'center' }, box: true, fmt: !st && c >= 5 && c <= 12 ? '0' : undefined }); }
   };
-  table(5, 'OVERALL', ''); table(17, 'INSTALLATION METHOD STATEMENTS', 'I'); table(29, 'TESTING & COMMISSIONING METHOD STATEMENTS', 'T');
+  table(4, 'OVERALL', ''); table(16, 'INSTALLATION METHOD STATEMENTS', 'I'); table(28, 'TESTING & COMMISSIONING METHOD STATEMENTS', 'T');
   msPage(ws, 'A1:M15');
-  ws.addImage(logoId, { tl: { col: 11 + 143 / msColPx(22.86), row: 0 }, ext: { width: 195.5, height: 57.6 }, editAs: 'oneCell' });
+  ws.addImage(logoId, { tl: { nativeCol: 11, nativeColOff: 198120, nativeRow: 0, nativeRowOff: 0 }, ext: { width: 195.5, height: 57.6 }, editAs: 'oneCell' });
 }
 function msXlsxMaster(wb, log, info) {
   const ws = wb.addWorksheet('MS Master List', { state: 'hidden', views: [{ state: 'frozen', ySplit: 36, topLeftCell: 'A37' }] });
-  [5.71, 10.29, 12.57, 8, 16, 66.29, 27.43, 11.43, 14.86, 14.86, 14.86, 11.43, 10.29, 10.29, 25.14, 22.86, 22.86].forEach((w, i) => { ws.getColumn(i + 1).width = w; });
+  [5.71, 10.29, 12.57, 8, 16, 66.29, 27.43, 11.43, 14.86, 14.86, 14.86, 11.43, 10.29, 10.29, 12.71, 12.29, 15.14].forEach((w, i) => { ws.getColumn(i + 1).width = w; });
   ws.getRow(1).height = 15.75; ws.getRow(2).height = 15.75;
-  const pv = (log.block.find(r => /^project$/i.test(r.label.trim())) || log.block[0] || { value: '' }).value;
+  const pv = msProjTitle(log);
   const a1 = ws.getCell('A1'); a1.value = pv; msF(a1, { font: { size: 12, bold: true } });
   const a2 = ws.getCell('A2'); a2.value = 'METHOD STATEMENT MASTER LIST - ALL DISCIPLINES (LIVE-LINKED TO DISCIPLINE LOGS)'; msF(a2, { font: { size: 12, bold: true } });
   const p2 = ws.getCell('P2'); p2.value = 'DATE:'; msF(p2, { font: { size: 10, bold: true } });
@@ -4241,7 +4310,7 @@ function msXlsxMaster(wb, log, info) {
 function msXlsxMsl(wb, log) {
   const msl = log.msl, ws = wb.addWorksheet('MSL Ref', { state: 'hidden', views: [{ state: 'frozen', ySplit: 8, topLeftCell: 'A9' }] });
   [11.43, 11.43, 10.29, 80, 12.57, 18.29, 12.57, 34.29].forEach((w, i) => { ws.getColumn(i + 1).width = w; });
-  const pv = (log.block.find(r => /^project$/i.test(r.label.trim())) || log.block[0] || { value: '' }).value;
+  const pv = msProjTitle(log);
   const put = (a, v, o) => { const c = ws.getCell(a); c.value = v; msF(c, o || {}); return c; };
   put('A1', 'MATERIAL SUBMITTAL - PLANNED SUBMISSION DATES (BASIS FOR MOS PLANNED DATES)', { font: { size: 12, bold: true } });
   put('A2', pv, { font: { size: 12, bold: true } });
@@ -4263,17 +4332,20 @@ function msXlsxMsl(wb, log) {
   ws.addConditionalFormatting({ ref: `G9:G${Math.max(last, 9)}`, rules: [{ type: 'cellIs', operator: 'equal', formulae: ['0'], style: { fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: 'FFFFC7CE' } }, font: { bold: true, color: { argb: 'FF9C0006' } } } }] });
 }
 /* the workbook: Summary, the seven logs, then the hidden MSL Ref and MS Master List (the template's order) */
-async function msBuildXlsx(ExcelJS, log, proj, logoB64) {
+async function msBuildXlsx(ExcelJS, log, proj, logoB64, company) {
   const wb = new ExcelJS.Workbook();
   wb.creator = 'Oxypro Project Library'; wb.created = new Date(); wb.calcProperties = { fullCalcOnLoad: true };
   const logoId = wb.addImage({ base64: logoB64, extension: 'png' });
+  // the sheet heads' logo boxes: the project's client, consultant and main contractor from the library, and Oxypro
+  const logos = { oxy: { id: logoId, w: 195.5, h: 57.6 } };
+  for (const k of ['client', 'consultant', 'contractor']) { const l = company && company[k]; if (l) logos[k] = { id: wb.addImage({ base64: l.data.split(',')[1], extension: 'png' }), w: l.w, h: l.h }; }
   const summary = wb.addWorksheet('Summary');   // first sheet, filled after the logs so it can point at their rows
   const msl = log.msl, mats = msl ? new Map(msl.items.map(m => [m.k, m.desc])) : null;
   const matText = msl ? it => it.m.map(k => `${k} ${mats.get(k) || ''}`.trim()).join('; ') : null;
   const items = log.items.map(it => ({ ...it }));
   const L = { ...log, items };
   const info = {};
-  for (const d of MS_DISC) info[d.code] = msXlsxLog(wb, logoId, L, d, matText);
+  for (const d of MS_DISC) info[d.code] = msXlsxLog(wb, logos, L, d, matText, proj);
   msXlsxSummary(summary, logoId, L, info);
   if (msl) msXlsxMsl(wb, L);
   msXlsxMaster(wb, L, info);
@@ -4283,7 +4355,7 @@ async function msBuildXlsx(ExcelJS, log, proj, logoB64) {
 async function msSaveXlsx() {
   await msFontsReady();
   await loadScript(MS_LIBS.exceljs);
-  const buf = await msBuildXlsx(window.ExcelJS, MSV.log, msProj(), MS_LOGO.split(',')[1]);
+  const buf = await msBuildXlsx(window.ExcelJS, MSV.log, msProj(), MS_LOGO.split(',')[1], await msLogos(msProj()));
   await saveFile(msFileBase() + '.xlsx', new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
 }
 
@@ -4296,56 +4368,58 @@ function msPdfFit(doc, text, maxW, size, min, bold) {
   while (s > min && doc.getTextWidth(text) > maxW) { s -= 0.25; doc.setFontSize(s); }
   return s;
 }
-function msPdfHead(doc, log, d, c, logo) {
-  const L = MS_PG.l, R = MS_PG.w - MS_PG.r, y0 = MS_PG.t;
-  doc.setTextColor(0, 0, 0);
-  // legends, top right
-  const lx = R - 236, cw = 34, rh = 10.5;
-  doc.setLineWidth(0.5); doc.setDrawColor(0, 0, 0);
-  doc.setFillColor(255, 255, 255); doc.rect(lx, y0, 236, rh, 'S');
-  doc.setFont('Carlito', 'bold'); doc.setFontSize(7.5); doc.text('LEGENDS', lx + 118, y0 + 7.3, { align: 'center' });
-  MS_LEGEND.forEach(([k, t], i) => {
-    const y = y0 + rh * (i + 1);
-    doc.setFillColor(...MS_RGB(MS_FILL[k])); doc.rect(lx, y, cw, rh, 'FD');
-    doc.rect(lx + cw, y, 236 - cw, rh, 'S');
-    doc.setFont('Carlito', 'bold'); doc.setFontSize(7.5); doc.text(k, lx + cw / 2, y + 7.3, { align: 'center' });
-    doc.setFont('Carlito', 'normal'); doc.setFontSize(7); doc.text(t, lx + cw + 4, y + 7.2);
-  });
-  // logo between the block and the legends
-  const lw = 128, lh = lw * 132 / 448;
-  if (logo) doc.addImage(logo, 'PNG', lx - 22 - lw, y0 + 4, lw, lh);
-  // title and project block
-  const bx = L + 78, room = lx - 22 - lw - 12 - bx;
-  doc.setFont('Carlito', 'bold'); msPdfFit(doc, `${d.name} METHOD STATEMENT SUBMITTAL LOG`, lx - 22 - lw - 12 - L, 11, 8, true);
-  doc.text(`${d.name} METHOD STATEMENT SUBMITTAL LOG`, L, y0 + 9);
-  let y = y0 + 24;
-  for (const r of log.block) {
-    doc.setFont('Carlito', 'bold'); doc.setFontSize(7.5); doc.text(r.label, L, y);
-    const v = ': ' + r.value, s = msPdfFit(doc, v, room, 7.5, 6, true);
-    const lines = doc.splitTextToSize(v, room).slice(0, 2);
-    doc.setFontSize(s); doc.text(lines, bx, y);
-    y += 10.5 * lines.length;
-  }
-  // date and the code counter
-  const sy = Math.max(y0 + rh * 7 + 8, y - 4), sw = [50, 36, 36, 36, 36, 36, 36, 50], sx0 = R - sw.reduce((a, b) => a + b, 0);
-  let x = sx0;
-  const cells = [['CODE', 'Total']].concat(MS_COUNTED.map(k => [k, String(c[k])])).concat([['TOTAL', String(c.sub)]]);
-  cells.forEach(([h, v], i) => {
-    const k = MS_COUNTED[i - 1];
-    if (k) doc.setFillColor(...MS_RGB(MS_FILL[k])); else doc.setFillColor(255, 255, 255);
-    doc.rect(x, sy, sw[i], 11, 'FD'); doc.setFillColor(255, 255, 255); doc.rect(x, sy + 11, sw[i], 11, 'FD');
-    doc.setFont('Carlito', 'bold'); doc.setFontSize(7.5); doc.text(h, x + sw[i] / 2, sy + 7.8, { align: 'center' }); doc.text(v, x + sw[i] / 2, sy + 18.8, { align: 'center' });
-    x += sw[i];
-  });
-  doc.setFont('Carlito', 'bold'); doc.setFontSize(7.5); doc.text(`Date:  ${msFmtLong(msFromDay(msToday()))}`, L, sy + 18.8);
-  return sy + 22 + 6;
+/* the sheet's columns A to M in points: the Excel widths, scaled to the page width */
+function msPdfCols() {
+  const W = MS_PG.w - MS_PG.l - MS_PG.r, px = MS_LOG_W.slice(0, 13).map(msXPx), sum = px.reduce((a, b) => a + b, 0);
+  return px.map(v => v * W / sum);
 }
-const MS_PDF_COLS = [22, 46, 190, 86, 20, 40, 46, 44, 44, 36, 30, 34];
-function msPdfLog(doc, log, d, logo, first) {
+/* the sheet head as in the Excel file: project bar, block, logo boxes, legends, then date, the log's title and the code counter */
+function msPdfHead(doc, log, d, c, logos) {
+  const L = MS_PG.l, y0 = MS_PG.t, cols = msPdfCols(), X = [L]; cols.forEach(w => X.push(X[X.length - 1] + w));
+  const rh = 11, gap = 3, y = r => y0 + (r < 8 ? (r - 1) * rh : 7 * rh + gap + (r - 9) * rh);   // top of sheet row r (1-7, 9-10)
+  const head = msHeadRows(log, msProj());
+  doc.setLineWidth(0.5); doc.setDrawColor(0, 0, 0); doc.setTextColor(0, 0, 0);
+  const box = (c1, r1, c2, r2, fill) => { if (fill) doc.setFillColor(...MS_RGB(fill)); doc.rect(X[c1 - 1], y(r1), X[c2] - X[c1 - 1], y(r2) + rh - y(r1), fill ? 'FD' : 'S'); };
+  const text = (t, c1, c2, r1, r2, o) => {
+    const x1 = X[c1 - 1], x2 = X[c2], size = msPdfFit(doc, t, x2 - x1 - 6, o.size, o.min || 5, o.bold);
+    const ty = o.bottom ? y(r2) + rh - 3 : (y(r1) + y(r2) + rh) / 2 + size * 0.34;
+    doc.text(t, o.left ? x1 + 3 : (x1 + x2) / 2, ty, { align: o.left ? 'left' : 'center' });
+  };
+  // row 1: the project (white Arial, here Helvetica, on black) and LEGENDS
+  box(1, 1, 10, 1, '#000000'); doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold'); let ts = 7.6; doc.setFontSize(ts); while (ts > 5 && doc.getTextWidth(head.title) > X[10] - X[0] - 10) { ts -= 0.25; doc.setFontSize(ts); }
+  doc.text(head.title, (X[0] + X[10]) / 2, y(1) + rh / 2 + ts * 0.35, { align: 'center' }); doc.setTextColor(0, 0, 0);
+  box(11, 1, 13, 1); text('LEGENDS', 11, 13, 1, 1, { size: 6.6, bold: true });
+  // rows 2 to 7: the block
+  for (let i = 0; i < 6; i++) {
+    const r = 2 + i, b = head.rows[i]; box(1, r, 3, r);
+    if (b) { text(b.label, 1, 2, r, r, { size: 6, min: 4.5, bold: true, left: true }); text(': ' + b.value, 3, 3, r, r, { size: 6, min: 4.5, bold: true, left: true }); }
+  }
+  // the logo boxes
+  const spans = [[4, 4], [5, 6], [7, 8], [9, 10]];
+  box(4, 2, 10, 7);
+  MS_LOGO_BOX.forEach(([k, label], i) => {
+    const [c1, c2] = spans[i]; text(label, c1, c2, 2, 2, { size: 6 });
+    const lg = logos && logos[k]; if (!lg) return;
+    const bw = X[c2] - X[c1 - 1] - 10, bh = 5 * rh - 8, s = Math.min(bw / lg.w, bh / lg.h), w = lg.w * s, h = lg.h * s;
+    try { doc.addImage(lg.data, 'PNG', (X[c1 - 1] + X[c2] - w) / 2, y(3) + (5 * rh - h) / 2, w, h, 'mslogo-' + k, 'FAST'); } catch (e) { /* left out */ }
+  });
+  // the legends
+  MS_LEGEND.forEach(([k, t], i) => { const r = 2 + i; box(11, r, 11, r, MS_FILL[k]); text(k, 11, 11, r, r, { size: 7.6, bold: true }); box(12, r, 13, r); text(t, 12, 13, r, r, { size: 6.5, left: true }); });
+  // rows 9 and 10
+  box(1, 9, 2, 10); text('Date:', 1, 1, 9, 10, { size: 6, bold: true, bottom: true }); text(msFmtLong(msFromDay(msToday())), 2, 2, 9, 10, { size: 6, min: 4.5, bold: true, bottom: true });
+  box(3, 9, 5, 10); text(`${d.name} METHOD STATEMENT SUBMITTAL LOG`, 3, 5, 9, 10, { size: 7.6, min: 5.5, bold: true });
+  [['CODE', 'Total', null]].concat(MS_COUNTED.map(k => [k, String(c[k]), MS_FILL[k]])).concat([['TOTAL', String(c.sub), null]]).forEach(([h, v, f], i) => {
+    const col = 6 + i; box(col, 9, col, 9, f || '#FFFFFF'); box(col, 10, col, 10, '#FFFFFF');
+    text(h, col, col, 9, 9, { size: 7.6, bold: true }); text(v, col, col, 10, 10, { size: 7.6, bold: true });
+  });
+  return y(10) + rh;
+}
+function msPdfLog(doc, log, d, logos, first) {
   const items = msItemsOf(log, d.code), c = msCounts(items);
   if (!first) doc.addPage();
-  const startY = msPdfHead(doc, log, d, c, logo);
-  const W = MS_PG.w - MS_PG.l - MS_PG.r, cols = MS_PDF_COLS.concat([W - MS_PDF_COLS.reduce((a, b) => a + b, 0)]);
+  const startY = msPdfHead(doc, log, d, c, logos);
+  const cols = msPdfCols();
   const ban = (text, fill) => [{ content: text, colSpan: 13, styles: { fillColor: MS_RGB(fill), fontStyle: 'bold', halign: 'center', fontSize: 7.5, cellPadding: 3.5 } }];
   const st = v => v ? { content: v, styles: { fillColor: MS_RGB(MS_FILL[v]), fontStyle: 'bold', halign: 'center' } } : '';
   const body = [ban(d.name, '#D9D9D9')];
@@ -4360,7 +4434,7 @@ function msPdfLog(doc, log, d, logo, first) {
         { content: msFmt(it.sub), styles: { textColor: [0, 0, 255] } }, { content: msFmt(it.ret), styles: { textColor: [0, 0, 255] } }, String(msReview(it)), st(it.st), st(it.fin), it.rem]);
     }
   }
-  const head = [[{ content: 'No.', rowSpan: 2 }, { content: 'Unifier Ref. Number', rowSpan: 2 }, { content: 'Method Statement Title', rowSpan: 2 }, { content: 'Method Statement Reference No.', rowSpan: 2 }, { content: 'Rev.', rowSpan: 2 }, { content: 'Discipline', rowSpan: 2 }, { content: 'Planned Submission Date', rowSpan: 2 }, { content: 'Method Statement Status', colSpan: 4 }, { content: 'Final Status', rowSpan: 2 }, { content: 'Remark', rowSpan: 2 }],
+  const head = [[{ content: 'SN', rowSpan: 2 }, { content: 'Unifier Ref. Number', rowSpan: 2 }, { content: 'Method Statement Title', rowSpan: 2 }, { content: 'Method Statement Reference No.', rowSpan: 2 }, { content: 'Rev.', rowSpan: 2 }, { content: 'Discipline', rowSpan: 2 }, { content: 'Planned Submission Date', rowSpan: 2 }, { content: 'Method Statement Status', colSpan: 4 }, { content: 'Final Status', rowSpan: 2 }, { content: 'Remark', rowSpan: 2 }],
     ['Submitted Date', 'Return Date', 'Review Period (in days)', 'Status']];
   doc.autoTable({
     head, body, startY, margin: { left: MS_PG.l, right: MS_PG.r, top: MS_PG.t, bottom: MS_PG.b }, theme: 'grid', showHead: 'everyPage', rowPageBreak: 'avoid',
@@ -4371,13 +4445,13 @@ function msPdfLog(doc, log, d, logo, first) {
 }
 function msPdfSummary(doc, log, logo) {
   const L = MS_PG.l, R = MS_PG.w - MS_PG.r, y0 = MS_PG.t;
-  const pv = (log.block.find(r => /^project$/i.test(r.label.trim())) || log.block[0] || { value: '' }).value;
+  const pv = msProjTitle(log);
   const lw = 120, lh = lw * 132 / 448;
   if (logo) doc.addImage(logo, 'PNG', R - lw, y0 - 4, lw, lh);
   doc.setTextColor(0, 0, 0);
   const t1 = `PROJECT : ${pv}`; msPdfFit(doc, t1, R - lw - 16 - L, 10, 7, true); doc.text(t1, L, y0 + 10);
   doc.setFontSize(9.5); doc.text('METHOD STATEMENT OVERALL SUMMARY', L, y0 + 24);
-  doc.setFontSize(7.5); doc.text(`DATE:  ${msFmt(msFromDay(msToday()))}`, R, y0 + lh + 6, { align: 'right' });
+  doc.setFontSize(7.5); doc.text(`DATE:  ${msFmtSlash(msFromDay(msToday()))}`, L, y0 + 36);
   let y = y0 + lh + 14;
   const W = R - L, cw = [24, 160, 62, 54, 54, 54, 54, 54, 54, 96]; cw.push(W - cw.reduce((a, b) => a + b, 0));
   for (const [title, st] of [['OVERALL', ''], ['INSTALLATION METHOD STATEMENTS', 'I'], ['TESTING & COMMISSIONING METHOD STATEMENTS', 'T']]) {
@@ -4387,7 +4461,7 @@ function msPdfSummary(doc, log, logo) {
     doc.autoTable({
       startY: y, margin: { left: L, right: MS_PG.r }, theme: 'grid',
       head: [[{ content: title, colSpan: 11, styles: { fillColor: MS_RGB('#1F4E78'), textColor: [255, 255, 255], fontSize: 7.5 } }],
-        ['SN', 'Method Statements', 'Total MS'].map(h => ({ content: h })).concat(MS_COUNTED.map((k, j) => ({ content: k === 'UR' ? 'Under Review' : `${k}' Status`, styles: { fillColor: fill[j] } }))).concat([{ content: 'To Be Submitted (including resubmissions)' }, { content: 'Remarks' }])],
+        ['SN', 'Method Statements', 'Total MS'].map(h => ({ content: h })).concat(MS_COUNTED.map((k, j) => ({ content: k === 'UR' ? 'Under Review' : `${k}' Status`, styles: { fillColor: fill[j] } }))).concat([{ content: 'To Be Submitted\n(including resubmissions)' }, { content: 'Remarks' }])],
       body: rows.concat([[{ content: 'TOTAL', colSpan: 2, styles: { fontStyle: 'bold', fillColor: MS_RGB('#D9E1F2') } }, { content: String(tot.total), styles: { fontStyle: 'bold', fillColor: MS_RGB('#D9E1F2') } }]
         .concat(MS_COUNTED.map((k, j) => ({ content: String(tot[k]), styles: { fontStyle: 'bold', fillColor: fill[j] } })))
         .concat([{ content: String(st ? tot.toSubSection : tot.toSubOverall), styles: { fontStyle: 'bold', fillColor: MS_RGB('#D9E1F2') } }, { content: '', styles: { fillColor: MS_RGB('#D9E1F2') } }])]),
@@ -4398,14 +4472,16 @@ function msPdfSummary(doc, log, logo) {
     y = doc.lastAutoTable.finalY + 12;
   }
 }
-function msBuildPdf(jsPDF, log, proj, fonts, logo, rev) {
+function msBuildPdf(jsPDF, log, proj, fonts, logo, rev, company) {
   const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4', compress: true });
   doc.addFileToVFS('Carlito-Regular.ttf', fonts.r); doc.addFont('Carlito-Regular.ttf', 'Carlito', 'normal');
   doc.addFileToVFS('Carlito-Bold.ttf', fonts.b); doc.addFont('Carlito-Bold.ttf', 'Carlito', 'bold');
   doc.setFont('Carlito', 'normal');
   doc.setProperties({ title: `${proj.no} ${proj.name || ''} - Method Statement Log`.trim(), creator: 'Oxypro Project Library', subject: 'Method Statement Submittal Log' });
   msPdfSummary(doc, log, logo);
-  for (const d of MS_DISC) if (msItemsOf(log, d.code).length) msPdfLog(doc, log, d, logo, false);
+  const logos = { oxy: { data: logo, w: 448, h: 132 } };
+  for (const k of ['client', 'consultant', 'contractor']) if (company && company[k]) logos[k] = { ...company[k], id: k };
+  for (const d of MS_DISC) if (msItemsOf(log, d.code).length) msPdfLog(doc, log, d, logos, false);
   const n = doc.getNumberOfPages(), foot = `${proj.no}${proj.name ? ' · ' + proj.name : ''} · Method Statement Submittal Log · Rev ${rev || '00'}`;
   for (let i = 1; i <= n; i++) {
     doc.setPage(i); doc.setFont('Carlito', 'normal'); doc.setFontSize(6.5); doc.setTextColor(110, 110, 110);
@@ -4415,7 +4491,7 @@ function msBuildPdf(jsPDF, log, proj, fonts, logo, rev) {
 }
 async function msSavePdf(print) {
   await loadScript(LIBS.jspdf); await loadScript(MS_LIBS.autotable);
-  const doc = msBuildPdf(window.jspdf.jsPDF, MSV.log, msProj(), msPdfFonts(), MS_LOGO, MSV.log.rev);
+  const doc = msBuildPdf(window.jspdf.jsPDF, MSV.log, msProj(), msPdfFonts(), MS_LOGO, MSV.log.rev, await msLogos(msProj()));
   const blob = doc.output('blob');
   if (print && GH) {   // a normal website may open the PDF in a new tab, where the browser prints it
     const url = URL.createObjectURL(blob), w = window.open(url, '_blank');
@@ -4541,25 +4617,39 @@ function msStartHTML() {
   </div>`;
 }
 
-/* the sheet header: title, project block, logo, legends, date and the code counter */
+/* the sheet head, laid out on the sheet's own columns as in the Excel file:
+   row 1 the project bar and LEGENDS; rows 2-7 the block, the logo boxes and the legends; rows 9-10 date, the log's title and the code counter */
 function msHeadHTML(title, c) {
-  const log = MSV.log, e = MSV.mode === 'edit';
-  const block = log.block.map((r, i) => e
-    ? `<tr><td><input class="ms-in" data-bl="${i}" data-f="label" value="${esc(r.label)}" aria-label="Label of row ${i + 1}" maxlength="60"></td><td class="ms-colon">:</td><td><input class="ms-in" data-bl="${i}" data-f="value" value="${esc(r.value)}" aria-label="${esc(r.label || 'Value of row ' + (i + 1))}" maxlength="400"></td><td class="ms-bl-tools"><button type="button" class="ms-x" data-ms-act="bl-rm" data-i="${i}" aria-label="Remove ${esc(r.label || 'this row')}" title="Remove row"${log.block.length < 2 ? ' disabled' : ''}>${MS_ICON.x}</button></td></tr>`
-    : `<tr><th>${esc(r.label)}</th><td>: ${esc(r.value)}</td></tr>`).join('');
-  return `<div class="ms-head">
-    <div class="ms-h-left">
-      <div class="ms-h-title">${esc(title)}</div>
-      <table class="ms-block">${block}</table>
-      ${e ? `<div class="ms-bl-add">${log.block.length < MS_BLOCK_MAX ? '<button type="button" class="btn btn-ghost btn-sm" data-ms-act="bl-add">+ Add row</button>' : ''}<button type="button" class="btn btn-ghost btn-sm" data-ms-act="bl-reset" title="Fill the block again from the library's project details">Refill from the library</button><label class="ms-rev">Log revision <input class="ms-in" data-ms-rev value="${esc(log.rev)}" maxlength="10" aria-label="Log revision"></label></div>` : ''}
-      <div class="ms-date"><b>Date:</b> ${esc(msFmtLong(msFromDay(msToday())))}</div>
-    </div>
-    <div class="ms-h-logo"><img src="${MS_LOGO}" alt="Oxypro Electromechanical Works LLC"></div>
-    <div class="ms-h-right">
-      <table class="ms-legend"><tr><th colspan="2">LEGENDS</th></tr>${MS_LEGEND.map(([k, t]) => `<tr><td class="st-${msCls(k)}">${k}</td><td>${t}</td></tr>`).join('')}</table>
-      ${c ? `<table class="ms-strip"><tr><th>CODE</th>${MS_COUNTED.map(k => `<td class="st-${msCls(k)}">${k}</td>`).join('')}<th>TOTAL</th></tr><tr><th>Total</th>${MS_COUNTED.map(k => `<td data-cnt="${k}">${c[k]}</td>`).join('')}<td data-cnt="sub">${c.sub}</td></tr></table>` : ''}
-    </div>
-  </div>`;
+  const log = MSV.log, e = MSV.mode === 'edit', p = msProj(), head = msHeadRows(log, p), names = msLogoNames(p);
+  const proj = e && head.pi >= 0
+    ? `<input class="ms-in ms-in-proj" data-bl="${head.pi}" data-f="value" value="${esc(head.title)}" aria-label="Project" maxlength="400">`
+    : esc(head.title);
+  const legend = i => { const [k, t] = MS_LEGEND[i]; return `<td class="t-code st-${msCls(k)}">${k}</td><td colspan="2" class="t-desc">${t}</td>`; };
+  const blockRow = i => {
+    const b = head.rows[i];
+    if (!b) return '<td colspan="2" class="t-lab"></td><td class="t-val"></td>';
+    if (!e) return `<td colspan="2" class="t-lab">${esc(b.label)}</td><td class="t-val">: ${esc(b.value)}</td>`;
+    return `<td colspan="2" class="t-lab"><input class="ms-in" data-bl="${b.j}" data-f="label" value="${esc(b.label)}" aria-label="Label of row ${i + 1}" maxlength="60"></td>
+      <td class="t-val"><span class="t-ed">:<input class="ms-in" data-bl="${b.j}" data-f="value" value="${esc(b.value)}" aria-label="${esc(b.label || 'Value of row ' + (i + 1))}" maxlength="400"><button type="button" class="ms-x" data-ms-act="bl-rm" data-i="${b.j}" aria-label="Remove ${esc(b.label || 'this row')}" title="Remove row"${log.block.length < 2 ? ' disabled' : ''}>${MS_ICON.x}</button></span></td>`;
+  };
+  const logo = k => {
+    if (k === 'oxy') return `<img src="${MS_LOGO}" alt="Oxypro Electromechanical Works LLC">`;
+    const lg = names[k] && logoOf(names[k]);
+    return lg ? `<img src="${esc(logoUrl(lg.id))}" alt="${esc(names[k])} logo">` : '';
+  };
+  const spans = [1, 2, 2, 2];
+  const rows = [
+    `<tr><td colspan="10" class="t-proj">${proj}</td><td colspan="3" class="t-legh">LEGENDS</td></tr>`,
+    `<tr>${blockRow(0)}${MS_LOGO_BOX.map(([, l], i) => `<td${spans[i] > 1 ? ` colspan="${spans[i]}"` : ''} class="t-ll${i === 0 ? ' l' : ''}${i === 3 ? ' r' : ''}">${l}</td>`).join('')}${legend(0)}</tr>`,
+    `<tr>${blockRow(1)}${MS_LOGO_BOX.map(([k], i) => `<td${spans[i] > 1 ? ` colspan="${spans[i]}"` : ''} rowspan="5" class="t-logo${i === 0 ? ' l' : ''}${i === 3 ? ' r' : ''}">${logo(k)}</td>`).join('')}${legend(1)}</tr>`
+  ];
+  for (let i = 2; i < 6; i++) rows.push(`<tr>${blockRow(i)}${legend(i)}</tr>`);
+  rows.push('<tr class="t-gap"><td colspan="13"></td></tr>');
+  rows.push(`<tr><td rowspan="2" class="t-date l">Date:</td><td rowspan="2" class="t-date r">${esc(msFmtLong(msFromDay(msToday())))}</td><td colspan="3" rowspan="2" class="t-title">${esc(title)}</td>
+    <th class="t-sh">CODE</th>${MS_COUNTED.map(k => `<td class="t-sh st-${msCls(k)}">${k}</td>`).join('')}<th class="t-sh">TOTAL</th></tr>`);
+  rows.push(`<tr><th class="t-sh">Total</th>${MS_COUNTED.map(k => `<td class="t-sh" data-cnt="${k}">${c[k]}</td>`).join('')}<td class="t-sh" data-cnt="sub">${c.sub}</td></tr>`);
+  return `<table class="ms-top" style="width:${MS_COLS.reduce((a, [, w]) => a + w, 0)}px"><colgroup>${MS_COLS.map(([, w]) => `<col style="width:${w}px">`).join('')}</colgroup><tbody>${rows.join('')}</tbody></table>
+    ${e ? `<div class="ms-bl-add">${log.block.length < MS_BLOCK_MAX && head.rows.length < 6 ? '<button type="button" class="btn btn-ghost btn-sm" data-ms-act="bl-add">+ Add row</button>' : ''}<button type="button" class="btn btn-ghost btn-sm" data-ms-act="bl-reset" title="Fill the project bar and the block again from the library's project details">Refill from the library</button><label class="ms-rev">Log revision <input class="ms-in" data-ms-rev value="${esc(log.rev)}" maxlength="10" aria-label="Log revision"></label></div>` : ''}`;
 }
 const msCls = k => k === 'n/a' ? 'na' : k;
 const MS_ICON = {
@@ -4568,7 +4658,7 @@ const MS_ICON = {
   down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
   link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>'
 };
-const MS_COLS = [['No.', 50], ['Unifier Ref. Number', 90], ['Method Statement Title', 400], ['Method Statement Reference No.', 190], ['Rev.', 46], ['Discipline', 76], ['Planned Submission Date', 112], ['Submitted Date', 108], ['Return Date', 108], ['Review Period (in days)', 82], ['Status', 74], ['Final Status', 82], ['Remark', 210]];
+const MS_COLS = [['SN', 40], ['Unifier Ref. Number', 80], ['Method Statement Title', 446], ['Method Statement Reference No.', 194], ['Rev.', 99], ['Discipline', 99], ['Planned Submission Date', 99], ['Submitted Date', 99], ['Return Date', 99], ['Review Period (in days)', 99], ['Status', 99], ['Final Status', 99], ['Remark', 216]];
 function msDateCls(it) {
   const pd = msDay(it.plan); if (pd == null || it.sub) return '';
   const t0 = msToday(); return pd < t0 ? ' ms-od' : pd - t0 <= 7 ? ' ms-soon' : '';
@@ -4621,7 +4711,7 @@ function msSheetHTML(code) {
 function msSumTable(head, rows, tot, section) {
   const cell = v => `<td class="c">${v}</td>`;
   return `<table class="ms-sum"><thead><tr class="ms-sum-ban"><th colspan="10">${esc(head)}</th></tr>
-    <tr><th>SN</th><th>Method Statements</th><th>Total MS</th>${MS_COUNTED.map(k => `<th class="st-${msCls(k)}">${k === 'UR' ? 'Under Review' : k + '\' Status'}</th>`).join('')}<th>To Be Submitted (including resubmissions)</th><th>Remarks</th></tr></thead>
+    <tr><th>SN</th><th>Method Statements</th><th>Total MS</th>${MS_COUNTED.map(k => `<th class="st-${msCls(k)}">${k === 'UR' ? 'Under Review' : k + '\' Status'}</th>`).join('')}<th>To Be Submitted<br>(including resubmissions)</th><th>Remarks</th></tr></thead>
     <tbody>${rows.map((r, i) => `<tr><td class="c">${i + 1}</td><td><button type="button" class="ms-link" data-ms-tab="${r.code}">${esc(r.label)}</button></td>${cell(r.c.total)}${MS_COUNTED.map(k => cell(r.c[k])).join('')}${cell(section ? r.c.toSubSection : r.c.toSubOverall)}<td></td></tr>`).join('')}
     <tr class="ms-sum-tot"><td colspan="2" class="c">TOTAL</td>${cell(tot.total)}${MS_COUNTED.map(k => `<td class="c st-${msCls(k)}">${tot[k]}</td>`).join('')}${cell(section ? tot.toSubSection : tot.toSubOverall)}<td></td></tr></tbody></table>`;
 }
@@ -4629,10 +4719,10 @@ function msSummaryHTML() {
   const log = MSV.log, w = msCanSave();
   const block = (st) => { const rows = MS_DISC.map(d => ({ code: d.code, label: d.sum, c: msCounts(msItemsOf(log, d.code, st)) })); return { rows, tot: msCounts(log.items.filter(it => !st || it.s === st)) }; };
   const o = block(''), I = block('I'), T = block('T');
-  const pv = (log.block.find(r => /^project$/i.test(r.label.trim())) || log.block[0] || { value: '' }).value;
+  const pv = msProjTitle(log);
   const od = o.tot.overdue, soon = o.tot.soon;
   return `<div class="ms-scroll ms-scroll-sum"><div class="ms-paper ms-paper-sum">
-    <div class="ms-sum-head"><div><div class="ms-h-title">PROJECT : ${esc(pv)}</div><div class="ms-h-sub">METHOD STATEMENT OVERALL SUMMARY</div></div><div class="ms-sum-logo"><img src="${MS_LOGO}" alt="Oxypro"><div class="ms-date"><b>DATE:</b> ${esc(msFmt(msFromDay(msToday())))}</div></div></div>
+    <div class="ms-sum-head"><div><div class="ms-h-title">PROJECT : ${esc(pv)}</div><div class="ms-h-sub">METHOD STATEMENT OVERALL SUMMARY</div><div class="ms-date"><b>DATE:</b> ${esc(msFmtSlash(msFromDay(msToday())))}</div></div><div class="ms-sum-logo"><img src="${MS_LOGO}" alt="Oxypro"></div></div>
     ${msSumTable('OVERALL', o.rows, o.tot, false)}
     ${msSumTable('INSTALLATION METHOD STATEMENTS', I.rows, I.tot, true)}
     ${msSumTable('TESTING & COMMISSIONING METHOD STATEMENTS', T.rows, T.tot, true)}

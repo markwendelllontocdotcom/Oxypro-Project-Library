@@ -113,25 +113,39 @@ function msStartHTML() {
   </div>`;
 }
 
-/* the sheet header: title, project block, logo, legends, date and the code counter */
+/* the sheet head, laid out on the sheet's own columns as in the Excel file:
+   row 1 the project bar and LEGENDS; rows 2-7 the block, the logo boxes and the legends; rows 9-10 date, the log's title and the code counter */
 function msHeadHTML(title, c) {
-  const log = MSV.log, e = MSV.mode === 'edit';
-  const block = log.block.map((r, i) => e
-    ? `<tr><td><input class="ms-in" data-bl="${i}" data-f="label" value="${esc(r.label)}" aria-label="Label of row ${i + 1}" maxlength="60"></td><td class="ms-colon">:</td><td><input class="ms-in" data-bl="${i}" data-f="value" value="${esc(r.value)}" aria-label="${esc(r.label || 'Value of row ' + (i + 1))}" maxlength="400"></td><td class="ms-bl-tools"><button type="button" class="ms-x" data-ms-act="bl-rm" data-i="${i}" aria-label="Remove ${esc(r.label || 'this row')}" title="Remove row"${log.block.length < 2 ? ' disabled' : ''}>${MS_ICON.x}</button></td></tr>`
-    : `<tr><th>${esc(r.label)}</th><td>: ${esc(r.value)}</td></tr>`).join('');
-  return `<div class="ms-head">
-    <div class="ms-h-left">
-      <div class="ms-h-title">${esc(title)}</div>
-      <table class="ms-block">${block}</table>
-      ${e ? `<div class="ms-bl-add">${log.block.length < MS_BLOCK_MAX ? '<button type="button" class="btn btn-ghost btn-sm" data-ms-act="bl-add">+ Add row</button>' : ''}<button type="button" class="btn btn-ghost btn-sm" data-ms-act="bl-reset" title="Fill the block again from the library's project details">Refill from the library</button><label class="ms-rev">Log revision <input class="ms-in" data-ms-rev value="${esc(log.rev)}" maxlength="10" aria-label="Log revision"></label></div>` : ''}
-      <div class="ms-date"><b>Date:</b> ${esc(msFmtLong(msFromDay(msToday())))}</div>
-    </div>
-    <div class="ms-h-logo"><img src="${MS_LOGO}" alt="Oxypro Electromechanical Works LLC"></div>
-    <div class="ms-h-right">
-      <table class="ms-legend"><tr><th colspan="2">LEGENDS</th></tr>${MS_LEGEND.map(([k, t]) => `<tr><td class="st-${msCls(k)}">${k}</td><td>${t}</td></tr>`).join('')}</table>
-      ${c ? `<table class="ms-strip"><tr><th>CODE</th>${MS_COUNTED.map(k => `<td class="st-${msCls(k)}">${k}</td>`).join('')}<th>TOTAL</th></tr><tr><th>Total</th>${MS_COUNTED.map(k => `<td data-cnt="${k}">${c[k]}</td>`).join('')}<td data-cnt="sub">${c.sub}</td></tr></table>` : ''}
-    </div>
-  </div>`;
+  const log = MSV.log, e = MSV.mode === 'edit', p = msProj(), head = msHeadRows(log, p), names = msLogoNames(p);
+  const proj = e && head.pi >= 0
+    ? `<input class="ms-in ms-in-proj" data-bl="${head.pi}" data-f="value" value="${esc(head.title)}" aria-label="Project" maxlength="400">`
+    : esc(head.title);
+  const legend = i => { const [k, t] = MS_LEGEND[i]; return `<td class="t-code st-${msCls(k)}">${k}</td><td colspan="2" class="t-desc">${t}</td>`; };
+  const blockRow = i => {
+    const b = head.rows[i];
+    if (!b) return '<td colspan="2" class="t-lab"></td><td class="t-val"></td>';
+    if (!e) return `<td colspan="2" class="t-lab">${esc(b.label)}</td><td class="t-val">: ${esc(b.value)}</td>`;
+    return `<td colspan="2" class="t-lab"><input class="ms-in" data-bl="${b.j}" data-f="label" value="${esc(b.label)}" aria-label="Label of row ${i + 1}" maxlength="60"></td>
+      <td class="t-val"><span class="t-ed">:<input class="ms-in" data-bl="${b.j}" data-f="value" value="${esc(b.value)}" aria-label="${esc(b.label || 'Value of row ' + (i + 1))}" maxlength="400"><button type="button" class="ms-x" data-ms-act="bl-rm" data-i="${b.j}" aria-label="Remove ${esc(b.label || 'this row')}" title="Remove row"${log.block.length < 2 ? ' disabled' : ''}>${MS_ICON.x}</button></span></td>`;
+  };
+  const logo = k => {
+    if (k === 'oxy') return `<img src="${MS_LOGO}" alt="Oxypro Electromechanical Works LLC">`;
+    const lg = names[k] && logoOf(names[k]);
+    return lg ? `<img src="${esc(logoUrl(lg.id))}" alt="${esc(names[k])} logo">` : '';
+  };
+  const spans = [1, 2, 2, 2];
+  const rows = [
+    `<tr><td colspan="10" class="t-proj">${proj}</td><td colspan="3" class="t-legh">LEGENDS</td></tr>`,
+    `<tr>${blockRow(0)}${MS_LOGO_BOX.map(([, l], i) => `<td${spans[i] > 1 ? ` colspan="${spans[i]}"` : ''} class="t-ll${i === 0 ? ' l' : ''}${i === 3 ? ' r' : ''}">${l}</td>`).join('')}${legend(0)}</tr>`,
+    `<tr>${blockRow(1)}${MS_LOGO_BOX.map(([k], i) => `<td${spans[i] > 1 ? ` colspan="${spans[i]}"` : ''} rowspan="5" class="t-logo${i === 0 ? ' l' : ''}${i === 3 ? ' r' : ''}">${logo(k)}</td>`).join('')}${legend(1)}</tr>`
+  ];
+  for (let i = 2; i < 6; i++) rows.push(`<tr>${blockRow(i)}${legend(i)}</tr>`);
+  rows.push('<tr class="t-gap"><td colspan="13"></td></tr>');
+  rows.push(`<tr><td rowspan="2" class="t-date l">Date:</td><td rowspan="2" class="t-date r">${esc(msFmtLong(msFromDay(msToday())))}</td><td colspan="3" rowspan="2" class="t-title">${esc(title)}</td>
+    <th class="t-sh">CODE</th>${MS_COUNTED.map(k => `<td class="t-sh st-${msCls(k)}">${k}</td>`).join('')}<th class="t-sh">TOTAL</th></tr>`);
+  rows.push(`<tr><th class="t-sh">Total</th>${MS_COUNTED.map(k => `<td class="t-sh" data-cnt="${k}">${c[k]}</td>`).join('')}<td class="t-sh" data-cnt="sub">${c.sub}</td></tr>`);
+  return `<table class="ms-top" style="width:${MS_COLS.reduce((a, [, w]) => a + w, 0)}px"><colgroup>${MS_COLS.map(([, w]) => `<col style="width:${w}px">`).join('')}</colgroup><tbody>${rows.join('')}</tbody></table>
+    ${e ? `<div class="ms-bl-add">${log.block.length < MS_BLOCK_MAX && head.rows.length < 6 ? '<button type="button" class="btn btn-ghost btn-sm" data-ms-act="bl-add">+ Add row</button>' : ''}<button type="button" class="btn btn-ghost btn-sm" data-ms-act="bl-reset" title="Fill the project bar and the block again from the library's project details">Refill from the library</button><label class="ms-rev">Log revision <input class="ms-in" data-ms-rev value="${esc(log.rev)}" maxlength="10" aria-label="Log revision"></label></div>` : ''}`;
 }
 const msCls = k => k === 'n/a' ? 'na' : k;
 const MS_ICON = {
@@ -140,7 +154,7 @@ const MS_ICON = {
   down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
   link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>'
 };
-const MS_COLS = [['No.', 50], ['Unifier Ref. Number', 90], ['Method Statement Title', 400], ['Method Statement Reference No.', 190], ['Rev.', 46], ['Discipline', 76], ['Planned Submission Date', 112], ['Submitted Date', 108], ['Return Date', 108], ['Review Period (in days)', 82], ['Status', 74], ['Final Status', 82], ['Remark', 210]];
+const MS_COLS = [['SN', 40], ['Unifier Ref. Number', 80], ['Method Statement Title', 446], ['Method Statement Reference No.', 194], ['Rev.', 99], ['Discipline', 99], ['Planned Submission Date', 99], ['Submitted Date', 99], ['Return Date', 99], ['Review Period (in days)', 99], ['Status', 99], ['Final Status', 99], ['Remark', 216]];
 function msDateCls(it) {
   const pd = msDay(it.plan); if (pd == null || it.sub) return '';
   const t0 = msToday(); return pd < t0 ? ' ms-od' : pd - t0 <= 7 ? ' ms-soon' : '';
@@ -193,7 +207,7 @@ function msSheetHTML(code) {
 function msSumTable(head, rows, tot, section) {
   const cell = v => `<td class="c">${v}</td>`;
   return `<table class="ms-sum"><thead><tr class="ms-sum-ban"><th colspan="10">${esc(head)}</th></tr>
-    <tr><th>SN</th><th>Method Statements</th><th>Total MS</th>${MS_COUNTED.map(k => `<th class="st-${msCls(k)}">${k === 'UR' ? 'Under Review' : k + '\' Status'}</th>`).join('')}<th>To Be Submitted (including resubmissions)</th><th>Remarks</th></tr></thead>
+    <tr><th>SN</th><th>Method Statements</th><th>Total MS</th>${MS_COUNTED.map(k => `<th class="st-${msCls(k)}">${k === 'UR' ? 'Under Review' : k + '\' Status'}</th>`).join('')}<th>To Be Submitted<br>(including resubmissions)</th><th>Remarks</th></tr></thead>
     <tbody>${rows.map((r, i) => `<tr><td class="c">${i + 1}</td><td><button type="button" class="ms-link" data-ms-tab="${r.code}">${esc(r.label)}</button></td>${cell(r.c.total)}${MS_COUNTED.map(k => cell(r.c[k])).join('')}${cell(section ? r.c.toSubSection : r.c.toSubOverall)}<td></td></tr>`).join('')}
     <tr class="ms-sum-tot"><td colspan="2" class="c">TOTAL</td>${cell(tot.total)}${MS_COUNTED.map(k => `<td class="c st-${msCls(k)}">${tot[k]}</td>`).join('')}${cell(section ? tot.toSubSection : tot.toSubOverall)}<td></td></tr></tbody></table>`;
 }
@@ -201,10 +215,10 @@ function msSummaryHTML() {
   const log = MSV.log, w = msCanSave();
   const block = (st) => { const rows = MS_DISC.map(d => ({ code: d.code, label: d.sum, c: msCounts(msItemsOf(log, d.code, st)) })); return { rows, tot: msCounts(log.items.filter(it => !st || it.s === st)) }; };
   const o = block(''), I = block('I'), T = block('T');
-  const pv = (log.block.find(r => /^project$/i.test(r.label.trim())) || log.block[0] || { value: '' }).value;
+  const pv = msProjTitle(log);
   const od = o.tot.overdue, soon = o.tot.soon;
   return `<div class="ms-scroll ms-scroll-sum"><div class="ms-paper ms-paper-sum">
-    <div class="ms-sum-head"><div><div class="ms-h-title">PROJECT : ${esc(pv)}</div><div class="ms-h-sub">METHOD STATEMENT OVERALL SUMMARY</div></div><div class="ms-sum-logo"><img src="${MS_LOGO}" alt="Oxypro"><div class="ms-date"><b>DATE:</b> ${esc(msFmt(msFromDay(msToday())))}</div></div></div>
+    <div class="ms-sum-head"><div><div class="ms-h-title">PROJECT : ${esc(pv)}</div><div class="ms-h-sub">METHOD STATEMENT OVERALL SUMMARY</div><div class="ms-date"><b>DATE:</b> ${esc(msFmtSlash(msFromDay(msToday())))}</div></div><div class="ms-sum-logo"><img src="${MS_LOGO}" alt="Oxypro"></div></div>
     ${msSumTable('OVERALL', o.rows, o.tot, false)}
     ${msSumTable('INSTALLATION METHOD STATEMENTS', I.rows, I.tot, true)}
     ${msSumTable('TESTING & COMMISSIONING METHOD STATEMENTS', T.rows, T.tot, true)}

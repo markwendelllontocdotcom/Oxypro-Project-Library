@@ -610,7 +610,7 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.16.2 (6 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.17.0 (11 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -674,8 +674,8 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.16.2';
-const APP_DATE = '6 Nov 2026';   // shown in the footer and in About
+const APP_VERSION = '1.17.0';
+const APP_DATE = '11 Nov 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
 const SNAP_DATE = String(window.__OPL_SNAPSHOT || '');
@@ -3317,6 +3317,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.17.0', '11 Nov 2026', 'MSRA Log in the updated Oxypro format: the project in a black bar across the top, the client, consultant, main contractor and subcontractor (Oxypro) logo boxes beside the project block, the legends on the right, then the date and the log\'s title above the code counter; SN column and the new column widths. The logos come from the library. The summary shows the date under its title. Same in Excel, PDF and on the page.'],
   ['1.16.2', '6 Nov 2026', 'Company logos show whole in their boxes. Photos on the presentation pages zoom in and out: the Zoom slider under each photo, Ctrl + mouse wheel or a pinch on the photo, or the + and − keys. The zoom goes into the PDF, the PowerPoint and View / Present, and Save to the project keeps it.'],
   ['1.16.1', '3 Nov 2026', 'Pre-Qualification has its own PQ button (it was in the QA/QC menu); the project buttons are in the order PQ, QA/QC, HSE, Edit.'],
   ['1.16.0', '3 Nov 2026', 'QA/QC > Pre-Qualification (PQ): the PQ Generator is part of the Library. It opens on the project with its details and Library page, uses the live projects and photos, and takes the company documents kept in the Library (editors replace them from the Company Documents folder). Word and PDF are saved through Claude; Print saves the PDF to print. Not in the GitHub edition.'],

@@ -37,38 +37,47 @@
 /* the log as paper: the template's look in Calibri, white in every theme */
 .ms-scroll{overflow:auto;max-height:calc(100vh - 150px);border:1px solid var(--line-strong);border-radius:4px;background:#FFFFFF}
 .ms-paper{--ms-ink:#000000;color:#000000;background:#FFFFFF;font:12px/1.35 Calibri,Carlito,Arial,sans-serif;padding:14px 16px 18px;width:max-content;min-width:100%}
-.ms-head{display:grid;grid-template-columns:minmax(560px,1fr) 230px 360px;gap:14px;align-items:start;margin-bottom:10px;position:sticky;left:16px;width:calc(var(--msw,100%) - 32px);box-sizing:border-box}
+/* the sheet head on the sheet's own columns (1.17.0 format) */
+.ms-top{border-collapse:collapse;table-layout:fixed;width:max-content;font-size:12.5px;color:#000000;margin-bottom:0}
+.ms-top td,.ms-top th{height:27px;padding:0 6px;vertical-align:middle;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ms-top .t-proj{background:#000000;color:#FFFFFF;font:700 18px/1.2 Arial,Helvetica,sans-serif;text-align:center;border:1px solid #000000}
+.ms-top .t-legh{border:1px solid #000000;text-align:center;font-weight:700;font-size:15px}
+.ms-top .t-lab{font-weight:700;border-top:1px solid #000000;border-bottom:1px solid #000000;border-left:1px solid #000000}
+.ms-top .t-val{font-weight:700;border-top:1px solid #000000;border-bottom:1px solid #000000;border-right:1px solid #000000}
+.ms-top .t-ll{text-align:center;font-size:13px;border-top:1px solid #000000}
+.ms-top .t-logo{text-align:center;border-bottom:1px solid #000000;padding:8px 10px;height:auto}
+.ms-top .t-ll.l,.ms-top .t-logo.l{border-left:1px solid #000000}
+.ms-top .t-ll.r,.ms-top .t-logo.r{border-right:1px solid #000000}
+.ms-top .t-logo img{display:inline-block;max-width:100%;max-height:96px;width:auto;height:auto;vertical-align:middle}
+.ms-top .t-code{border:1px solid #000000;text-align:center;font-weight:700;font-size:17px}
+.ms-top .t-desc{border:1px solid #000000;font-size:14px}
+.ms-top .t-gap td{height:7px;padding:0}
+.ms-top .t-date{font-weight:700;font-size:12px;vertical-align:bottom;padding:0 2px 4px;text-align:center;border-top:1px solid #000000;border-bottom:1px solid #000000;text-overflow:clip}
+.ms-top .t-date.l{border-left:1px solid #000000}.ms-top .t-date.r{border-right:1px solid #000000}
+.ms-top .t-title{border:1px solid #000000;text-align:center;font-weight:700;font-size:17px;white-space:normal}
+.ms-top .t-sh{border:1px solid #000000;text-align:center;font-weight:700;font-size:17px}
+.ms-top .t-ed{display:flex;align-items:center;gap:4px}
+.ms-top .ms-in{font-weight:700;padding:1px 4px}
+.editing .ms-top .t-lab,.editing .ms-top .t-val{padding:0 3px}
+.ms-top .t-lab .ms-in{font-size:11.5px;padding:1px 3px}
+.ms-top .ms-in-proj{background:#1C1C1C;color:#FFFFFF;border-color:#5A5A5A;text-align:center;font:700 16px Arial,Helvetica,sans-serif}
 .ms-h-title{font-weight:700;font-size:17px;line-height:1.25;margin:2px 0 10px}
 .ms-h-sub{font-weight:700;font-size:14px}
-.ms-block{border-collapse:collapse;font-weight:700;font-size:12.5px}
-.ms-block th{text-align:left;padding:1px 14px 1px 0;white-space:nowrap;vertical-align:top}
-.ms-block td{padding:1px 0}
-.ms-block .ms-colon{padding:0 4px}
 .ms-in{font:inherit;color:#000000;background:#FFFDF0;border:1px solid #C9CCD1;border-radius:3px;padding:2px 5px;min-width:0;width:100%}
-.ms-block .ms-in[data-f="label"]{width:150px}
-.ms-block .ms-in[data-f="value"]{width:min(640px,52vw)}
 .ms-bl-tools{padding-left:4px}
 .ms-x{display:grid;place-items:center;width:24px;height:24px;border:0;border-radius:3px;background:none;color:#62666C;cursor:pointer;padding:0}
 .ms-x:hover:not(:disabled){background:#F0F1F3;color:#B3151C}
 .ms-x svg{width:14px;height:14px}
 .ms-x:disabled{opacity:.35;cursor:default}
-.ms-bl-add{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:6px;font-size:12.5px}
+.ms-bl-add{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:6px 0 4px;font-size:12.5px}
 .ms-bl-add .btn{color:#232425;border-color:transparent}
 .ms-bl-add .btn:hover{background:#F0F1F3}
 .ms-rev{display:inline-flex;align-items:center;gap:6px;font-weight:600}
 .ms-rev .ms-in{width:64px}
 .ms-date{margin-top:10px;font-size:12.5px}
-.ms-h-logo{display:flex;justify-content:center;padding-top:10px}
-.ms-h-logo img{width:196px;height:auto}
-.ms-legend,.ms-strip{border-collapse:collapse;width:100%;font-size:12px}
-.ms-legend th{border:1px solid #000000;padding:2px;font-weight:700;text-align:center}
-.ms-legend td{border:1px solid #000000;padding:2px 6px}
-.ms-legend td:first-child{width:52px;text-align:center;font-weight:700}
-.ms-strip{margin-top:10px}
-.ms-strip th,.ms-strip td{border:1px solid #000000;padding:3px 2px;text-align:center;font-weight:700;font-size:13px}
 .st-A{background:#00B050}.st-B{background:#92D050}.st-C{background:#FF0000}.st-D{background:#C00000}.st-E{background:#00B0F0}.st-UR{background:#FFFF00}.st-na{background:#D9D9D9}
 .ms-log td.st-A,.ms-log td.st-B,.ms-log td.st-C,.ms-log td.st-D,.ms-log td.st-E,.ms-log td.st-UR,.ms-log td.st-na{font-weight:700}
-.ms-log{border-collapse:separate;border-spacing:0;table-layout:fixed;font-size:12px}
+.ms-log{border-collapse:separate;border-spacing:0;table-layout:fixed;font-size:12px;margin-top:-1px}
 .ms-log th,.ms-log td{border-right:1px solid #000000;border-bottom:1px solid #000000;padding:4px 5px;vertical-align:middle;overflow-wrap:anywhere}
 .ms-log tr>:first-child{border-left:1px solid #000000}
 .ms-log thead th{position:sticky;background:#F8CBAD;font-weight:700;font-size:12px;line-height:1.25;text-align:center;z-index:2}
@@ -95,7 +104,7 @@ td.ms-od .ms-c,td.ms-soon .ms-c{color:inherit}
 /* No., Unifier ref. and Title stay in view while the log scrolls sideways (wide screens) */
 @media (min-width:1000px){
   .ms-log .f1,.ms-log .f2,.ms-log .f3{position:sticky;z-index:1;background:#FFFFFF}
-  .ms-log .f1{left:0}.ms-log .f2{left:50px}.ms-log .f3{left:140px;box-shadow:2px 0 0 rgba(0,0,0,.12)}
+  .ms-log .f1{left:0}.ms-log .f2{left:40px}.ms-log .f3{left:120px;box-shadow:2px 0 0 rgba(0,0,0,.12)}
   .ms-log thead .f1,.ms-log thead .f2,.ms-log thead .f3{z-index:4;background:#F8CBAD}
 }
 .ms-c:hover{border-color:#C9CCD1;background:#FFFFFF}
@@ -166,5 +175,4 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 @media (max-width:700px){
   .ms-title h2{font-size:22px}
   .ms-scroll{max-height:calc(100vh - 120px)}
-  .ms-head{grid-template-columns:minmax(520px,1fr) 200px 340px}
 }

@@ -24,7 +24,7 @@ function msLines(text, pt, px, bold) {
 }
 // the rows' fixed 30 pt height, or more when a title or remark needs a third line in Calibri
 function msRowPt(it) {
-  const lines = Math.max(msLines(it.t, 10, msColPx(70.71) - 8), msLines(it.rem, 10, msColPx(34.29) - 8), msLines(it.ref, 10, msColPx(35.71) - 8), msLines(it.b, 10, msColPx(12.71) - 8));
+  const lines = Math.max(msLines(it.t, 10, msColPx(70.71) - 8), msLines(it.rem, 10, msColPx(34.29) - 8), msLines(it.ref, 10, msColPx(30.71) - 8), msLines(it.b, 10, msColPx(12.71) - 8));
   return lines <= 2 ? 30 : Math.ceil(lines * 12.75 + 3);
 }
 const msXDate = iso => { const d = msDay(iso); return d == null ? null : new Date(d * 86400000); };
@@ -40,37 +40,81 @@ function msStatusCF(ws, ref, first) {
   const rules = [['UR', `LEFT(TRIM(${first}),2)="UR"`]].concat(['A', 'B', 'C', 'D', 'E'].map(k => [k, `LEFT(TRIM(${first}),1)="${k}"`])).concat([['n/a', `LOWER(TRIM(${first}))="n/a"`]]);
   ws.addConditionalFormatting({ ref, rules: rules.map(([k, f]) => ({ type: 'expression', formulae: [f], stopIfTrue: true, style: { fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: MS_ARGB(MS_FILL[k]) } }, font: { bold: true, color: { argb: 'FF000000' } } } })) });
 }
+// Excel's column width (characters) in pixels, as Excel itself counts them (Calibri 11)
+const msXPx = w => Math.trunc(((256 * w + 18) / 256) * 7);
+const MS_LOG_W = [5.71, 12.71, 70.71, 30.71, 15.71, 15.71, 15.71, 15.71, 15.71, 15.71, 15.71, 15.71, 34.29, 13.71, 9.14, 68.57, 9.14];
+// thin outer border round a block of cells, keeping the borders the cells already have
+function msBoxRange(ws, r1, c1, r2, c2) {
+  for (let r = r1; r <= r2; r++) for (let c = c1; c <= c2; c++) {
+    const cell = ws.getCell(r, c), b = { ...(cell.border || {}) };
+    if (r === r1) b.top = MS_THIN; if (r === r2) b.bottom = MS_THIN; if (c === c1) b.left = MS_THIN; if (c === c2) b.right = MS_THIN;
+    cell.border = b;
+  }
+}
+// an image centred in a box of cells (pixels at 100 %), anchored to the cell its top left corner falls in
+function msImageIn(ws, id, w, h, r1, c1, r2, c2, pad) {
+  const colPx = c => msXPx(ws.getColumn(c).width || 8.43), rowPx = r => (ws.getRow(r).height || 15) * 4 / 3;
+  let bw = 0, bh = 0; for (let c = c1; c <= c2; c++) bw += colPx(c); for (let r = r1; r <= r2; r++) bh += rowPx(r);
+  const k = Math.min(1, (bw - 2 * pad) / w, (bh - 2 * pad) / h), W = w * k, H = h * k;
+  let x = (bw - W) / 2, y = (bh - H) / 2, c = c1, r = r1;
+  while (c < c2 && x >= colPx(c)) { x -= colPx(c); c++; }
+  while (r < r2 && y >= rowPx(r)) { y -= rowPx(r); r++; }
+  ws.addImage(id, { tl: { nativeCol: c - 1, nativeColOff: Math.round(x * 9525), nativeRow: r - 1, nativeRowOff: Math.round(y * 9525) }, ext: { width: W, height: H }, editAs: 'oneCell' });
+}
 function msPage(ws, area, titles) {
   ws.pageSetup = { paperSize: 9, orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0, margins: { left: 0.25, right: 0.25, top: 0.5, bottom: 0.5, header: 0.3, footer: 0.3 }, ...(area ? { printArea: area } : {}), ...(titles ? { printTitlesRow: titles } : {}) };
 }
 /* one discipline log; returns the rows the summary and the master list point at */
-function msXlsxLog(wb, logoId, log, d, matText) {
+function msXlsxLog(wb, logos, log, d, matText, proj) {
   const ws = wb.addWorksheet(d.code, { views: [{ state: 'frozen', xSplit: 0, ySplit: 12, topLeftCell: 'A13', zoomScale: 85, zoomScaleNormal: 85 }], properties: { outlineLevelCol: 1 } });
-  const widths = [6.86, 12.71, 70.71, 35.71, 6.86, 11.43, 18.29, 16, 16, 13.71, 11.43, 13.71, 34.29, 13.71, 9.14, 68.57];
-  widths.forEach((w, i) => { ws.getColumn(i + 1).width = w; });
+  MS_LOG_W.forEach((w, i) => { ws.getColumn(i + 1).width = w; });
   const P = ws.getColumn(16); P.outlineLevel = 1; P.hidden = true;
-  for (let r = 1; r <= 10; r++) ws.getRow(r).height = 20.1;
-  ws.getRow(11).height = 21.95; ws.getRow(12).height = 39.95;
-  // title, project block, legends
-  ws.mergeCells('A1:D2'); const t = ws.getCell('A1'); t.value = `${d.name} METHOD STATEMENT SUBMITTAL LOG`;
-  msF(t, { font: { size: 14, bold: true }, al: { horizontal: 'center', vertical: 'middle' } });
-  log.block.forEach((b, i) => {
-    const r = 3 + i, a = ws.getCell(r, 1), c = ws.getCell(r, 3);
-    a.value = b.label; c.value = ': ' + b.value;
-    const room = msColPx(70.71) + msColPx(35.71) + msColPx(6.86) + msColPx(11.43) + msColPx(18.29) - 12;   // C to G, left of the logo
-    let size = 11; while (size > 8 && msTextPx(c.value, size, true) > room) size -= 0.5;
-    msF(a, { font: { size: 11, bold: true } }); msF(c, { font: { size, bold: true } });
+  for (let r = 1; r <= 11; r++) ws.getRow(r).height = r === 8 ? 5.1 : 20.1;
+  ws.getRow(12).height = 30;
+  const head = msHeadRows(log, proj);
+  // row 1: the project across A:J (white Arial on black) and LEGENDS
+  ws.mergeCells('A1:J1'); const t = ws.getCell('A1'); t.value = head.title;
+  const troom = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce((a, c) => a + msXPx(MS_LOG_W[c - 1]), 0) - 16;
+  let tsize = 14; while (tsize > 9 && msTextPx(head.title, tsize, true) * 1.08 > troom) tsize -= 0.5;   // Arial runs a little wider than Calibri
+  msF(t, { font: { name: 'Arial', size: tsize, bold: true, color: { argb: 'FFFFFFFF' } }, fill: '#000000', al: { horizontal: 'center' } });
+  for (let c = 1; c <= 10; c++) { const cell = ws.getCell(1, c); cell.border = { ...(cell.border || {}), bottom: MS_THIN, ...(c === 1 ? { left: MS_THIN } : {}), ...(c === 10 ? { right: MS_THIN } : {}) }; }
+  ws.mergeCells('K1:M1'); const lg = ws.getCell('K1'); lg.value = 'LEGENDS'; msF(lg, { font: { size: 12, bold: true }, fill: '#FFFFFF', al: { horizontal: 'center', vertical: 'middle' } });
+  msBoxRange(ws, 1, 11, 1, 13);
+  // rows 2 to 7: the project block (label in A, ": value" in C), each row boxed
+  const vroom = msXPx(70.71) - 10;
+  for (let i = 0; i < 6; i++) {
+    const r = 2 + i, b = head.rows[i];
+    if (b) {
+      const a = ws.getCell(r, 1), c = ws.getCell(r, 3); a.value = b.label; c.value = ': ' + b.value;
+      let size = 11; while (size > 8 && msTextPx(c.value, size, true) > vroom) size -= 0.5;
+      msF(a, { font: { size: 11, bold: true } }); msF(c, { font: { size, bold: true } });
+    }
+    msBoxRange(ws, r, 1, r, 3);
+  }
+  // the logo boxes: Client, Consultant, Main Contractor, Subcontractor (D2:J7)
+  const boxes = [[4, 4], [5, 6], [7, 8], [9, 10]];
+  MS_LOGO_BOX.forEach(([k, label], i) => {
+    const [c1, c2] = boxes[i];
+    if (c2 > c1) ws.mergeCells(2, c1, 2, c2);
+    const l = ws.getCell(2, c1); l.value = label; msF(l, { font: { size: 11 }, al: { horizontal: 'center', vertical: 'middle' } });
+    ws.mergeCells(3, c1, 7, c2); msF(ws.getCell(3, c1), { al: { horizontal: 'center', vertical: 'middle' } });
+    const img = logos[k]; if (img) msImageIn(ws, img.id, img.w, img.h, 3, c1, 7, c2, 12);
   });
-  ws.mergeCells('J1:M1'); const lg = ws.getCell('J1'); lg.value = 'LEGENDS'; msF(lg, { font: { size: 12, bold: true }, fill: '#FFFFFF', al: { horizontal: 'center', vertical: 'middle' }, box: true });
-  ['K1', 'L1', 'M1'].forEach(a => { ws.getCell(a).border = MS_BOX; });
+  msBoxRange(ws, 2, 4, 7, 10);
+  // the legends: code in K, meaning in L:M
   MS_LEGEND.forEach(([k, txt], i) => {
-    const r = 2 + i, c = ws.getCell(r, 10); c.value = k; msF(c, { font: { size: 14, bold: true }, fill: MS_FILL[k], al: { horizontal: 'center', vertical: 'middle' }, box: true });
-    ws.mergeCells(r, 11, r, 13); const x = ws.getCell(r, 11); x.value = txt; msF(x, { font: { size: 12 }, al: { horizontal: 'left', vertical: 'middle' }, box: true });
-    [12, 13].forEach(cc => { ws.getCell(r, cc).border = MS_BOX; });
+    const r = 2 + i, c = ws.getCell(r, 11); c.value = k; msF(c, { font: { size: 14, bold: true }, fill: MS_FILL[k], al: { horizontal: 'center', vertical: 'middle' }, box: true });
+    ws.mergeCells(r, 12, r, 13); const x = ws.getCell(r, 12); x.value = txt; msF(x, { font: { size: 12 }, al: { horizontal: 'left', vertical: 'middle' } });
+    msBoxRange(ws, r, 12, r, 13);
   });
-  // date and the code counter
-  const da = ws.getCell('A10'); da.value = 'Date:'; msF(da, { font: { size: 10, bold: true } });
-  const db = ws.getCell('B10'); db.value = { formula: 'TODAY()', result: new Date(msToday() * 86400000) }; msF(db, { font: { size: 10, bold: true }, al: { horizontal: 'left' }, fmt: '[$-en-US]d/mmm/yyyy;@' });
+  // rows 9 and 10: date, the log's title and the code counter
+  ws.mergeCells('A9:A10'); const da = ws.getCell('A9'); da.value = 'Date:'; msF(da, { font: { size: 11, bold: true }, al: { horizontal: 'center' } });
+  ws.mergeCells('B9:B10'); const db = ws.getCell('B9'); db.value = { formula: 'TODAY()', result: new Date(msToday() * 86400000) }; msF(db, { font: { size: 11, bold: true }, al: { horizontal: 'center' }, fmt: '[$-409]d/mmm/yyyy;@' });
+  msBoxRange(ws, 9, 1, 10, 2);
+  ws.mergeCells('C9:E10'); const lt = ws.getCell('C9'); lt.value = `${d.name} METHOD STATEMENT SUBMITTAL LOG`;
+  const lroom = msXPx(70.71) + msXPx(30.71) + msXPx(15.71) - 16; let lsize = 14; while (lsize > 10 && msTextPx(lt.value, lsize, true) > lroom) lsize -= 0.5;
+  msF(lt, { font: { size: lsize, bold: true }, al: { horizontal: 'center', vertical: 'middle' } });
+  msBoxRange(ws, 9, 3, 10, 5);
   const items = msItemsOf(log, d.code), cnt = msCounts(items);
   const f9 = ws.getCell('F9'); f9.value = 'CODE'; const f10 = ws.getCell('F10'); f10.value = 'Total';
   [f9, f10].forEach(c => msF(c, { font: { size: 14, bold: true }, fill: '#FFFFFF', al: { horizontal: 'center', vertical: 'middle' }, box: true }));
@@ -81,7 +125,7 @@ function msXlsxLog(wb, logoId, log, d, matText) {
   const m9 = ws.getCell('M9'); m9.value = 'TOTAL'; msF(m9, { font: { size: 14, bold: true }, fill: '#FFFFFF', al: { horizontal: 'center', vertical: 'middle' }, box: true });
   const m10 = ws.getCell('M10'); m10.value = { formula: 'SUM(G10:L10)', result: cnt.sub }; msF(m10, { font: { size: 14, bold: true }, fill: '#FFFFFF', al: { horizontal: 'center', vertical: 'middle' }, box: true, fmt: '0' });
   // headers
-  const H = ['No.', 'Unifier Ref. Number', 'Method Statement Title', 'Method Statement Reference No.', 'Rev.', 'Discipline', 'Planned Submission Date'];
+  const H = ['SN', 'Unifier Ref. Number', 'Method Statement Title', 'Method Statement Reference No.', 'Rev.', 'Discipline', 'Planned Submission Date'];
   H.forEach((h, i) => { ws.mergeCells(11, i + 1, 12, i + 1); ws.getCell(11, i + 1).value = h; });
   ws.mergeCells('H11:K11'); ws.getCell('H11').value = 'Method Statement Status';
   ['Submitted Date', 'Return Date', 'Review Period (in days)', 'Status'].forEach((h, i) => { ws.getCell(12, 8 + i).value = h; });
@@ -118,19 +162,18 @@ function msXlsxLog(wb, logoId, log, d, matText) {
   ws.dataValidations.add(`K15:L${last + 200}`, { type: 'list', allowBlank: true, formulae: ['"A,B,C,D,E,UR,n/a"'], showErrorMessage: true, errorTitle: 'Status', error: 'Choose A, B, C, D, E, UR or n/a' });
   ws.autoFilter = `A12:M${Math.max(last, 13)}`;
   msPage(ws, `A1:M${last}`, '11:12');
-  ws.addImage(logoId, { tl: { col: 7, row: 1 }, ext: { width: 195.5, height: 57.6 }, editAs: 'oneCell' });
   return { last, rows };
 }
 function msXlsxSummary(ws, logoId, log, info) {
-  [5.71, 38.86, 12.57, 12.57, 13.71, 11.43, 11.43, 11.43, 11.43, 11.43, 12.57, 22.86, 27.43].forEach((w, i) => { ws.getColumn(i + 1).width = w; });
+  [5.71, 28.29, 12.57, 12.57, 13.71, 11.43, 11.43, 11.43, 11.43, 11.43, 12.57, 15.71, 30.71].forEach((w, i) => { ws.getColumn(i + 1).width = w; });
   ws.getColumn(3).hidden = true; ws.getColumn(5).hidden = true;
   ws.getRow(1).height = 15.75; ws.getRow(2).height = 15.75;
-  const pv = (log.block.find(r => /^project$/i.test(r.label.trim())) || log.block[0] || { value: '' }).value;
+  const pv = msProjTitle(log);
   const a1 = ws.getCell('A1'); a1.value = `PROJECT : ${pv}`; msF(a1, { font: { size: 12, bold: true } });
   const a2 = ws.getCell('A2'); a2.value = 'METHOD STATEMENT OVERALL SUMMARY'; msF(a2, { font: { size: 12, bold: true } });
-  const l4 = ws.getCell('L4'); l4.value = 'DATE:'; msF(l4, { font: { size: 10, bold: true }, al: { horizontal: 'right' } });
-  const m4 = ws.getCell('M4'); m4.value = { formula: 'TODAY()', result: new Date(msToday() * 86400000) }; msF(m4, { font: { size: 10, bold: true }, al: { horizontal: 'left' }, fmt: 'd/mmm/yy' });
-  const head = ['SN', 'Method Statements', 'Planned MS', 'Total MS', 'MS Submitted', "A' Status", "B' Status", "C' Status", "D' Status", "E' Status", 'Under Review', 'To Be Submitted (including resubmissions)', 'Remarks'];
+  const a3 = ws.getCell('A3'); a3.value = 'DATE:'; msF(a3, { font: { size: 10, bold: true }, al: { horizontal: 'left' } });
+  const b3 = ws.getCell('B3'); b3.value = { formula: 'TODAY()', result: new Date(msToday() * 86400000) }; msF(b3, { font: { size: 10, bold: true }, al: { horizontal: 'left' }, fmt: 'd/mmm/yy' });
+  const head = ['SN', 'Method Statements', 'Planned MS', 'Total MS', 'MS Submitted', "A' Status", "B' Status", "C' Status", "D' Status", "E' Status", 'Under Review', 'To Be Submitted\n (including resubmissions)', 'Remarks'];
   const table = (top, title, st) => {
     ws.mergeCells(top, 1, top, 13); const b = ws.getCell(top, 1); b.value = title; msF(b, { font: { size: 11, bold: true, color: { argb: 'FFFFFFFF' } }, fill: '#1F4E78', al: { horizontal: 'center' }, box: true });
     for (let c = 1; c <= 13; c++) ws.getCell(top, c).border = MS_BOX;
@@ -160,15 +203,15 @@ function msXlsxSummary(ws, logoId, log, info) {
     const res = [tot.total, tot.total, st ? tot.filled : tot.sub, tot.A, tot.B, tot.C, tot.D, tot.E, tot.UR, st ? tot.toSubSection : tot.toSubOverall];
     for (let c = 3; c <= 13; c++) { const cell = ws.getCell(tr, c), L = String.fromCharCode(64 + c), k = ['A', 'B', 'C', 'D', 'E', 'UR'][c - 6]; if (c < 13) cell.value = { formula: `SUM(${L}${r0}:${L}${r0 + 6})`, result: res[c - 3] }; msF(cell, { font: { size: 10, bold: true }, fill: k ? MS_FILL[k] : '#D9E1F2', al: { horizontal: 'center' }, box: true, fmt: !st && c >= 5 && c <= 12 ? '0' : undefined }); }
   };
-  table(5, 'OVERALL', ''); table(17, 'INSTALLATION METHOD STATEMENTS', 'I'); table(29, 'TESTING & COMMISSIONING METHOD STATEMENTS', 'T');
+  table(4, 'OVERALL', ''); table(16, 'INSTALLATION METHOD STATEMENTS', 'I'); table(28, 'TESTING & COMMISSIONING METHOD STATEMENTS', 'T');
   msPage(ws, 'A1:M15');
-  ws.addImage(logoId, { tl: { col: 11 + 143 / msColPx(22.86), row: 0 }, ext: { width: 195.5, height: 57.6 }, editAs: 'oneCell' });
+  ws.addImage(logoId, { tl: { nativeCol: 11, nativeColOff: 198120, nativeRow: 0, nativeRowOff: 0 }, ext: { width: 195.5, height: 57.6 }, editAs: 'oneCell' });
 }
 function msXlsxMaster(wb, log, info) {
   const ws = wb.addWorksheet('MS Master List', { state: 'hidden', views: [{ state: 'frozen', ySplit: 36, topLeftCell: 'A37' }] });
-  [5.71, 10.29, 12.57, 8, 16, 66.29, 27.43, 11.43, 14.86, 14.86, 14.86, 11.43, 10.29, 10.29, 25.14, 22.86, 22.86].forEach((w, i) => { ws.getColumn(i + 1).width = w; });
+  [5.71, 10.29, 12.57, 8, 16, 66.29, 27.43, 11.43, 14.86, 14.86, 14.86, 11.43, 10.29, 10.29, 12.71, 12.29, 15.14].forEach((w, i) => { ws.getColumn(i + 1).width = w; });
   ws.getRow(1).height = 15.75; ws.getRow(2).height = 15.75;
-  const pv = (log.block.find(r => /^project$/i.test(r.label.trim())) || log.block[0] || { value: '' }).value;
+  const pv = msProjTitle(log);
   const a1 = ws.getCell('A1'); a1.value = pv; msF(a1, { font: { size: 12, bold: true } });
   const a2 = ws.getCell('A2'); a2.value = 'METHOD STATEMENT MASTER LIST - ALL DISCIPLINES (LIVE-LINKED TO DISCIPLINE LOGS)'; msF(a2, { font: { size: 12, bold: true } });
   const p2 = ws.getCell('P2'); p2.value = 'DATE:'; msF(p2, { font: { size: 10, bold: true } });
@@ -223,7 +266,7 @@ function msXlsxMaster(wb, log, info) {
 function msXlsxMsl(wb, log) {
   const msl = log.msl, ws = wb.addWorksheet('MSL Ref', { state: 'hidden', views: [{ state: 'frozen', ySplit: 8, topLeftCell: 'A9' }] });
   [11.43, 11.43, 10.29, 80, 12.57, 18.29, 12.57, 34.29].forEach((w, i) => { ws.getColumn(i + 1).width = w; });
-  const pv = (log.block.find(r => /^project$/i.test(r.label.trim())) || log.block[0] || { value: '' }).value;
+  const pv = msProjTitle(log);
   const put = (a, v, o) => { const c = ws.getCell(a); c.value = v; msF(c, o || {}); return c; };
   put('A1', 'MATERIAL SUBMITTAL - PLANNED SUBMISSION DATES (BASIS FOR MOS PLANNED DATES)', { font: { size: 12, bold: true } });
   put('A2', pv, { font: { size: 12, bold: true } });
@@ -245,17 +288,20 @@ function msXlsxMsl(wb, log) {
   ws.addConditionalFormatting({ ref: `G9:G${Math.max(last, 9)}`, rules: [{ type: 'cellIs', operator: 'equal', formulae: ['0'], style: { fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: 'FFFFC7CE' } }, font: { bold: true, color: { argb: 'FF9C0006' } } } }] });
 }
 /* the workbook: Summary, the seven logs, then the hidden MSL Ref and MS Master List (the template's order) */
-async function msBuildXlsx(ExcelJS, log, proj, logoB64) {
+async function msBuildXlsx(ExcelJS, log, proj, logoB64, company) {
   const wb = new ExcelJS.Workbook();
   wb.creator = 'Oxypro Project Library'; wb.created = new Date(); wb.calcProperties = { fullCalcOnLoad: true };
   const logoId = wb.addImage({ base64: logoB64, extension: 'png' });
+  // the sheet heads' logo boxes: the project's client, consultant and main contractor from the library, and Oxypro
+  const logos = { oxy: { id: logoId, w: 195.5, h: 57.6 } };
+  for (const k of ['client', 'consultant', 'contractor']) { const l = company && company[k]; if (l) logos[k] = { id: wb.addImage({ base64: l.data.split(',')[1], extension: 'png' }), w: l.w, h: l.h }; }
   const summary = wb.addWorksheet('Summary');   // first sheet, filled after the logs so it can point at their rows
   const msl = log.msl, mats = msl ? new Map(msl.items.map(m => [m.k, m.desc])) : null;
   const matText = msl ? it => it.m.map(k => `${k} ${mats.get(k) || ''}`.trim()).join('; ') : null;
   const items = log.items.map(it => ({ ...it }));
   const L = { ...log, items };
   const info = {};
-  for (const d of MS_DISC) info[d.code] = msXlsxLog(wb, logoId, L, d, matText);
+  for (const d of MS_DISC) info[d.code] = msXlsxLog(wb, logos, L, d, matText, proj);
   msXlsxSummary(summary, logoId, L, info);
   if (msl) msXlsxMsl(wb, L);
   msXlsxMaster(wb, L, info);
@@ -265,6 +311,6 @@ async function msBuildXlsx(ExcelJS, log, proj, logoB64) {
 async function msSaveXlsx() {
   await msFontsReady();
   await loadScript(MS_LIBS.exceljs);
-  const buf = await msBuildXlsx(window.ExcelJS, MSV.log, msProj(), MS_LOGO.split(',')[1]);
+  const buf = await msBuildXlsx(window.ExcelJS, MSV.log, msProj(), MS_LOGO.split(',')[1], await msLogos(msProj()));
   await saveFile(msFileBase() + '.xlsx', new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
 }

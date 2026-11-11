@@ -7,56 +7,58 @@ function msPdfFit(doc, text, maxW, size, min, bold) {
   while (s > min && doc.getTextWidth(text) > maxW) { s -= 0.25; doc.setFontSize(s); }
   return s;
 }
-function msPdfHead(doc, log, d, c, logo) {
-  const L = MS_PG.l, R = MS_PG.w - MS_PG.r, y0 = MS_PG.t;
-  doc.setTextColor(0, 0, 0);
-  // legends, top right
-  const lx = R - 236, cw = 34, rh = 10.5;
-  doc.setLineWidth(0.5); doc.setDrawColor(0, 0, 0);
-  doc.setFillColor(255, 255, 255); doc.rect(lx, y0, 236, rh, 'S');
-  doc.setFont('Carlito', 'bold'); doc.setFontSize(7.5); doc.text('LEGENDS', lx + 118, y0 + 7.3, { align: 'center' });
-  MS_LEGEND.forEach(([k, t], i) => {
-    const y = y0 + rh * (i + 1);
-    doc.setFillColor(...MS_RGB(MS_FILL[k])); doc.rect(lx, y, cw, rh, 'FD');
-    doc.rect(lx + cw, y, 236 - cw, rh, 'S');
-    doc.setFont('Carlito', 'bold'); doc.setFontSize(7.5); doc.text(k, lx + cw / 2, y + 7.3, { align: 'center' });
-    doc.setFont('Carlito', 'normal'); doc.setFontSize(7); doc.text(t, lx + cw + 4, y + 7.2);
-  });
-  // logo between the block and the legends
-  const lw = 128, lh = lw * 132 / 448;
-  if (logo) doc.addImage(logo, 'PNG', lx - 22 - lw, y0 + 4, lw, lh);
-  // title and project block
-  const bx = L + 78, room = lx - 22 - lw - 12 - bx;
-  doc.setFont('Carlito', 'bold'); msPdfFit(doc, `${d.name} METHOD STATEMENT SUBMITTAL LOG`, lx - 22 - lw - 12 - L, 11, 8, true);
-  doc.text(`${d.name} METHOD STATEMENT SUBMITTAL LOG`, L, y0 + 9);
-  let y = y0 + 24;
-  for (const r of log.block) {
-    doc.setFont('Carlito', 'bold'); doc.setFontSize(7.5); doc.text(r.label, L, y);
-    const v = ': ' + r.value, s = msPdfFit(doc, v, room, 7.5, 6, true);
-    const lines = doc.splitTextToSize(v, room).slice(0, 2);
-    doc.setFontSize(s); doc.text(lines, bx, y);
-    y += 10.5 * lines.length;
-  }
-  // date and the code counter
-  const sy = Math.max(y0 + rh * 7 + 8, y - 4), sw = [50, 36, 36, 36, 36, 36, 36, 50], sx0 = R - sw.reduce((a, b) => a + b, 0);
-  let x = sx0;
-  const cells = [['CODE', 'Total']].concat(MS_COUNTED.map(k => [k, String(c[k])])).concat([['TOTAL', String(c.sub)]]);
-  cells.forEach(([h, v], i) => {
-    const k = MS_COUNTED[i - 1];
-    if (k) doc.setFillColor(...MS_RGB(MS_FILL[k])); else doc.setFillColor(255, 255, 255);
-    doc.rect(x, sy, sw[i], 11, 'FD'); doc.setFillColor(255, 255, 255); doc.rect(x, sy + 11, sw[i], 11, 'FD');
-    doc.setFont('Carlito', 'bold'); doc.setFontSize(7.5); doc.text(h, x + sw[i] / 2, sy + 7.8, { align: 'center' }); doc.text(v, x + sw[i] / 2, sy + 18.8, { align: 'center' });
-    x += sw[i];
-  });
-  doc.setFont('Carlito', 'bold'); doc.setFontSize(7.5); doc.text(`Date:  ${msFmtLong(msFromDay(msToday()))}`, L, sy + 18.8);
-  return sy + 22 + 6;
+/* the sheet's columns A to M in points: the Excel widths, scaled to the page width */
+function msPdfCols() {
+  const W = MS_PG.w - MS_PG.l - MS_PG.r, px = MS_LOG_W.slice(0, 13).map(msXPx), sum = px.reduce((a, b) => a + b, 0);
+  return px.map(v => v * W / sum);
 }
-const MS_PDF_COLS = [22, 46, 190, 86, 20, 40, 46, 44, 44, 36, 30, 34];
-function msPdfLog(doc, log, d, logo, first) {
+/* the sheet head as in the Excel file: project bar, block, logo boxes, legends, then date, the log's title and the code counter */
+function msPdfHead(doc, log, d, c, logos) {
+  const L = MS_PG.l, y0 = MS_PG.t, cols = msPdfCols(), X = [L]; cols.forEach(w => X.push(X[X.length - 1] + w));
+  const rh = 11, gap = 3, y = r => y0 + (r < 8 ? (r - 1) * rh : 7 * rh + gap + (r - 9) * rh);   // top of sheet row r (1-7, 9-10)
+  const head = msHeadRows(log, msProj());
+  doc.setLineWidth(0.5); doc.setDrawColor(0, 0, 0); doc.setTextColor(0, 0, 0);
+  const box = (c1, r1, c2, r2, fill) => { if (fill) doc.setFillColor(...MS_RGB(fill)); doc.rect(X[c1 - 1], y(r1), X[c2] - X[c1 - 1], y(r2) + rh - y(r1), fill ? 'FD' : 'S'); };
+  const text = (t, c1, c2, r1, r2, o) => {
+    const x1 = X[c1 - 1], x2 = X[c2], size = msPdfFit(doc, t, x2 - x1 - 6, o.size, o.min || 5, o.bold);
+    const ty = o.bottom ? y(r2) + rh - 3 : (y(r1) + y(r2) + rh) / 2 + size * 0.34;
+    doc.text(t, o.left ? x1 + 3 : (x1 + x2) / 2, ty, { align: o.left ? 'left' : 'center' });
+  };
+  // row 1: the project (white Arial, here Helvetica, on black) and LEGENDS
+  box(1, 1, 10, 1, '#000000'); doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold'); let ts = 7.6; doc.setFontSize(ts); while (ts > 5 && doc.getTextWidth(head.title) > X[10] - X[0] - 10) { ts -= 0.25; doc.setFontSize(ts); }
+  doc.text(head.title, (X[0] + X[10]) / 2, y(1) + rh / 2 + ts * 0.35, { align: 'center' }); doc.setTextColor(0, 0, 0);
+  box(11, 1, 13, 1); text('LEGENDS', 11, 13, 1, 1, { size: 6.6, bold: true });
+  // rows 2 to 7: the block
+  for (let i = 0; i < 6; i++) {
+    const r = 2 + i, b = head.rows[i]; box(1, r, 3, r);
+    if (b) { text(b.label, 1, 2, r, r, { size: 6, min: 4.5, bold: true, left: true }); text(': ' + b.value, 3, 3, r, r, { size: 6, min: 4.5, bold: true, left: true }); }
+  }
+  // the logo boxes
+  const spans = [[4, 4], [5, 6], [7, 8], [9, 10]];
+  box(4, 2, 10, 7);
+  MS_LOGO_BOX.forEach(([k, label], i) => {
+    const [c1, c2] = spans[i]; text(label, c1, c2, 2, 2, { size: 6 });
+    const lg = logos && logos[k]; if (!lg) return;
+    const bw = X[c2] - X[c1 - 1] - 10, bh = 5 * rh - 8, s = Math.min(bw / lg.w, bh / lg.h), w = lg.w * s, h = lg.h * s;
+    try { doc.addImage(lg.data, 'PNG', (X[c1 - 1] + X[c2] - w) / 2, y(3) + (5 * rh - h) / 2, w, h, 'mslogo-' + k, 'FAST'); } catch (e) { /* left out */ }
+  });
+  // the legends
+  MS_LEGEND.forEach(([k, t], i) => { const r = 2 + i; box(11, r, 11, r, MS_FILL[k]); text(k, 11, 11, r, r, { size: 7.6, bold: true }); box(12, r, 13, r); text(t, 12, 13, r, r, { size: 6.5, left: true }); });
+  // rows 9 and 10
+  box(1, 9, 2, 10); text('Date:', 1, 1, 9, 10, { size: 6, bold: true, bottom: true }); text(msFmtLong(msFromDay(msToday())), 2, 2, 9, 10, { size: 6, min: 4.5, bold: true, bottom: true });
+  box(3, 9, 5, 10); text(`${d.name} METHOD STATEMENT SUBMITTAL LOG`, 3, 5, 9, 10, { size: 7.6, min: 5.5, bold: true });
+  [['CODE', 'Total', null]].concat(MS_COUNTED.map(k => [k, String(c[k]), MS_FILL[k]])).concat([['TOTAL', String(c.sub), null]]).forEach(([h, v, f], i) => {
+    const col = 6 + i; box(col, 9, col, 9, f || '#FFFFFF'); box(col, 10, col, 10, '#FFFFFF');
+    text(h, col, col, 9, 9, { size: 7.6, bold: true }); text(v, col, col, 10, 10, { size: 7.6, bold: true });
+  });
+  return y(10) + rh;
+}
+function msPdfLog(doc, log, d, logos, first) {
   const items = msItemsOf(log, d.code), c = msCounts(items);
   if (!first) doc.addPage();
-  const startY = msPdfHead(doc, log, d, c, logo);
-  const W = MS_PG.w - MS_PG.l - MS_PG.r, cols = MS_PDF_COLS.concat([W - MS_PDF_COLS.reduce((a, b) => a + b, 0)]);
+  const startY = msPdfHead(doc, log, d, c, logos);
+  const cols = msPdfCols();
   const ban = (text, fill) => [{ content: text, colSpan: 13, styles: { fillColor: MS_RGB(fill), fontStyle: 'bold', halign: 'center', fontSize: 7.5, cellPadding: 3.5 } }];
   const st = v => v ? { content: v, styles: { fillColor: MS_RGB(MS_FILL[v]), fontStyle: 'bold', halign: 'center' } } : '';
   const body = [ban(d.name, '#D9D9D9')];
@@ -71,7 +73,7 @@ function msPdfLog(doc, log, d, logo, first) {
         { content: msFmt(it.sub), styles: { textColor: [0, 0, 255] } }, { content: msFmt(it.ret), styles: { textColor: [0, 0, 255] } }, String(msReview(it)), st(it.st), st(it.fin), it.rem]);
     }
   }
-  const head = [[{ content: 'No.', rowSpan: 2 }, { content: 'Unifier Ref. Number', rowSpan: 2 }, { content: 'Method Statement Title', rowSpan: 2 }, { content: 'Method Statement Reference No.', rowSpan: 2 }, { content: 'Rev.', rowSpan: 2 }, { content: 'Discipline', rowSpan: 2 }, { content: 'Planned Submission Date', rowSpan: 2 }, { content: 'Method Statement Status', colSpan: 4 }, { content: 'Final Status', rowSpan: 2 }, { content: 'Remark', rowSpan: 2 }],
+  const head = [[{ content: 'SN', rowSpan: 2 }, { content: 'Unifier Ref. Number', rowSpan: 2 }, { content: 'Method Statement Title', rowSpan: 2 }, { content: 'Method Statement Reference No.', rowSpan: 2 }, { content: 'Rev.', rowSpan: 2 }, { content: 'Discipline', rowSpan: 2 }, { content: 'Planned Submission Date', rowSpan: 2 }, { content: 'Method Statement Status', colSpan: 4 }, { content: 'Final Status', rowSpan: 2 }, { content: 'Remark', rowSpan: 2 }],
     ['Submitted Date', 'Return Date', 'Review Period (in days)', 'Status']];
   doc.autoTable({
     head, body, startY, margin: { left: MS_PG.l, right: MS_PG.r, top: MS_PG.t, bottom: MS_PG.b }, theme: 'grid', showHead: 'everyPage', rowPageBreak: 'avoid',
@@ -82,13 +84,13 @@ function msPdfLog(doc, log, d, logo, first) {
 }
 function msPdfSummary(doc, log, logo) {
   const L = MS_PG.l, R = MS_PG.w - MS_PG.r, y0 = MS_PG.t;
-  const pv = (log.block.find(r => /^project$/i.test(r.label.trim())) || log.block[0] || { value: '' }).value;
+  const pv = msProjTitle(log);
   const lw = 120, lh = lw * 132 / 448;
   if (logo) doc.addImage(logo, 'PNG', R - lw, y0 - 4, lw, lh);
   doc.setTextColor(0, 0, 0);
   const t1 = `PROJECT : ${pv}`; msPdfFit(doc, t1, R - lw - 16 - L, 10, 7, true); doc.text(t1, L, y0 + 10);
   doc.setFontSize(9.5); doc.text('METHOD STATEMENT OVERALL SUMMARY', L, y0 + 24);
-  doc.setFontSize(7.5); doc.text(`DATE:  ${msFmt(msFromDay(msToday()))}`, R, y0 + lh + 6, { align: 'right' });
+  doc.setFontSize(7.5); doc.text(`DATE:  ${msFmtSlash(msFromDay(msToday()))}`, L, y0 + 36);
   let y = y0 + lh + 14;
   const W = R - L, cw = [24, 160, 62, 54, 54, 54, 54, 54, 54, 96]; cw.push(W - cw.reduce((a, b) => a + b, 0));
   for (const [title, st] of [['OVERALL', ''], ['INSTALLATION METHOD STATEMENTS', 'I'], ['TESTING & COMMISSIONING METHOD STATEMENTS', 'T']]) {
@@ -98,7 +100,7 @@ function msPdfSummary(doc, log, logo) {
     doc.autoTable({
       startY: y, margin: { left: L, right: MS_PG.r }, theme: 'grid',
       head: [[{ content: title, colSpan: 11, styles: { fillColor: MS_RGB('#1F4E78'), textColor: [255, 255, 255], fontSize: 7.5 } }],
-        ['SN', 'Method Statements', 'Total MS'].map(h => ({ content: h })).concat(MS_COUNTED.map((k, j) => ({ content: k === 'UR' ? 'Under Review' : `${k}' Status`, styles: { fillColor: fill[j] } }))).concat([{ content: 'To Be Submitted (including resubmissions)' }, { content: 'Remarks' }])],
+        ['SN', 'Method Statements', 'Total MS'].map(h => ({ content: h })).concat(MS_COUNTED.map((k, j) => ({ content: k === 'UR' ? 'Under Review' : `${k}' Status`, styles: { fillColor: fill[j] } }))).concat([{ content: 'To Be Submitted\n(including resubmissions)' }, { content: 'Remarks' }])],
       body: rows.concat([[{ content: 'TOTAL', colSpan: 2, styles: { fontStyle: 'bold', fillColor: MS_RGB('#D9E1F2') } }, { content: String(tot.total), styles: { fontStyle: 'bold', fillColor: MS_RGB('#D9E1F2') } }]
         .concat(MS_COUNTED.map((k, j) => ({ content: String(tot[k]), styles: { fontStyle: 'bold', fillColor: fill[j] } })))
         .concat([{ content: String(st ? tot.toSubSection : tot.toSubOverall), styles: { fontStyle: 'bold', fillColor: MS_RGB('#D9E1F2') } }, { content: '', styles: { fillColor: MS_RGB('#D9E1F2') } }])]),
@@ -109,14 +111,16 @@ function msPdfSummary(doc, log, logo) {
     y = doc.lastAutoTable.finalY + 12;
   }
 }
-function msBuildPdf(jsPDF, log, proj, fonts, logo, rev) {
+function msBuildPdf(jsPDF, log, proj, fonts, logo, rev, company) {
   const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4', compress: true });
   doc.addFileToVFS('Carlito-Regular.ttf', fonts.r); doc.addFont('Carlito-Regular.ttf', 'Carlito', 'normal');
   doc.addFileToVFS('Carlito-Bold.ttf', fonts.b); doc.addFont('Carlito-Bold.ttf', 'Carlito', 'bold');
   doc.setFont('Carlito', 'normal');
   doc.setProperties({ title: `${proj.no} ${proj.name || ''} - Method Statement Log`.trim(), creator: 'Oxypro Project Library', subject: 'Method Statement Submittal Log' });
   msPdfSummary(doc, log, logo);
-  for (const d of MS_DISC) if (msItemsOf(log, d.code).length) msPdfLog(doc, log, d, logo, false);
+  const logos = { oxy: { data: logo, w: 448, h: 132 } };
+  for (const k of ['client', 'consultant', 'contractor']) if (company && company[k]) logos[k] = { ...company[k], id: k };
+  for (const d of MS_DISC) if (msItemsOf(log, d.code).length) msPdfLog(doc, log, d, logos, false);
   const n = doc.getNumberOfPages(), foot = `${proj.no}${proj.name ? ' · ' + proj.name : ''} · Method Statement Submittal Log · Rev ${rev || '00'}`;
   for (let i = 1; i <= n; i++) {
     doc.setPage(i); doc.setFont('Carlito', 'normal'); doc.setFontSize(6.5); doc.setTextColor(110, 110, 110);
@@ -126,7 +130,7 @@ function msBuildPdf(jsPDF, log, proj, fonts, logo, rev) {
 }
 async function msSavePdf(print) {
   await loadScript(LIBS.jspdf); await loadScript(MS_LIBS.autotable);
-  const doc = msBuildPdf(window.jspdf.jsPDF, MSV.log, msProj(), msPdfFonts(), MS_LOGO, MSV.log.rev);
+  const doc = msBuildPdf(window.jspdf.jsPDF, MSV.log, msProj(), msPdfFonts(), MS_LOGO, MSV.log.rev, await msLogos(msProj()));
   const blob = doc.output('blob');
   if (print && GH) {   // a normal website may open the PDF in a new tab, where the browser prints it
     const url = URL.createObjectURL(blob), w = window.open(url, '_blank');
