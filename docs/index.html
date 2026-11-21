@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Oxypro Project Library</title>
-<link rel="icon" href="favicon.ico?v=1.18.2" sizes="any">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=1.18.2">
+<link rel="icon" href="favicon.ico?v=1.19.0" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=1.19.0">
 <meta name="theme-color" content="#D81F27">
 <meta name="description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP, Method Statement, WIR and MIR Logs) and HSE Plans.">
 <meta property="og:type" content="website">
@@ -13,12 +13,12 @@
 <meta property="og:title" content="Oxypro Project Library">
 <meta property="og:description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP, Method Statement, WIR and MIR Logs) and HSE Plans.">
 <meta property="og:url" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/">
-<meta property="og:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.18.2">
+<meta property="og:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.19.0">
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
 <meta property="og:image:alt" content="Oxypro Library logo">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.18.2">
+<meta name="twitter:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.19.0">
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 </head>
 <body>
@@ -97,6 +97,20 @@ html:root[data-view="dark"]{
   --logo-light:none; --logo-dark:block;
   color-scheme:dark;
 }
+/* Oxypro: the logo's charcoal and red (user, 21 Nov 2026) */
+html:root[data-view="oxypro"]{
+  --red:#D81F27; --red-hover:#EE3239; --red-text:#FF7B80; --red-soft:#4A2224; --on-red:#FFFFFF;
+  --bg:#2B2B2B; --surface:#353535; --surface-2:#404040; --line:#4E4E4E; --line-strong:#6D6D6D;
+  --fg:#FFFFFF; --fg-2:#E8E8E8; --muted:#C2C2C2; --faint:#919191;
+  --chip-on-bg:#D81F27; --chip-on-fg:#FFFFFF;
+  --ok:#6FD6A3; --ok-soft:#1F3A2D; --warn:#F4CB7A; --warn-soft:#43351A; --danger:#FF7B80; --info:#9CC9F5; --info-soft:#22364A;
+  --scrim:rgba(0,0,0,.62); --focus:#FF7B80;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 6px 20px rgba(0,0,0,.3);
+  --shadow-lg:0 10px 40px rgba(0,0,0,.55);
+  --logo-light:none; --logo-dark:block;
+  color-scheme:dark;
+}
+.sw.sw-oxy{background:linear-gradient(135deg,#2B2B2B 0 58%,#D81F27 58% 100%);border-color:#6D6D6D}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--f-body);-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -741,6 +755,7 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
           <span class="menu-label">Background</span>
           <button type="button" class="menu-item" role="menuitemradio" aria-checked="false" data-view-opt="light"><span class="sw sw-light"></span><span>Light<small>White background</small></span><svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
           <button type="button" class="menu-item" role="menuitemradio" aria-checked="false" data-view-opt="dark"><span class="sw sw-dark"></span><span>Dark<small>Dark background</small></span><svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+          <button type="button" class="menu-item" role="menuitemradio" aria-checked="false" data-view-opt="oxypro"><span class="sw sw-oxy"></span><span>Oxypro<small>Oxypro charcoal and red</small></span><svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
           <button type="button" class="menu-item" role="menuitemradio" aria-checked="false" data-view-opt="auto"><span class="sw sw-auto"></span><span>Auto<small>Follows your Claude app setting</small></span><svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
         </div>
       </div>
@@ -845,7 +860,7 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.18.2 (21 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.19.0 (21 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -979,7 +994,7 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.18.2';
+const APP_VERSION = '1.19.0';
 const APP_DATE = '21 Nov 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
@@ -3588,7 +3603,7 @@ function bindShow() {
 }
 
 /* ---------- modal / global ---------- */
-const VIEW_NAMES = { light: 'Light', dark: 'Dark', auto: 'Auto' };
+const VIEW_NAMES = { light: 'Light', dark: 'Dark', oxypro: 'Oxypro', auto: 'Auto' };
 function applyView(mode) {
   if (!VIEW_NAMES[mode]) mode = 'auto';
   const root = document.documentElement;
@@ -3625,6 +3640,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.19.0', '21 Nov 2026', 'Oxypro colour theme in the View menu, beside Light, Dark and Auto: the charcoal and red of the Oxypro logo.'],
   ['1.18.2', '21 Nov 2026', 'MIR Log without the Level and Delivery / Storage Location columns, which do not apply to material inspections: on the page and in the Excel file (seven logs and the Transmittal Sheet), with the formulas, lists and logos moved to suit.'],
   ['1.18.1', '21 Nov 2026', 'WIR Log and MIR Log: the revision column is headed Rev. No. on the page and in the Excel file.'],
   ['1.18.0', '21 Nov 2026', 'QA/QC > WIR Log and MIR Log: the Work Inspection Request and Material Inspection Request logs of a project, made the way the MSRA Log is. Summary, the seven discipline logs and the Transmittal Sheet of a day on the page; reference numbers follow on by discipline. Save as Excel gives the Oxypro standard workbook itself with the log filled in: the same sheets, formats, formulas and lists, with the hidden guide sheets.'],
@@ -3682,7 +3698,7 @@ function openAbout() {
           ${GH ? '' : '<li>For a Pre-Qualification, choose <b>PQ</b> (before <b>QA/QC</b>). The first PQ of a project starts with its details and Library page; the next time the same PQ opens again (New starts another one). PQs are kept in that browser; Save gives a .pqg.json file the PQ Generator opens. The company documents are the ones kept in the Library; editors replace them in Company documents.</li>'}
           <li>For the MSRA Generator, choose <b>QA/QC</b> and then <b>Generate MSRA</b>, pick the consultant (when there are two) and the cover photo, then <b>Save MSRA project file</b>. In the MSRA Generator choose <b>Open project</b> and pick the file (save the project open there first).</li>
           <li>For an HSE Plan, choose <b>HSE</b>, keep the main photo or pick another one (or no photo), then <b>Open in HSE Plan Maker</b> and paste the photo there with Ctrl+V. Or <b>Save HSE Plan file</b>, then in HSE Plan Maker choose <b>Import project</b> and pick the file.</li>
-          <li>Click <b>Project Library</b> at the top to come back to the list from any page. <b>View</b> switches between Light, Dark and Auto.</li>
+          <li>Click <b>Project Library</b> at the top to come back to the list from any page. <b>View</b> switches between Light, Dark, Oxypro and Auto.</li>
         </ol></section>
       <section><h3>Your data</h3>
         <ul>
