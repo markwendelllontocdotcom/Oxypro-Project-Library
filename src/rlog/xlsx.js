@@ -12,31 +12,40 @@ function rlRowHeight(it) {
   const n = Math.max(lines(it.desc, 78), lines(it.rem, 36), lines(it.loc, 20), lines(it.ref, 21));
   return n <= 2 ? 30 : n * 15;
 }
+// the columns of a log sheet: the WIR workbook has A to N; the MIR workbook has no Level and no Location (user, 21 Nov 2026), so A to L
+const RL_LAY = {
+  wir: { n: 14, last: 'N', ref: 'C', rev: 'D', lvl: 'E', loc: 'F', desc: 'G', plan: 'H', sub: 'I', ret: 'J', rv: 'K', st: 'L', fin: 'M', rem: 'N', logo: 6 },
+  mir: { n: 12, last: 'L', ref: 'C', rev: 'D', lvl: '', loc: '', desc: 'E', plan: 'F', sub: 'G', ret: 'H', rv: 'I', st: 'J', fin: 'K', rem: 'L', logo: 4 }
+};
+const rlLetters = n => 'ABCDEFGHIJKLMN'.slice(0, n).split('');
 // st: the standard's own cell formats of a log row, read from its row 12 (they differ between the WIR and the MIR workbook)
-function rlRowXml(r, sn, code, it, st) {
-  const c = [];
-  c.push(`<c r="A${r}" s="${st.A}"><v>${sn}</v></c>`, rlInline('B' + r, st.B, code));
+function rlRowXml(r, sn, code, it, st, Y) {
+  const cell = {};
   const num = (col, v) => v == null ? `<c r="${col}${r}" s="${st[col]}"/>` : `<c r="${col}${r}" s="${st[col]}"><v>${v}</v></c>`;
   const txt = (col, v) => rlInline(col + r, st[col], v);
+  cell.A = `<c r="A${r}" s="${st.A}"><v>${sn}</v></c>`; cell.B = txt('B', code);
   if (it) {
-    c.push(txt('C', it.ref));
-    c.push(/^\d{1,6}$/.test(it.rev.trim()) ? num('D', +it.rev.trim()) : txt('D', it.rev.trim()));
-    c.push(txt('E', it.lvl), txt('F', it.loc), txt('G', it.desc));
-    c.push(num('H', rlSerial(it.plan)), num('I', rlSerial(it.sub)), num('J', rlSerial(it.ret)));
-  } else 'CDEFGHIJ'.split('').forEach(col => c.push(num(col, null)));
-  const rv = it ? msReview(it) : '', f = `IF(OR($I${r}="",$J${r}=""),"",$J${r}-$I${r})`;
-  c.push(rv === '' ? `<c r="K${r}" s="${st.K}" t="str"><f>${f}</f><v></v></c>` : `<c r="K${r}" s="${st.K}"><f>${f}</f><v>${rv}</v></c>`);
-  c.push(txt('L', it ? it.st : ''), txt('M', it ? it.fin : ''), txt('N', it ? it.rem : ''));
-  return `<row r="${r}" spans="1:14" ht="${it ? rlRowHeight(it) : 30}" customHeight="1">${c.join('')}</row>`;
+    cell[Y.ref] = txt(Y.ref, it.ref);
+    cell[Y.rev] = /^\d{1,6}$/.test(it.rev.trim()) ? num(Y.rev, +it.rev.trim()) : txt(Y.rev, it.rev.trim());
+    if (Y.lvl) cell[Y.lvl] = txt(Y.lvl, it.lvl);
+    if (Y.loc) cell[Y.loc] = txt(Y.loc, it.loc);
+    cell[Y.desc] = txt(Y.desc, it.desc);
+    cell[Y.plan] = num(Y.plan, rlSerial(it.plan)); cell[Y.sub] = num(Y.sub, rlSerial(it.sub)); cell[Y.ret] = num(Y.ret, rlSerial(it.ret));
+    cell[Y.st] = txt(Y.st, it.st); cell[Y.fin] = txt(Y.fin, it.fin); cell[Y.rem] = txt(Y.rem, it.rem);
+  }
+  const rv = it ? msReview(it) : '', f = `IF(OR($${Y.sub}${r}="",$${Y.ret}${r}=""),"",$${Y.ret}${r}-$${Y.sub}${r})`;
+  cell[Y.rv] = rv === '' ? `<c r="${Y.rv}${r}" s="${st[Y.rv]}" t="str"><f>${f}</f><v></v></c>` : `<c r="${Y.rv}${r}" s="${st[Y.rv]}"><f>${f}</f><v>${rv}</v></c>`;
+  return `<row r="${r}" spans="1:${Y.n}" ht="${it ? rlRowHeight(it) : 30}" customHeight="1">${rlLetters(Y.n).map(col => cell[col] || num(col, null)).join('')}</row>`;
 }
-// Excel's column width (characters) in pixels at 100 %, and the standard's widths of G to K and row height of rows 3 to 5
+// Excel's column width (characters) in pixels at 100 %: the wide description column and the date columns, and the height of rows 3 to 5
 const RL_PX = { G: msXPx(70.7109375), H: msXPx(15.7109375), row: 20.1 * 4 / 3 };
-// where a logo goes: centred in its box of rows 3 to 5 (Client the left half of G, Consultant the right half, Main Contractor H:I)
-function rlLogoAnchor(role, w, h) {
-  const box = role === 'client' ? { col: 6, x0: 0, bw: RL_PX.G / 2 } : role === 'consultant' ? { col: 6, x0: RL_PX.G / 2, bw: RL_PX.G / 2 } : { col: 7, x0: 0, bw: RL_PX.H * 2 };
+// where a logo goes: centred in its box of rows 3 to 5 (Client the left half of the description column, Consultant the right half,
+// Main Contractor the two columns after it); c0 = that column's number counted from 0 (G in the WIR workbook, E in the MIR workbook)
+function rlLogoAnchor(role, w, h, c0) {
+  const box = role === 'client' ? { col: c0, x0: 0, bw: RL_PX.G / 2 } : role === 'consultant' ? { col: c0, x0: RL_PX.G / 2, bw: RL_PX.G / 2 } : { col: c0 + 1, x0: 0, bw: RL_PX.H * 2 };
   const bh = RL_PX.row * 3, pad = 8, k = Math.min(1, (box.bw - 2 * pad) / w, (bh - 2 * pad) / h), W = w * k, H = h * k;
   let x = box.x0 + (box.bw - W) / 2, y = (bh - H) / 2, col = box.col, row = 2;
-  if (col === 7 && x >= RL_PX.H) { x -= RL_PX.H; col = 8; }
+  if (col === c0 + 1 && x >= RL_PX.H) { x -= RL_PX.H; col = c0 + 2; }
   while (row < 4 && y >= RL_PX.row) { y -= RL_PX.row; row++; }
   const e = v => Math.round(v * 9525);
   return { from: `<xdr:from><xdr:col>${col}</xdr:col><xdr:colOff>${e(x)}</xdr:colOff><xdr:row>${row}</xdr:row><xdr:rowOff>${e(y)}</xdr:rowOff></xdr:from>`, cx: e(W), cy: e(H) };
@@ -45,7 +54,7 @@ const RL_IMG_ROLE = { 'image2.png': 'contractor', 'image3.png': 'client', 'image
 /* model: { kind, title, block: {client, consultant, mepConsultant, mainContractor, mepContractor}, sheets: {MEC: [items], ...},
             logos: {client, consultant, contractor: {b64, w, h} | null} } -> the workbook as a Uint8Array */
 async function rlFillTemplate(JSZip, tplB64, model) {
-  const zip = await JSZip.loadAsync(tplB64, { base64: true });
+  const zip = await JSZip.loadAsync(tplB64, { base64: true }), Y = RL_LAY[model.kind] || RL_LAY.wir;
   const read = n => zip.file(n).async('string'), once = (t, a, b, what) => { const i = t.indexOf(a); if (i < 0 || t.indexOf(a, i + a.length) >= 0) throw new Error('The standard file is not as expected (' + what + ').'); return t.slice(0, i) + b + t.slice(i + a.length); };
   // the project: one shared text for the bar of every sheet, one for the Summary
   let ss = await read('xl/sharedStrings.xml');
@@ -69,16 +78,16 @@ async function rlFillTemplate(JSZip, tplB64, model) {
       const code = RL_CODES[i], items = model.sheets[code] || [], n = Math.max(RL_TPL_ROWS, items.length), last = 11 + n;
       const a = t.indexOf('<row r="12"'), b = t.indexOf('</sheetData>'); if (a < 0 || b < a) throw new Error('The standard file is not as expected (log rows).');
       const st = {}; t.slice(a, t.indexOf('</row>', a)).replace(/<c r="([A-N])12" s="(\d+)"/g, (m, col, sid) => { st[col] = sid; return m; });
-      if (Object.keys(st).length !== 14) throw new Error('The standard file is not as expected (log row formats).');
-      const rows = []; for (let k = 0; k < n; k++) rows.push(rlRowXml(12 + k, k + 1, code, items[k] || null, st));
+      if (Object.keys(st).length !== Y.n) throw new Error('The standard file is not as expected (log row formats).');
+      const rows = []; for (let k = 0; k < n; k++) rows.push(rlRowXml(12 + k, k + 1, code, items[k] || null, st, Y));
       t = t.slice(0, a) + rows.join('') + t.slice(b);
-      t = t.replace(/<dimension ref="A1:R\d+"\/>/, `<dimension ref="A1:R${last}"/>`);
+      t = t.replace(/<dimension ref="A1:([A-Z]+)\d+"\/>/, (m, c) => `<dimension ref="A1:${c}${last}"/>`);
       // the lists and colours of the standard reach at least to the last row
-      t = t.replace(/sqref="(H12:H|L12:M)(\d+)"/g, (m, p, e) => `sqref="${p}${Math.max(+e, last)}"`);
+      t = t.replace(/sqref="([A-N]12:[A-N])(\d+)"/g, (m, p, e) => `sqref="${p}${Math.max(+e, last)}"`);
       const cn = rlCounts(items), row = [cn.A, cn.B, cn.C, cn.D, cn.E, cn.UR, cn.sub]; sum.push(row);
-      'HIJKLMN'.split('').forEach((col, k) => { t = setV(t, col + '10', row[k]); });
+      rlLetters(Y.n).slice(-7).forEach((col, k) => { t = setV(t, col + '10', row[k]); });
       const used = 11 + items.length;
-      wbx = wbx.replace(new RegExp(`(<definedName name="_xlnm\\.Print_Area" localSheetId="${i + 1}">${code}!\\$A\\$1:\\$N\\$)(\\d+)`), (m, p, e) => p + Math.max(+e, used));
+      wbx = wbx.replace(new RegExp(`(<definedName name="_xlnm\\.Print_Area" localSheetId="${i + 1}">${code}!\\$A\\$1:\\$${Y.last}\\$)(\\d+)`), (m, p, e) => p + Math.max(+e, used));
     }
     t = setV(t, 'B10', today);
     zip.file(name, t);
@@ -101,7 +110,7 @@ async function rlFillTemplate(JSZip, tplB64, model) {
     d = d.replace(/<xdr:oneCellAnchor>[\s\S]*?<\/xdr:oneCellAnchor>/g, an => {
       const role = RL_IMG_ROLE[map[(an.match(/r:embed="([^"]+)"/) || [])[1]]]; if (!role) return an;
       const lg = L[role]; if (!lg) return '';
-      const p = rlLogoAnchor(role, lg.w, lg.h);
+      const p = rlLogoAnchor(role, lg.w, lg.h, Y.logo);
       return an.replace(/<xdr:from>[\s\S]*?<\/xdr:from><xdr:ext cx="\d+" cy="\d+"\/>/, `${p.from}<xdr:ext cx="${p.cx}" cy="${p.cy}"/>`).replace(/<a:xfrm>[\s\S]*?<\/a:xfrm>/, `<a:xfrm><a:off x="0" y="0"/><a:ext cx="${p.cx}" cy="${p.cy}"/></a:xfrm>`);
     });
     zip.file(`xl/drawings/drawing${i}.xml`, d);

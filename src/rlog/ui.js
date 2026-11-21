@@ -127,36 +127,39 @@ function rlStartHTML() {
 
 /* the sheet, on the workbook's own columns A to N */
 const RL_PAGE = 50;
-const RL_W = [45, 89, 150, 80, 80, 150, 500, 115, 115, 115, 115, 115, 115, 245];
-const rlColsHTML = extra => `<colgroup>${RL_W.concat(extra || []).map(w => `<col style="width:${w}px">`).join('')}</colgroup>`;
+// the WIR sheet has columns A to N; the MIR sheet has no Level and no Location (user, 21 Nov 2026), so A to L with a wider Reference No.
+const rlLL = () => !!RL_LAY[RLV.kind].lvl;   // Level and Location columns
+const rlW = () => rlLL() ? [45, 89, 150, 80, 80, 150, 500, 115, 115, 115, 115, 115, 115, 245] : [45, 89, 205, 80, 500, 115, 115, 115, 115, 115, 115, 245];
+const rlNC = () => rlW().length;
+const rlColsHTML = extra => `<colgroup>${rlW().concat(extra || []).map(w => `<col style="width:${w}px">`).join('')}</colgroup>`;
 function rlHeadHTML(disc, title2, c, dateCell) {
   const log = RLV.log, e = RLV.mode === 'edit', p = rlProj(), names = msLogoNames(p);
   const proj = e ? `<input class="ms-in ms-in-proj" data-rl-bl="title" value="${esc(log.block.title)}" aria-label="Project" maxlength="400">` : esc(log.block.title);
   const legend = i => { const [k, t] = MS_LEGEND[i]; return `<td class="t-code st-${msCls(k)}">${k}</td><td colspan="2" class="t-desc">${t}</td>`; };
   const block = i => {
     const [k, label] = RL_BLOCK[i];
-    return `<td colspan="2" class="t-lab">${label}</td><td colspan="4" class="t-val">${e ? `<span class="t-ed">:<input class="ms-in" data-rl-bl="${k}" value="${esc(log.block[k])}" aria-label="${label}" maxlength="400"></span>` : ': ' + esc(log.block[k])}</td>`;
+    return `<td colspan="2" class="t-lab">${label}</td><td colspan="${rlNC() - 10}" class="t-val">${e ? `<span class="t-ed">:<input class="ms-in" data-rl-bl="${k}" value="${esc(log.block[k])}" aria-label="${label}" maxlength="400"></span>` : ': ' + esc(log.block[k])}</td>`;
   };
   const logo = k => { const lg = names[k] && logoOf(names[k]); return lg ? `<img src="${esc(logoUrl(lg.id))}" alt="${esc(names[k])} logo">` : ''; };
   const rows = [
-    `<tr><td colspan="11" class="t-proj">${proj}</td><td colspan="3" class="t-legh">LEGENDS</td></tr>`,
+    `<tr><td colspan="${rlNC() - 3}" class="t-proj">${proj}</td><td colspan="3" class="t-legh">LEGENDS</td></tr>`,
     `<tr>${block(0)}<td class="t-ll l">Client | Consultant</td><td colspan="2" class="t-ll">Main Contractor</td><td colspan="2" class="t-ll r">Subcontractor</td>${legend(0)}</tr>`,
     `<tr>${block(1)}<td rowspan="3" class="t-logo l"><div class="rl-pair"><span>${logo('client')}</span><span>${logo('consultant')}</span></div></td><td colspan="2" rowspan="3" class="t-logo">${logo('contractor')}</td><td colspan="2" rowspan="3" class="t-logo r"><img src="${MS_LOGO}" alt="Oxypro Electromechanical Works LLC"></td>${legend(1)}</tr>`,
     `<tr>${block(2)}${legend(2)}</tr>`, `<tr>${block(3)}${legend(3)}</tr>`,
     `<tr>${block(4)}<td colspan="5" rowspan="2" class="t-title rl-big">${esc(title2)}</td>${legend(4)}</tr>`,
-    `<tr><td colspan="2" class="t-lab"></td><td colspan="4" class="t-val"></td>${legend(5)}</tr>`,
-    '<tr class="t-gap"><td colspan="14"></td></tr>',
-    `<tr><td class="t-date l rl-dt"></td><td class="t-date r rl-dt"></td><td colspan="4" rowspan="2" class="t-title">${esc(disc)}</td><td rowspan="2" class="t-title">${esc(title2)}</td>${MS_COUNTED.map(k => `<td class="t-sh st-${msCls(k)}">${k}</td>`).join('')}<th class="t-sh">TOTAL</th></tr>`,
+    `<tr><td colspan="2" class="t-lab"></td><td colspan="${rlNC() - 10}" class="t-val"></td>${legend(5)}</tr>`,
+    `<tr class="t-gap"><td colspan="${rlNC()}"></td></tr>`,
+    `<tr><td class="t-date l rl-dt"></td><td class="t-date r rl-dt"></td><td colspan="${rlNC() - 10}" rowspan="2" class="t-title">${esc(disc)}</td><td rowspan="2" class="t-title">${esc(title2)}</td>${MS_COUNTED.map(k => `<td class="t-sh st-${msCls(k)}">${k}</td>`).join('')}<th class="t-sh">TOTAL</th></tr>`,
     `<tr><td class="t-date l rl-db">Date:</td><td class="t-date r rl-db">${dateCell}</td>${MS_COUNTED.map(k => `<td class="t-sh" data-cnt="${k}">${c[k]}</td>`).join('')}<td class="t-sh" data-cnt="sub">${c.sub}</td></tr>`
   ];
-  return `<table class="ms-top rl-top" style="width:${RL_W.reduce((a, b) => a + b, 0)}px">${rlColsHTML()}<tbody>${rows.join('')}</tbody></table>`;
+  return `<table class="ms-top rl-top" style="width:${rlW().reduce((a, b) => a + b, 0)}px">${rlColsHTML()}<tbody>${rows.join('')}</tbody></table>`;
 }
-const rlHeadCells = () => { const K = rlK(); return ['SN', 'Discipline', 'Reference No.', 'Rev. No.', 'Level', K.loc, K.desc, 'Planned Submission Date', 'Submitted Date', 'Return Date', 'Review Period\n(in days)', 'Status', 'Final Status', 'Remark']; };
+const rlHeadCells = () => { const K = rlK(); return ['SN', 'Discipline', 'Reference No.', 'Rev. No.'].concat(rlLL() ? ['Level', K.loc] : []).concat([K.desc, 'Planned Submission Date', 'Submitted Date', 'Return Date', 'Review Period\n(in days)', 'Status', 'Final Status', 'Remark']); };
 const rlTheadHTML = e => `<thead><tr>${rlHeadCells().map((l, i) => `<th${i < 3 ? ` class="rf${i + 1}"` : ''}>${esc(l).replace(/\n/g, '<br>')}</th>`).join('')}${e ? '<th class="ms-tools-h">Edit</th>' : ''}</tr></thead>`;
 function rlRowHTML(it, no, idx, list, ro) {
   const e = RLV.mode === 'edit' && !ro, rv = msReview(it), K = rlK();
   if (!e) {
-    return `<tr data-id="${it.id}"><td class="c rf1">${no}</td><td class="c rf2">${it.d}</td><td class="c rf3">${esc(it.ref)}</td><td class="c">${esc(it.rev)}</td><td class="c">${esc(it.lvl)}</td><td class="c">${esc(it.loc)}</td><td class="rl-desc">${esc(it.desc)}</td>
+    return `<tr data-id="${it.id}"><td class="c rf1">${no}</td><td class="c rf2">${it.d}</td><td class="c rf3">${esc(it.ref)}</td><td class="c">${esc(it.rev)}</td>${rlLL() ? `<td class="c">${esc(it.lvl)}</td>` : ''}${rlLL() ? `<td class="c">${esc(it.loc)}</td>` : ''}<td class="rl-desc">${esc(it.desc)}</td>
       <td class="c${msDateCls(it)}">${msFmt(it.plan)}</td><td class="c">${msFmt(it.sub)}</td><td class="c">${msFmt(it.ret)}</td><td class="c">${rv}</td>
       <td class="c st-${msCls(it.st) || 'none'}">${esc(it.st)}</td><td class="c st-${msCls(it.fin) || 'none'}">${esc(it.fin)}</td><td>${esc(it.rem)}</td></tr>`;
   }
@@ -164,8 +167,7 @@ function rlRowHTML(it, no, idx, list, ro) {
   return `<tr data-id="${it.id}"><td class="c rf1">${no}</td><td class="c rf2">${it.d}</td>
     <td class="rf3"><input class="ms-c c" data-k="ref" value="${esc(it.ref)}" aria-label="Reference no." maxlength="120"></td>
     <td><input class="ms-c c" data-k="rev" value="${esc(it.rev)}" aria-label="Revision" maxlength="10"></td>
-    <td><input class="ms-c c" data-k="lvl" value="${esc(it.lvl)}" aria-label="Level" maxlength="60"></td>
-    <td><textarea class="ms-c c" data-k="loc" rows="1" aria-label="${esc(K.loc.split('\n')[0])}" maxlength="200">${esc(it.loc)}</textarea></td>
+    ${rlLL() ? `<td><input class="ms-c c" data-k="lvl" value="${esc(it.lvl)}" aria-label="Level" maxlength="60"></td><td><textarea class="ms-c c" data-k="loc" rows="1" aria-label="${esc(K.loc.split('\n')[0])}" maxlength="200">${esc(it.loc)}</textarea></td>` : ''}
     <td><textarea class="ms-c" data-k="desc" rows="1" aria-label="${esc(K.desc)}" maxlength="600" placeholder="${esc(K.descPh)}">${esc(it.desc)}</textarea></td>
     <td class="${msDateCls(it).trim()}"><input type="date" class="ms-c${it.plan ? '' : ' is-empty'}" data-k="plan" value="${it.plan}" aria-label="Planned submission date"></td>
     <td><input type="date" class="ms-c${it.sub ? '' : ' is-empty'}" data-k="sub" value="${it.sub}" aria-label="Submitted date"></td>
@@ -189,8 +191,8 @@ function rlSheetHTML(code) {
     ${e ? `<div class="ms-bl-add rl-tools"><label class="ms-rev rl-pat">Reference numbering <input class="ms-in" data-rl-pat value="${esc(log.pat)}" maxlength="80" aria-label="Reference numbering" title="{DISC} is the discipline code of the sheet and {NNNN} the running number"></label><label class="ms-rev">Log revision <input class="ms-in" data-rl-rev value="${esc(log.rev)}" maxlength="10" aria-label="Log revision"></label><button type="button" class="btn btn-ghost btn-sm" data-rl-act="bl-reset" title="Fill the project bar and the block again from the library's project details">Refill from the library</button></div>` : ''}
     <table class="ms-log rl-log" data-code="${code}">${rlColsHTML(e ? [132] : null)}${rlTheadHTML(e)}
       <tbody>${shown.map((it, i) => rlRowHTML(it, from + i + 1, from + i, list)).join('')}
-      ${!list.length && !e ? `<tr class="ms-none"><td colspan="14">No ${K.items} in this log yet. Switch to Edit to add them.</td></tr>` : ''}
-      ${e ? `<tr class="ms-addrow"><td colspan="14"><button type="button" class="btn btn-ghost btn-sm" data-rl-act="add"${full ? ' disabled' : ''}>+ Add ${K.item}</button>${full ? ` <span class="hint">The standard workbook reads up to ${RL_MAX} rows in a log.</span>` : ''}</td><td class="ms-tools"></td></tr>` : ''}</tbody>
+      ${!list.length && !e ? `<tr class="ms-none"><td colspan="${rlNC()}">No ${K.items} in this log yet. Switch to Edit to add them.</td></tr>` : ''}
+      ${e ? `<tr class="ms-addrow"><td colspan="${rlNC()}"><button type="button" class="btn btn-ghost btn-sm" data-rl-act="add"${full ? ' disabled' : ''}>+ Add ${K.item}</button>${full ? ` <span class="hint">The standard workbook reads up to ${RL_MAX} rows in a log.</span>` : ''}</td><td class="ms-tools"></td></tr>` : ''}</tbody>
     </table></div></div>`;
 }
 function rlSummaryHTML() {
@@ -218,7 +220,7 @@ function rlTransHTML() {
     <div class="ms-scroll"><div class="ms-paper">
     ${rlHeadHTML(K.title, 'TRANSMITTAL SHEET', c, esc(msFmtLong(RLV.day)))}
     <table class="ms-log rl-log">${rlColsHTML()}${rlTheadHTML(false)}
-      <tbody>${list.map((it, i) => rlRowHTML(it, i + 1, i, list, true)).join('') || `<tr class="ms-none"><td colspan="14">No ${K.items} with ${RLV.day ? 'a Submitted Date of ' + esc(msFmtLong(RLV.day)) : 'that date'}. Choose another date above.</td></tr>`}</tbody>
+      <tbody>${list.map((it, i) => rlRowHTML(it, i + 1, i, list, true)).join('') || `<tr class="ms-none"><td colspan="${rlNC()}">No ${K.items} with ${RLV.day ? 'a Submitted Date of ' + esc(msFmtLong(RLV.day)) : 'that date'}. Choose another date above.</td></tr>`}</tbody>
     </table></div></div>
     <p class="hint rl-note">The Transmittal Sheet lists the ${K.items} whose Submitted Date is the chosen day. In the Excel file the same sheet shows the day typed in its cell B10 (today when the file opens).</p>`;
 }
@@ -277,8 +279,8 @@ async function rlOnClick(e) {
     case 'save-xlsx': return rlRun(b, 'Preparing the Excel file…', rlSaveXlsx);
     case 'load-remote': if (RLV.remote) { rlLoad(RLV.remote); renderRl(); } return;
     case 'bl-reset': log.block = rlDefaultBlock(rlProj()); rlSetDirty(); rlRenderBody(); toast('Project bar and block filled from the library'); return;
-    case 'add': return focusRow(rlAddItem(RLV.tab), '[data-k="lvl"]');
-    case 'dup': { const src = rlFind(tr.dataset.id); if (src && rlItemsOf(log, src.d).length < RL_MAX) focusRow(rlAddItem(src.d, src), '[data-k="lvl"]'); return; }
+    case 'add': return focusRow(rlAddItem(RLV.tab), rlLL() ? '[data-k="lvl"]' : '[data-k="desc"]');
+    case 'dup': { const src = rlFind(tr.dataset.id); if (src && rlItemsOf(log, src.d).length < RL_MAX) focusRow(rlAddItem(src.d, src), rlLL() ? '[data-k="lvl"]' : '[data-k="desc"]'); return; }
     case 'up': case 'down': return rlMove(tr.dataset.id, act === 'up' ? -1 : 1);
     case 'rm': RLV.rm = tr.dataset.id; rlRenderBody(); { const y = document.querySelector('#rl-body [data-rl-act="rm-yes"]'); if (y) y.focus(); } return;
     case 'rm-no': RLV.rm = null; return rlRenderBody();

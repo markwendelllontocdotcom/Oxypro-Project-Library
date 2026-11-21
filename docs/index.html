@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Oxypro Project Library</title>
-<link rel="icon" href="favicon.ico?v=1.18.1" sizes="any">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=1.18.1">
+<link rel="icon" href="favicon.ico?v=1.18.2" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=1.18.2">
 <meta name="theme-color" content="#D81F27">
 <meta name="description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP, Method Statement, WIR and MIR Logs) and HSE Plans.">
 <meta property="og:type" content="website">
@@ -13,12 +13,12 @@
 <meta property="og:title" content="Oxypro Project Library">
 <meta property="og:description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP, Method Statement, WIR and MIR Logs) and HSE Plans.">
 <meta property="og:url" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/">
-<meta property="og:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.18.1">
+<meta property="og:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.18.2">
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
 <meta property="og:image:alt" content="Oxypro Library logo">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.18.1">
+<meta name="twitter:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.18.2">
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 </head>
 <body>
@@ -845,7 +845,7 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.18.1 (21 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.18.2 (21 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -979,7 +979,7 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.18.1';
+const APP_VERSION = '1.18.2';
 const APP_DATE = '21 Nov 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
@@ -3625,6 +3625,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.18.2', '21 Nov 2026', 'MIR Log without the Level and Delivery / Storage Location columns, which do not apply to material inspections: on the page and in the Excel file (seven logs and the Transmittal Sheet), with the formulas, lists and logos moved to suit.'],
   ['1.18.1', '21 Nov 2026', 'WIR Log and MIR Log: the revision column is headed Rev. No. on the page and in the Excel file.'],
   ['1.18.0', '21 Nov 2026', 'QA/QC > WIR Log and MIR Log: the Work Inspection Request and Material Inspection Request logs of a project, made the way the MSRA Log is. Summary, the seven discipline logs and the Transmittal Sheet of a day on the page; reference numbers follow on by discipline. Save as Excel gives the Oxypro standard workbook itself with the log filled in: the same sheets, formats, formulas and lists, with the hidden guide sheets.'],
   ['1.17.1', '11 Nov 2026', 'MSRA Log: the client, consultant, main contractor and subcontractor logos sit in rows 3 to 5, each one inside its own box under its name; rows 6 and 7 under the logos are one blank area. Same in Excel, PDF and on the page.'],
@@ -5161,31 +5162,40 @@ function rlRowHeight(it) {
   const n = Math.max(lines(it.desc, 78), lines(it.rem, 36), lines(it.loc, 20), lines(it.ref, 21));
   return n <= 2 ? 30 : n * 15;
 }
+// the columns of a log sheet: the WIR workbook has A to N; the MIR workbook has no Level and no Location (user, 21 Nov 2026), so A to L
+const RL_LAY = {
+  wir: { n: 14, last: 'N', ref: 'C', rev: 'D', lvl: 'E', loc: 'F', desc: 'G', plan: 'H', sub: 'I', ret: 'J', rv: 'K', st: 'L', fin: 'M', rem: 'N', logo: 6 },
+  mir: { n: 12, last: 'L', ref: 'C', rev: 'D', lvl: '', loc: '', desc: 'E', plan: 'F', sub: 'G', ret: 'H', rv: 'I', st: 'J', fin: 'K', rem: 'L', logo: 4 }
+};
+const rlLetters = n => 'ABCDEFGHIJKLMN'.slice(0, n).split('');
 // st: the standard's own cell formats of a log row, read from its row 12 (they differ between the WIR and the MIR workbook)
-function rlRowXml(r, sn, code, it, st) {
-  const c = [];
-  c.push(`<c r="A${r}" s="${st.A}"><v>${sn}</v></c>`, rlInline('B' + r, st.B, code));
+function rlRowXml(r, sn, code, it, st, Y) {
+  const cell = {};
   const num = (col, v) => v == null ? `<c r="${col}${r}" s="${st[col]}"/>` : `<c r="${col}${r}" s="${st[col]}"><v>${v}</v></c>`;
   const txt = (col, v) => rlInline(col + r, st[col], v);
+  cell.A = `<c r="A${r}" s="${st.A}"><v>${sn}</v></c>`; cell.B = txt('B', code);
   if (it) {
-    c.push(txt('C', it.ref));
-    c.push(/^\d{1,6}$/.test(it.rev.trim()) ? num('D', +it.rev.trim()) : txt('D', it.rev.trim()));
-    c.push(txt('E', it.lvl), txt('F', it.loc), txt('G', it.desc));
-    c.push(num('H', rlSerial(it.plan)), num('I', rlSerial(it.sub)), num('J', rlSerial(it.ret)));
-  } else 'CDEFGHIJ'.split('').forEach(col => c.push(num(col, null)));
-  const rv = it ? msReview(it) : '', f = `IF(OR($I${r}="",$J${r}=""),"",$J${r}-$I${r})`;
-  c.push(rv === '' ? `<c r="K${r}" s="${st.K}" t="str"><f>${f}</f><v></v></c>` : `<c r="K${r}" s="${st.K}"><f>${f}</f><v>${rv}</v></c>`);
-  c.push(txt('L', it ? it.st : ''), txt('M', it ? it.fin : ''), txt('N', it ? it.rem : ''));
-  return `<row r="${r}" spans="1:14" ht="${it ? rlRowHeight(it) : 30}" customHeight="1">${c.join('')}</row>`;
+    cell[Y.ref] = txt(Y.ref, it.ref);
+    cell[Y.rev] = /^\d{1,6}$/.test(it.rev.trim()) ? num(Y.rev, +it.rev.trim()) : txt(Y.rev, it.rev.trim());
+    if (Y.lvl) cell[Y.lvl] = txt(Y.lvl, it.lvl);
+    if (Y.loc) cell[Y.loc] = txt(Y.loc, it.loc);
+    cell[Y.desc] = txt(Y.desc, it.desc);
+    cell[Y.plan] = num(Y.plan, rlSerial(it.plan)); cell[Y.sub] = num(Y.sub, rlSerial(it.sub)); cell[Y.ret] = num(Y.ret, rlSerial(it.ret));
+    cell[Y.st] = txt(Y.st, it.st); cell[Y.fin] = txt(Y.fin, it.fin); cell[Y.rem] = txt(Y.rem, it.rem);
+  }
+  const rv = it ? msReview(it) : '', f = `IF(OR($${Y.sub}${r}="",$${Y.ret}${r}=""),"",$${Y.ret}${r}-$${Y.sub}${r})`;
+  cell[Y.rv] = rv === '' ? `<c r="${Y.rv}${r}" s="${st[Y.rv]}" t="str"><f>${f}</f><v></v></c>` : `<c r="${Y.rv}${r}" s="${st[Y.rv]}"><f>${f}</f><v>${rv}</v></c>`;
+  return `<row r="${r}" spans="1:${Y.n}" ht="${it ? rlRowHeight(it) : 30}" customHeight="1">${rlLetters(Y.n).map(col => cell[col] || num(col, null)).join('')}</row>`;
 }
-// Excel's column width (characters) in pixels at 100 %, and the standard's widths of G to K and row height of rows 3 to 5
+// Excel's column width (characters) in pixels at 100 %: the wide description column and the date columns, and the height of rows 3 to 5
 const RL_PX = { G: msXPx(70.7109375), H: msXPx(15.7109375), row: 20.1 * 4 / 3 };
-// where a logo goes: centred in its box of rows 3 to 5 (Client the left half of G, Consultant the right half, Main Contractor H:I)
-function rlLogoAnchor(role, w, h) {
-  const box = role === 'client' ? { col: 6, x0: 0, bw: RL_PX.G / 2 } : role === 'consultant' ? { col: 6, x0: RL_PX.G / 2, bw: RL_PX.G / 2 } : { col: 7, x0: 0, bw: RL_PX.H * 2 };
+// where a logo goes: centred in its box of rows 3 to 5 (Client the left half of the description column, Consultant the right half,
+// Main Contractor the two columns after it); c0 = that column's number counted from 0 (G in the WIR workbook, E in the MIR workbook)
+function rlLogoAnchor(role, w, h, c0) {
+  const box = role === 'client' ? { col: c0, x0: 0, bw: RL_PX.G / 2 } : role === 'consultant' ? { col: c0, x0: RL_PX.G / 2, bw: RL_PX.G / 2 } : { col: c0 + 1, x0: 0, bw: RL_PX.H * 2 };
   const bh = RL_PX.row * 3, pad = 8, k = Math.min(1, (box.bw - 2 * pad) / w, (bh - 2 * pad) / h), W = w * k, H = h * k;
   let x = box.x0 + (box.bw - W) / 2, y = (bh - H) / 2, col = box.col, row = 2;
-  if (col === 7 && x >= RL_PX.H) { x -= RL_PX.H; col = 8; }
+  if (col === c0 + 1 && x >= RL_PX.H) { x -= RL_PX.H; col = c0 + 2; }
   while (row < 4 && y >= RL_PX.row) { y -= RL_PX.row; row++; }
   const e = v => Math.round(v * 9525);
   return { from: `<xdr:from><xdr:col>${col}</xdr:col><xdr:colOff>${e(x)}</xdr:colOff><xdr:row>${row}</xdr:row><xdr:rowOff>${e(y)}</xdr:rowOff></xdr:from>`, cx: e(W), cy: e(H) };
@@ -5194,7 +5204,7 @@ const RL_IMG_ROLE = { 'image2.png': 'contractor', 'image3.png': 'client', 'image
 /* model: { kind, title, block: {client, consultant, mepConsultant, mainContractor, mepContractor}, sheets: {MEC: [items], ...},
             logos: {client, consultant, contractor: {b64, w, h} | null} } -> the workbook as a Uint8Array */
 async function rlFillTemplate(JSZip, tplB64, model) {
-  const zip = await JSZip.loadAsync(tplB64, { base64: true });
+  const zip = await JSZip.loadAsync(tplB64, { base64: true }), Y = RL_LAY[model.kind] || RL_LAY.wir;
   const read = n => zip.file(n).async('string'), once = (t, a, b, what) => { const i = t.indexOf(a); if (i < 0 || t.indexOf(a, i + a.length) >= 0) throw new Error('The standard file is not as expected (' + what + ').'); return t.slice(0, i) + b + t.slice(i + a.length); };
   // the project: one shared text for the bar of every sheet, one for the Summary
   let ss = await read('xl/sharedStrings.xml');
@@ -5218,16 +5228,16 @@ async function rlFillTemplate(JSZip, tplB64, model) {
       const code = RL_CODES[i], items = model.sheets[code] || [], n = Math.max(RL_TPL_ROWS, items.length), last = 11 + n;
       const a = t.indexOf('<row r="12"'), b = t.indexOf('</sheetData>'); if (a < 0 || b < a) throw new Error('The standard file is not as expected (log rows).');
       const st = {}; t.slice(a, t.indexOf('</row>', a)).replace(/<c r="([A-N])12" s="(\d+)"/g, (m, col, sid) => { st[col] = sid; return m; });
-      if (Object.keys(st).length !== 14) throw new Error('The standard file is not as expected (log row formats).');
-      const rows = []; for (let k = 0; k < n; k++) rows.push(rlRowXml(12 + k, k + 1, code, items[k] || null, st));
+      if (Object.keys(st).length !== Y.n) throw new Error('The standard file is not as expected (log row formats).');
+      const rows = []; for (let k = 0; k < n; k++) rows.push(rlRowXml(12 + k, k + 1, code, items[k] || null, st, Y));
       t = t.slice(0, a) + rows.join('') + t.slice(b);
-      t = t.replace(/<dimension ref="A1:R\d+"\/>/, `<dimension ref="A1:R${last}"/>`);
+      t = t.replace(/<dimension ref="A1:([A-Z]+)\d+"\/>/, (m, c) => `<dimension ref="A1:${c}${last}"/>`);
       // the lists and colours of the standard reach at least to the last row
-      t = t.replace(/sqref="(H12:H|L12:M)(\d+)"/g, (m, p, e) => `sqref="${p}${Math.max(+e, last)}"`);
+      t = t.replace(/sqref="([A-N]12:[A-N])(\d+)"/g, (m, p, e) => `sqref="${p}${Math.max(+e, last)}"`);
       const cn = rlCounts(items), row = [cn.A, cn.B, cn.C, cn.D, cn.E, cn.UR, cn.sub]; sum.push(row);
-      'HIJKLMN'.split('').forEach((col, k) => { t = setV(t, col + '10', row[k]); });
+      rlLetters(Y.n).slice(-7).forEach((col, k) => { t = setV(t, col + '10', row[k]); });
       const used = 11 + items.length;
-      wbx = wbx.replace(new RegExp(`(<definedName name="_xlnm\\.Print_Area" localSheetId="${i + 1}">${code}!\\$A\\$1:\\$N\\$)(\\d+)`), (m, p, e) => p + Math.max(+e, used));
+      wbx = wbx.replace(new RegExp(`(<definedName name="_xlnm\\.Print_Area" localSheetId="${i + 1}">${code}!\\$A\\$1:\\$${Y.last}\\$)(\\d+)`), (m, p, e) => p + Math.max(+e, used));
     }
     t = setV(t, 'B10', today);
     zip.file(name, t);
@@ -5250,7 +5260,7 @@ async function rlFillTemplate(JSZip, tplB64, model) {
     d = d.replace(/<xdr:oneCellAnchor>[\s\S]*?<\/xdr:oneCellAnchor>/g, an => {
       const role = RL_IMG_ROLE[map[(an.match(/r:embed="([^"]+)"/) || [])[1]]]; if (!role) return an;
       const lg = L[role]; if (!lg) return '';
-      const p = rlLogoAnchor(role, lg.w, lg.h);
+      const p = rlLogoAnchor(role, lg.w, lg.h, Y.logo);
       return an.replace(/<xdr:from>[\s\S]*?<\/xdr:from><xdr:ext cx="\d+" cy="\d+"\/>/, `${p.from}<xdr:ext cx="${p.cx}" cy="${p.cy}"/>`).replace(/<a:xfrm>[\s\S]*?<\/a:xfrm>/, `<a:xfrm><a:off x="0" y="0"/><a:ext cx="${p.cx}" cy="${p.cy}"/></a:xfrm>`);
     });
     zip.file(`xl/drawings/drawing${i}.xml`, d);
@@ -5387,36 +5397,39 @@ function rlStartHTML() {
 
 /* the sheet, on the workbook's own columns A to N */
 const RL_PAGE = 50;
-const RL_W = [45, 89, 150, 80, 80, 150, 500, 115, 115, 115, 115, 115, 115, 245];
-const rlColsHTML = extra => `<colgroup>${RL_W.concat(extra || []).map(w => `<col style="width:${w}px">`).join('')}</colgroup>`;
+// the WIR sheet has columns A to N; the MIR sheet has no Level and no Location (user, 21 Nov 2026), so A to L with a wider Reference No.
+const rlLL = () => !!RL_LAY[RLV.kind].lvl;   // Level and Location columns
+const rlW = () => rlLL() ? [45, 89, 150, 80, 80, 150, 500, 115, 115, 115, 115, 115, 115, 245] : [45, 89, 205, 80, 500, 115, 115, 115, 115, 115, 115, 245];
+const rlNC = () => rlW().length;
+const rlColsHTML = extra => `<colgroup>${rlW().concat(extra || []).map(w => `<col style="width:${w}px">`).join('')}</colgroup>`;
 function rlHeadHTML(disc, title2, c, dateCell) {
   const log = RLV.log, e = RLV.mode === 'edit', p = rlProj(), names = msLogoNames(p);
   const proj = e ? `<input class="ms-in ms-in-proj" data-rl-bl="title" value="${esc(log.block.title)}" aria-label="Project" maxlength="400">` : esc(log.block.title);
   const legend = i => { const [k, t] = MS_LEGEND[i]; return `<td class="t-code st-${msCls(k)}">${k}</td><td colspan="2" class="t-desc">${t}</td>`; };
   const block = i => {
     const [k, label] = RL_BLOCK[i];
-    return `<td colspan="2" class="t-lab">${label}</td><td colspan="4" class="t-val">${e ? `<span class="t-ed">:<input class="ms-in" data-rl-bl="${k}" value="${esc(log.block[k])}" aria-label="${label}" maxlength="400"></span>` : ': ' + esc(log.block[k])}</td>`;
+    return `<td colspan="2" class="t-lab">${label}</td><td colspan="${rlNC() - 10}" class="t-val">${e ? `<span class="t-ed">:<input class="ms-in" data-rl-bl="${k}" value="${esc(log.block[k])}" aria-label="${label}" maxlength="400"></span>` : ': ' + esc(log.block[k])}</td>`;
   };
   const logo = k => { const lg = names[k] && logoOf(names[k]); return lg ? `<img src="${esc(logoUrl(lg.id))}" alt="${esc(names[k])} logo">` : ''; };
   const rows = [
-    `<tr><td colspan="11" class="t-proj">${proj}</td><td colspan="3" class="t-legh">LEGENDS</td></tr>`,
+    `<tr><td colspan="${rlNC() - 3}" class="t-proj">${proj}</td><td colspan="3" class="t-legh">LEGENDS</td></tr>`,
     `<tr>${block(0)}<td class="t-ll l">Client | Consultant</td><td colspan="2" class="t-ll">Main Contractor</td><td colspan="2" class="t-ll r">Subcontractor</td>${legend(0)}</tr>`,
     `<tr>${block(1)}<td rowspan="3" class="t-logo l"><div class="rl-pair"><span>${logo('client')}</span><span>${logo('consultant')}</span></div></td><td colspan="2" rowspan="3" class="t-logo">${logo('contractor')}</td><td colspan="2" rowspan="3" class="t-logo r"><img src="${MS_LOGO}" alt="Oxypro Electromechanical Works LLC"></td>${legend(1)}</tr>`,
     `<tr>${block(2)}${legend(2)}</tr>`, `<tr>${block(3)}${legend(3)}</tr>`,
     `<tr>${block(4)}<td colspan="5" rowspan="2" class="t-title rl-big">${esc(title2)}</td>${legend(4)}</tr>`,
-    `<tr><td colspan="2" class="t-lab"></td><td colspan="4" class="t-val"></td>${legend(5)}</tr>`,
-    '<tr class="t-gap"><td colspan="14"></td></tr>',
-    `<tr><td class="t-date l rl-dt"></td><td class="t-date r rl-dt"></td><td colspan="4" rowspan="2" class="t-title">${esc(disc)}</td><td rowspan="2" class="t-title">${esc(title2)}</td>${MS_COUNTED.map(k => `<td class="t-sh st-${msCls(k)}">${k}</td>`).join('')}<th class="t-sh">TOTAL</th></tr>`,
+    `<tr><td colspan="2" class="t-lab"></td><td colspan="${rlNC() - 10}" class="t-val"></td>${legend(5)}</tr>`,
+    `<tr class="t-gap"><td colspan="${rlNC()}"></td></tr>`,
+    `<tr><td class="t-date l rl-dt"></td><td class="t-date r rl-dt"></td><td colspan="${rlNC() - 10}" rowspan="2" class="t-title">${esc(disc)}</td><td rowspan="2" class="t-title">${esc(title2)}</td>${MS_COUNTED.map(k => `<td class="t-sh st-${msCls(k)}">${k}</td>`).join('')}<th class="t-sh">TOTAL</th></tr>`,
     `<tr><td class="t-date l rl-db">Date:</td><td class="t-date r rl-db">${dateCell}</td>${MS_COUNTED.map(k => `<td class="t-sh" data-cnt="${k}">${c[k]}</td>`).join('')}<td class="t-sh" data-cnt="sub">${c.sub}</td></tr>`
   ];
-  return `<table class="ms-top rl-top" style="width:${RL_W.reduce((a, b) => a + b, 0)}px">${rlColsHTML()}<tbody>${rows.join('')}</tbody></table>`;
+  return `<table class="ms-top rl-top" style="width:${rlW().reduce((a, b) => a + b, 0)}px">${rlColsHTML()}<tbody>${rows.join('')}</tbody></table>`;
 }
-const rlHeadCells = () => { const K = rlK(); return ['SN', 'Discipline', 'Reference No.', 'Rev. No.', 'Level', K.loc, K.desc, 'Planned Submission Date', 'Submitted Date', 'Return Date', 'Review Period\n(in days)', 'Status', 'Final Status', 'Remark']; };
+const rlHeadCells = () => { const K = rlK(); return ['SN', 'Discipline', 'Reference No.', 'Rev. No.'].concat(rlLL() ? ['Level', K.loc] : []).concat([K.desc, 'Planned Submission Date', 'Submitted Date', 'Return Date', 'Review Period\n(in days)', 'Status', 'Final Status', 'Remark']); };
 const rlTheadHTML = e => `<thead><tr>${rlHeadCells().map((l, i) => `<th${i < 3 ? ` class="rf${i + 1}"` : ''}>${esc(l).replace(/\n/g, '<br>')}</th>`).join('')}${e ? '<th class="ms-tools-h">Edit</th>' : ''}</tr></thead>`;
 function rlRowHTML(it, no, idx, list, ro) {
   const e = RLV.mode === 'edit' && !ro, rv = msReview(it), K = rlK();
   if (!e) {
-    return `<tr data-id="${it.id}"><td class="c rf1">${no}</td><td class="c rf2">${it.d}</td><td class="c rf3">${esc(it.ref)}</td><td class="c">${esc(it.rev)}</td><td class="c">${esc(it.lvl)}</td><td class="c">${esc(it.loc)}</td><td class="rl-desc">${esc(it.desc)}</td>
+    return `<tr data-id="${it.id}"><td class="c rf1">${no}</td><td class="c rf2">${it.d}</td><td class="c rf3">${esc(it.ref)}</td><td class="c">${esc(it.rev)}</td>${rlLL() ? `<td class="c">${esc(it.lvl)}</td>` : ''}${rlLL() ? `<td class="c">${esc(it.loc)}</td>` : ''}<td class="rl-desc">${esc(it.desc)}</td>
       <td class="c${msDateCls(it)}">${msFmt(it.plan)}</td><td class="c">${msFmt(it.sub)}</td><td class="c">${msFmt(it.ret)}</td><td class="c">${rv}</td>
       <td class="c st-${msCls(it.st) || 'none'}">${esc(it.st)}</td><td class="c st-${msCls(it.fin) || 'none'}">${esc(it.fin)}</td><td>${esc(it.rem)}</td></tr>`;
   }
@@ -5424,8 +5437,7 @@ function rlRowHTML(it, no, idx, list, ro) {
   return `<tr data-id="${it.id}"><td class="c rf1">${no}</td><td class="c rf2">${it.d}</td>
     <td class="rf3"><input class="ms-c c" data-k="ref" value="${esc(it.ref)}" aria-label="Reference no." maxlength="120"></td>
     <td><input class="ms-c c" data-k="rev" value="${esc(it.rev)}" aria-label="Revision" maxlength="10"></td>
-    <td><input class="ms-c c" data-k="lvl" value="${esc(it.lvl)}" aria-label="Level" maxlength="60"></td>
-    <td><textarea class="ms-c c" data-k="loc" rows="1" aria-label="${esc(K.loc.split('\n')[0])}" maxlength="200">${esc(it.loc)}</textarea></td>
+    ${rlLL() ? `<td><input class="ms-c c" data-k="lvl" value="${esc(it.lvl)}" aria-label="Level" maxlength="60"></td><td><textarea class="ms-c c" data-k="loc" rows="1" aria-label="${esc(K.loc.split('\n')[0])}" maxlength="200">${esc(it.loc)}</textarea></td>` : ''}
     <td><textarea class="ms-c" data-k="desc" rows="1" aria-label="${esc(K.desc)}" maxlength="600" placeholder="${esc(K.descPh)}">${esc(it.desc)}</textarea></td>
     <td class="${msDateCls(it).trim()}"><input type="date" class="ms-c${it.plan ? '' : ' is-empty'}" data-k="plan" value="${it.plan}" aria-label="Planned submission date"></td>
     <td><input type="date" class="ms-c${it.sub ? '' : ' is-empty'}" data-k="sub" value="${it.sub}" aria-label="Submitted date"></td>
@@ -5449,8 +5461,8 @@ function rlSheetHTML(code) {
     ${e ? `<div class="ms-bl-add rl-tools"><label class="ms-rev rl-pat">Reference numbering <input class="ms-in" data-rl-pat value="${esc(log.pat)}" maxlength="80" aria-label="Reference numbering" title="{DISC} is the discipline code of the sheet and {NNNN} the running number"></label><label class="ms-rev">Log revision <input class="ms-in" data-rl-rev value="${esc(log.rev)}" maxlength="10" aria-label="Log revision"></label><button type="button" class="btn btn-ghost btn-sm" data-rl-act="bl-reset" title="Fill the project bar and the block again from the library's project details">Refill from the library</button></div>` : ''}
     <table class="ms-log rl-log" data-code="${code}">${rlColsHTML(e ? [132] : null)}${rlTheadHTML(e)}
       <tbody>${shown.map((it, i) => rlRowHTML(it, from + i + 1, from + i, list)).join('')}
-      ${!list.length && !e ? `<tr class="ms-none"><td colspan="14">No ${K.items} in this log yet. Switch to Edit to add them.</td></tr>` : ''}
-      ${e ? `<tr class="ms-addrow"><td colspan="14"><button type="button" class="btn btn-ghost btn-sm" data-rl-act="add"${full ? ' disabled' : ''}>+ Add ${K.item}</button>${full ? ` <span class="hint">The standard workbook reads up to ${RL_MAX} rows in a log.</span>` : ''}</td><td class="ms-tools"></td></tr>` : ''}</tbody>
+      ${!list.length && !e ? `<tr class="ms-none"><td colspan="${rlNC()}">No ${K.items} in this log yet. Switch to Edit to add them.</td></tr>` : ''}
+      ${e ? `<tr class="ms-addrow"><td colspan="${rlNC()}"><button type="button" class="btn btn-ghost btn-sm" data-rl-act="add"${full ? ' disabled' : ''}>+ Add ${K.item}</button>${full ? ` <span class="hint">The standard workbook reads up to ${RL_MAX} rows in a log.</span>` : ''}</td><td class="ms-tools"></td></tr>` : ''}</tbody>
     </table></div></div>`;
 }
 function rlSummaryHTML() {
@@ -5478,7 +5490,7 @@ function rlTransHTML() {
     <div class="ms-scroll"><div class="ms-paper">
     ${rlHeadHTML(K.title, 'TRANSMITTAL SHEET', c, esc(msFmtLong(RLV.day)))}
     <table class="ms-log rl-log">${rlColsHTML()}${rlTheadHTML(false)}
-      <tbody>${list.map((it, i) => rlRowHTML(it, i + 1, i, list, true)).join('') || `<tr class="ms-none"><td colspan="14">No ${K.items} with ${RLV.day ? 'a Submitted Date of ' + esc(msFmtLong(RLV.day)) : 'that date'}. Choose another date above.</td></tr>`}</tbody>
+      <tbody>${list.map((it, i) => rlRowHTML(it, i + 1, i, list, true)).join('') || `<tr class="ms-none"><td colspan="${rlNC()}">No ${K.items} with ${RLV.day ? 'a Submitted Date of ' + esc(msFmtLong(RLV.day)) : 'that date'}. Choose another date above.</td></tr>`}</tbody>
     </table></div></div>
     <p class="hint rl-note">The Transmittal Sheet lists the ${K.items} whose Submitted Date is the chosen day. In the Excel file the same sheet shows the day typed in its cell B10 (today when the file opens).</p>`;
 }
@@ -5537,8 +5549,8 @@ async function rlOnClick(e) {
     case 'save-xlsx': return rlRun(b, 'Preparing the Excel file…', rlSaveXlsx);
     case 'load-remote': if (RLV.remote) { rlLoad(RLV.remote); renderRl(); } return;
     case 'bl-reset': log.block = rlDefaultBlock(rlProj()); rlSetDirty(); rlRenderBody(); toast('Project bar and block filled from the library'); return;
-    case 'add': return focusRow(rlAddItem(RLV.tab), '[data-k="lvl"]');
-    case 'dup': { const src = rlFind(tr.dataset.id); if (src && rlItemsOf(log, src.d).length < RL_MAX) focusRow(rlAddItem(src.d, src), '[data-k="lvl"]'); return; }
+    case 'add': return focusRow(rlAddItem(RLV.tab), rlLL() ? '[data-k="lvl"]' : '[data-k="desc"]');
+    case 'dup': { const src = rlFind(tr.dataset.id); if (src && rlItemsOf(log, src.d).length < RL_MAX) focusRow(rlAddItem(src.d, src), rlLL() ? '[data-k="lvl"]' : '[data-k="desc"]'); return; }
     case 'up': case 'down': return rlMove(tr.dataset.id, act === 'up' ? -1 : 1);
     case 'rm': RLV.rm = tr.dataset.id; rlRenderBody(); { const y = document.querySelector('#rl-body [data-rl-act="rm-yes"]'); if (y) y.focus(); } return;
     case 'rm-no': RLV.rm = null; return rlRenderBody();
