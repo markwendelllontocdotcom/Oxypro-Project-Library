@@ -3,7 +3,7 @@
 One shared library of Oxypro Electromechanical's projects: project details and photos, presentation sheets, QA/QC (the Project Quality Plan hand-off to PQP Maker and each project's Method Statement Log) and HSE (the hand-off to HSE Plan Maker).
 
 **Use the app:** [Oxypro Project Library on Claude](https://claude.ai/artifact/T3U712ufURSuMQTfsGDkMy) (shared as "Anyone with the link")
-**Version:** 1.17.1 (11 Nov 2026)
+**Version:** 1.18.0 (21 Nov 2026)
 **Developed by** Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.
 
 This repository holds the source code and the GitHub edition website. The app runs as a Claude artifact: its project list, photos and MSRA Logs live in the artifact's shared database and storage.
@@ -27,7 +27,8 @@ The Claude edition also has QA/QC > Pre-Qualification (PQ), which opens the PQ G
 - **Projects:** search and filter by emirate, status and sector. Each project shows its details from the Projects Master List and up to five photos.
 - **Presentations:** select one or more projects for a top sheet (four designs), an Oxypro Project Presentation Sheet per project, a summary page and a references page, as PDF or PowerPoint. View / Present runs them full screen first.
 - **References page:** the last page of every presentation, a grid of the logos of the Main Contractors, Consultants (lead and MEP) and Clients we worked for (Oxypro itself left out). The companies come from the whole library or only the presentation's projects. Background: off, a faded pattern (the default) or any library project photo, faded (very faint, faint or stronger). Untick a logo to leave it out, add a logo from the device for that presentation, show companies without a logo as names and change the title. More logos go on to a second page (continued). It can be left out of the presentation.
-- **QA/QC:** a menu on each project with **PQP details and file**, the **MSRA Log** and **Generate MSRA**.
+- **QA/QC:** a menu on each project with **PQP details and file**, the **MSRA Log**, the **WIR Log**, the **MIR Log** and **Generate MSRA**.
+- **WIR Log and MIR Log** (1.18.0): each project's Work Inspection Request and Material Inspection Request logs, made the way the MSRA Log is. On the page: Summary, seven discipline logs (MEC, PLU, ELE, ELV, FF, LPG, MEP; long logs 50 rows at a time) and the Transmittal Sheet of a chosen day. Reference numbers follow on by discipline (`OXY-WIR-MEP-{DISC}-{NNNN}`, editable). **Save as Excel** gives the Oxypro standard workbook itself with the log filled in (`build/rlog/wir.xlsx`, `mir.xlsx`, prepared from the standard files by `tools/prep_rlog.py`): every sheet, format, formula, list and print setting, with the hidden sheets (Instructions, the Transmittal Sheet's helper sheet, MS Master List). The standard workbooks travel beside the page as `rlog-wir.js` and `rlog-mir.js` and are loaded only when a file is made. Rows are stored in parts (`wirlogparts`, `mirlogparts`), the head in `wirlogs` / `mirlogs`.
 - **Generate MSRA:** saves `MS Project - <code> - <name>.json`, a whole project for the Oxypro MSRA Generator (its project file format, version 1): the project name, code, emirate, client, consultant (the lead consultant, or the MEP consultant; a choice when there are both), main contractor and MEP contractor in capitals, the client, consultant and main contractor logos (PNG, up to 700 px), a cover photo of your choice and the Generator's standard list of 76 Method Statements (`build/msra-gen-std.json`, from its repository data). In the Generator: **Open project** (it replaces the project open there). The two apps are not linked: the file is the hand-off.
 - **Company logos:** one logo per company (client, consultant, contractor), shown on every project with that company; editors add, replace or remove them on the project.
 - **PQP details and file:** opens [PQP Maker](https://markwendelllontocdotcom.github.io/MEP-PQP-Maker/) with the project's PQP already created (the cover photo goes by copy and paste), or saves a PQP file.
@@ -49,6 +50,7 @@ The Claude edition also has QA/QC > Pre-Qualification (PQ), which opens the PQ G
 |---|---|
 | `src/library.html` | The Library page (HTML, CSS and JavaScript in one file) with placeholders for the embedded assets |
 | `src/msra/` | The MSRA Log: `core.js` (standard list, counts, MSL reading and matching), `xlsx.js` (Excel in the template layout, ExcelJS), `pdf.js` (PDF, jsPDF + AutoTable), `ui.js` (the page), `msra.css` |
+| `src/rlog/` | The WIR Log and the MIR Log: `core.js` (model, counts, reference numbers), `xlsx.js` (fills the standard workbook, JSZip), `ui.js` (the page), `rlog.css` |
 | `build.py` | Builds `dist/Oxypro Project Library.html` (Claude) and `docs/` (GitHub edition): inlines the logos, fonts, MSRA code and the MSRA standard |
 | `build/assets.json` | Logos (light and dark) and Carlito regular and bold (Calibri's letter widths), base64 |
 | `build/app-icon-512.png`, `build/app-icon.json`, `build/favicon.ico` | The app icon (512 px), its 32, 128 and 180 px versions (base64) and the website's favicon |

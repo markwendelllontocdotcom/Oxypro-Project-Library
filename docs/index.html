@@ -4,21 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Oxypro Project Library</title>
-<link rel="icon" href="favicon.ico?v=1.17.1" sizes="any">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=1.17.1">
+<link rel="icon" href="favicon.ico?v=1.18.0" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=1.18.0">
 <meta name="theme-color" content="#D81F27">
-<meta name="description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP and Method Statement Logs) and HSE Plans.">
+<meta name="description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP, Method Statement, WIR and MIR Logs) and HSE Plans.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Oxypro Project Library">
 <meta property="og:title" content="Oxypro Project Library">
-<meta property="og:description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP and Method Statement Logs) and HSE Plans.">
+<meta property="og:description" content="Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP, Method Statement, WIR and MIR Logs) and HSE Plans.">
 <meta property="og:url" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/">
-<meta property="og:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.17.1">
+<meta property="og:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.18.0">
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
 <meta property="og:image:alt" content="Oxypro Library logo">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.17.1">
+<meta name="twitter:image" content="https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/docs/icon-512.png?v=1.18.0">
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 </head>
 <body>
@@ -697,6 +697,28 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
   .ms-scroll{max-height:calc(100vh - 120px)}
 }
 
+/* ---------- WIR Log and MIR Log (the MSRA Log's styles, plus these) ---------- */
+#view-rlog .band-in{max-width:none}
+.rl-pair{display:flex;align-items:center;justify-content:space-around;gap:14px}
+.rl-pair span{flex:1 1 0;min-width:0;text-align:center}
+.rl-top .rl-big{font-size:19px}
+.rl-top .t-date.rl-dt{border-bottom:0}
+.rl-top .t-date.rl-db{border-top:0}
+.rl-log thead th{height:54px;white-space:normal}
+.rl-log .rl-desc{white-space:pre-wrap}
+.rl-tools .rl-pat .ms-in{width:270px}
+.rl-daybar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-bottom:10px;font-size:14px}
+.rl-daybar label{display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.rl-daybar .rl-day{width:auto;min-height:36px}
+.rl-pager{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-bottom:8px;font-size:13.5px}
+.rl-pager span{margin:0 6px;color:var(--fg-2);font-weight:600}
+.rl-note{margin:8px 0 0;max-width:900px}
+@media (min-width:1000px){
+  .rl-log .rf1,.rl-log .rf2,.rl-log .rf3{position:sticky;z-index:1;background:#FFFFFF}
+  .rl-log .rf1{left:0}.rl-log .rf2{left:45px}.rl-log .rf3{left:134px;box-shadow:2px 0 0 rgba(0,0,0,.12)}
+  .rl-log thead .rf1,.rl-log thead .rf2,.rl-log thead .rf3{z-index:4;background:#F8CBAD}
+}
+
 </style>
 
 <header class="top">
@@ -799,6 +821,17 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
   </div>
 </section>
 
+<section id="view-rlog" hidden aria-label="WIR Log">
+  <div class="band-in">
+    <div class="ms-bar">
+      <button type="button" class="btn btn-ghost" data-rl-act="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Library</button>
+      <div class="ms-title"><h2 id="rl-title">WIR Log</h2><span id="rl-proj"></span></div>
+      <div class="ms-actions" id="rl-actions"></div>
+    </div>
+    <div id="rl-body"></div>
+  </div>
+</section>
+
 <section id="view-pq" hidden aria-label="Pre-Qualification">
   <div class="band-in">
     <div class="ms-bar">
@@ -812,7 +845,7 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.17.1 (11 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.18.0 (21 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -946,8 +979,8 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.17.1';
-const APP_DATE = '11 Nov 2026';   // shown in the footer and in About
+const APP_VERSION = '1.18.0';
+const APP_DATE = '21 Nov 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
 const SNAP_DATE = String(window.__OPL_SNAPSHOT || '');
@@ -1092,7 +1125,7 @@ const S = {
   canWrite: null, assets: null, assetsKnown: false, downloads: null,
   view: 'library', pres: { sheets: [], cur: 0, dirty: new Set(), cover: null, summary: null }, coverDesign: 'A',
   extraCols: [], summaryCols: lsGet('summaryCols'),
-  delConfirm: null, pmConfirm: null, busy: null, fileTarget: null, imp: null, msMeta: new Map(), logos: new Map(), logoTarget: null, lgConfirm: null
+  delConfirm: null, pmConfirm: null, busy: null, fileTarget: null, imp: null, msMeta: new Map(), rlMeta: { wir: new Map(), mir: new Map() }, logos: new Map(), logoTarget: null, lgConfirm: null
 };
 let DB = null;
 const canWrite = () => S.canWrite !== false && !!DB;
@@ -1460,6 +1493,7 @@ function qaqcHTML(p) {
     <div class="menu" id="qaqc-menu" role="menu" aria-label="QA/QC" hidden>
       <button type="button" class="menu-item" role="menuitem" data-act="pqp"><span><b>PQP details and file</b><small>Project Quality Plan in PQP Maker, or a PQP file</small></span></button>
       ${msMenuItemHTML(p)}
+      ${rlMenuItemsHTML(p)}
       <button type="button" class="menu-item" role="menuitem" data-act="msragen"><span><b>Generate MSRA</b><small>Project file for the MSRA Generator: details and logos</small></span></button>
     </div></div>`;
 }
@@ -1556,6 +1590,8 @@ async function handleAct(act) {
     case 'qaqc': return toggleQaqc();
     case 'pqp': closeQaqc(); if (p) openPqp(p.no); return;
     case 'msra': closeQaqc(); if (p) openMsra(p.no); return;
+    case 'wirlog': closeQaqc(); if (p) openRlog('wir', p.no); return;
+    case 'mirlog': closeQaqc(); if (p) openRlog('mir', p.no); return;
     case 'msragen': closeQaqc(); if (p) openMsraGen(p.no); return;
     case 'pq': if (p) openPq(p.no); return;
     case 'lg-rm-yes': return removeLogo();
@@ -3589,6 +3625,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.18.0', '21 Nov 2026', 'QA/QC > WIR Log and MIR Log: the Work Inspection Request and Material Inspection Request logs of a project, made the way the MSRA Log is. Summary, the seven discipline logs and the Transmittal Sheet of a day on the page; reference numbers follow on by discipline. Save as Excel gives the Oxypro standard workbook itself with the log filled in: the same sheets, formats, formulas and lists, with the hidden guide sheets.'],
   ['1.17.1', '11 Nov 2026', 'MSRA Log: the client, consultant, main contractor and subcontractor logos sit in rows 3 to 5, each one inside its own box under its name; rows 6 and 7 under the logos are one blank area. Same in Excel, PDF and on the page.'],
   ['1.17.0', '11 Nov 2026', 'MSRA Log in the updated Oxypro format: the project in a black bar across the top, the client, consultant, main contractor and subcontractor (Oxypro) logo boxes beside the project block, the legends on the right, then the date and the log\'s title above the code counter; SN column and the new column widths. The logos come from the library. The summary shows the date under its title. Same in Excel, PDF and on the page.'],
   ['1.16.2', '6 Nov 2026', 'Company logos show whole in their boxes. Photos on the presentation pages zoom in and out: the Zoom slider under each photo, Ctrl + mouse wheel or a pinch on the photo, or the + and − keys. The zoom goes into the PDF, the PowerPoint and View / Present, and Save to the project keeps it.'],
@@ -3758,6 +3795,7 @@ if (!GH) window.__OPL_PQ_HOST = {
 function goHome() {
   if (SH.open) return;
   if (S.view === 'msra') { closeMsra(); if (S.view !== 'library') return; }   // asks first when the log has unsaved changes
+  else if (S.view === 'rlog') { closeRlog(); if (S.view !== 'library') return; }
   else if (S.view === 'pres') closePres();
   else if (S.view === 'pq') closePq();
   if (S.detailOpen) { S.detailOpen = false; renderDetail(); }
@@ -5033,6 +5071,551 @@ function bindMsra() {
   window.addEventListener('resize', () => { if (S.view === 'msra') msFitHead(); });
 }
 
+/* ---------- WIR Log and MIR Log (request logs): model ----------
+   The Oxypro standard workbooks "WIR Log - Standard.xlsx" and "MIR Log - Standard.xlsx" (user, 16 Nov 2026):
+   Summary, seven discipline logs (MEC, PLU, ELE, ELV, FF, LPG, MEP), the Transmittal Sheet and the hidden guide sheets.
+   A log row: reference no., revision, level, location, description, planned / submitted / return dates, status, final status, remark. */
+const RL_KIND = {
+  wir: { key: 'wir', short: 'WIR', name: 'WIR Log', item: 'WIR', items: 'WIRs', long: 'Work Inspection Request (WIR)', title: 'WORK INSPECTION REQUEST (WIR)',
+    loc: 'Location Reference\nArea/Zone/Room no.', desc: 'Description', file: 'WIR Log', pat: 'OXY-WIR-MEP-{DISC}-{NNNN}', descPh: 'Description of the work to inspect' },
+  mir: { key: 'mir', short: 'MIR', name: 'MIR Log', item: 'MIR', items: 'MIRs', long: 'Material Inspection Request (MIR)', title: 'MATERIAL INSPECTION REQUEST (MIR)',
+    loc: 'Delivery / Storage Location\nArea/Zone/Store', desc: 'Material Description', file: 'MIR Log', pat: 'OXY-MIR-MEP-{DISC}-{NNNN}', descPh: 'Material delivered' }
+};
+// the discipline sheets, in the workbook's order; head = the name printed in C9 of the sheet, sum = the row of the Summary
+const RL_DISC = [
+  { code: 'MEC', head: 'MECHANICAL (HVAC)', sum: 'HVAC' },
+  { code: 'PLU', head: 'PLUMBING & DRAINAGE', sum: 'PLUMBING' },
+  { code: 'ELE', head: 'ELECTRICAL', sum: 'ELECTRICAL' },
+  { code: 'ELV', head: 'ELV SYSTEMS', sum: 'ELV' },
+  { code: 'FF', head: 'FIRE FIGHTING', sum: 'FIRE FIGHTING' },
+  { code: 'LPG', head: 'LPG', sum: 'LPG' },
+  { code: 'MEP', head: 'MEP', sum: 'MEP' }
+];
+const RL_CODES = RL_DISC.map(d => d.code);
+const RL_BLOCK = [['client', 'CLIENT'], ['consultant', 'CONSULTANT'], ['mepConsultant', 'MEP CONSULTANT'], ['mainContractor', 'MAIN CONTRACTOR'], ['mepContractor', 'MEP CONTRACTOR']];
+const RL_PART = 400;          // rows kept in one stored part
+const RL_MAX = 7000;          // rows the standard's Transmittal Sheet reads from each log (rows 12 to 7011)
+const RL_TPL_ROWS = 50;       // rows the standard has ready in each log
+
+const rlBlankItem = (d, ref) => ({ id: msId(), d, ref: ref || '', rev: '0', lvl: '', loc: '', desc: '', plan: '', sub: '', ret: '', st: '', fin: '', rem: '' });
+function rlDefaultBlock(p) {
+  const b = msDefaultBlock(p || {}), get = re => { const r = b.find(x => re.test(x.label)); return r ? r.value : ''; };
+  return { title: b[0] ? b[0].value : msUp(p && p.name), client: get(/^CLIENT$/i), consultant: get(/^CONSULTANT$/i), mepConsultant: get(/^MEP CONSULTANT$/i),
+    mainContractor: get(/^(MAIN )?CONTRACTOR$/i), mepContractor: get(/^MEP CONTRACTOR$/i) || 'OXYPRO ELECTROMECHANICAL WORK LLC' };
+}
+function rlNewLog(kind, p) { return { kind, v: 1, rev: '00', pat: RL_KIND[kind].pat, block: rlDefaultBlock(p), items: [] }; }
+function rlClean(kind, x, p) {
+  const s = v => String(v == null ? '' : v), d0 = rlDefaultBlock(p), b = (x && x.block) || {};
+  const block = { title: s(b.title != null ? b.title : d0.title).slice(0, 400) };
+  for (const [k] of RL_BLOCK) block[k] = s(b[k] != null ? b[k] : d0[k]).slice(0, 400);
+  const items = (Array.isArray(x && x.items) ? x.items : []).filter(it => it && RL_CODES.includes(it.d)).map(it => ({
+    id: s(it.id) || msId(), d: it.d, ref: s(it.ref).slice(0, 120), rev: s(it.rev).slice(0, 10), lvl: s(it.lvl).slice(0, 60), loc: s(it.loc).slice(0, 200), desc: s(it.desc).slice(0, 600),
+    plan: msIso(it.plan), sub: msIso(it.sub), ret: msIso(it.ret), st: msStatus(it.st), fin: msStatus(it.fin), rem: s(it.rem).slice(0, 400) }));
+  return { kind, v: 1, rev: s((x && x.rev) || '00').slice(0, 10), pat: s((x && x.pat) || RL_KIND[kind].pat).slice(0, 80), block, items,
+    updatedAt: (x && x.updatedAt) || '', createdAt: (x && x.createdAt) || '' };
+}
+const rlItemsOf = (log, d) => log.items.filter(it => it.d === d);
+// as the workbook counts them: by Final Status (column M); the total is the sum of the six codes
+function rlCounts(items) {
+  const c = { A: 0, B: 0, C: 0, D: 0, E: 0, UR: 0, n: items.length, overdue: 0, soon: 0 }, t0 = msToday();
+  for (const it of items) {
+    if (c[it.fin] != null && it.fin !== 'n/a' && it.fin) c[it.fin]++;
+    const pd = msDay(it.plan); if (pd != null && !it.sub) { if (pd < t0) c.overdue++; else if (pd - t0 <= 7) c.soon++; }
+  }
+  c.sub = c.A + c.B + c.C + c.D + c.E + c.UR; c.re = c.C + c.D;
+  return c;
+}
+// the next reference number of a discipline, from the log's pattern ({DISC} the sheet code, {N...} the running number)
+function rlRefParts(pat, d) {
+  const m = String(pat || '').match(/^(.*?)\{(N+)\}(.*)$/i);
+  const fill = t => t.replace(/\{DISC\}/gi, d);
+  return m ? { pre: fill(m[1]), n: m[2].length, post: fill(m[3]) } : { pre: fill(String(pat || '')) + (pat ? '-' : ''), n: 4, post: '' };
+}
+function rlNextRef(log, d) {
+  const { pre, n, post } = rlRefParts(log.pat, d);
+  let max = 0;
+  for (const it of log.items) {
+    if (it.d !== d) continue;
+    const r = it.ref.trim();
+    if (r.length > pre.length + post.length && r.toUpperCase().startsWith(pre.toUpperCase()) && r.toUpperCase().endsWith(post.toUpperCase())) {
+      const mid = r.slice(pre.length, r.length - post.length); if (/^\d+$/.test(mid)) max = Math.max(max, +mid);
+    }
+  }
+  return pre + String(max + 1).padStart(n, '0') + post;
+}
+// rows of a day for the Transmittal Sheet: as the workbook, the requests whose Submitted Date is that day, sheet by sheet
+function rlOnDay(log, iso) { const out = []; if (!msIso(iso)) return out; for (const d of RL_CODES) for (const it of rlItemsOf(log, d)) if (it.sub === iso) out.push(it); return out; }
+
+/* ---------- WIR Log and MIR Log: the Excel file ----------
+   The file is the user's standard workbook itself, filled in: every sheet, style, formula, drop-down list, print setting and
+   hidden sheet (Instructions, the Transmittal Sheet's helper sheet, MS Master List) stays as in the standard. Filled in are the
+   project bar and block, the three party logos, and the rows of the seven discipline logs. */
+const RL_LIBS = { jszip: 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js' };
+const rlXml = s => String(s == null ? '' : s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F￾￿]/g, '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const rlInline = (ref, s, text) => text === '' || text == null ? `<c r="${ref}" s="${s}"/>` : `<c r="${ref}" s="${s}" t="inlineStr"><is><t xml:space="preserve">${rlXml(text)}</t></is></c>`;
+const rlSerial = iso => { const d = msDay(iso); return d == null ? null : d + 25569; };   // Excel's day number
+// the height of a log row: 30 points as in the standard, more when the description or the remark needs more lines
+function rlRowHeight(it) {
+  const lines = (t, per) => String(t || '').split('\n').reduce((a, l) => a + Math.max(1, Math.ceil(l.length / per)), 0);
+  const n = Math.max(lines(it.desc, 78), lines(it.rem, 36), lines(it.loc, 20), lines(it.ref, 21));
+  return n <= 2 ? 30 : n * 15;
+}
+// st: the standard's own cell formats of a log row, read from its row 12 (they differ between the WIR and the MIR workbook)
+function rlRowXml(r, sn, code, it, st) {
+  const c = [];
+  c.push(`<c r="A${r}" s="${st.A}"><v>${sn}</v></c>`, rlInline('B' + r, st.B, code));
+  const num = (col, v) => v == null ? `<c r="${col}${r}" s="${st[col]}"/>` : `<c r="${col}${r}" s="${st[col]}"><v>${v}</v></c>`;
+  const txt = (col, v) => rlInline(col + r, st[col], v);
+  if (it) {
+    c.push(txt('C', it.ref));
+    c.push(/^\d{1,6}$/.test(it.rev.trim()) ? num('D', +it.rev.trim()) : txt('D', it.rev.trim()));
+    c.push(txt('E', it.lvl), txt('F', it.loc), txt('G', it.desc));
+    c.push(num('H', rlSerial(it.plan)), num('I', rlSerial(it.sub)), num('J', rlSerial(it.ret)));
+  } else 'CDEFGHIJ'.split('').forEach(col => c.push(num(col, null)));
+  const rv = it ? msReview(it) : '', f = `IF(OR($I${r}="",$J${r}=""),"",$J${r}-$I${r})`;
+  c.push(rv === '' ? `<c r="K${r}" s="${st.K}" t="str"><f>${f}</f><v></v></c>` : `<c r="K${r}" s="${st.K}"><f>${f}</f><v>${rv}</v></c>`);
+  c.push(txt('L', it ? it.st : ''), txt('M', it ? it.fin : ''), txt('N', it ? it.rem : ''));
+  return `<row r="${r}" spans="1:14" ht="${it ? rlRowHeight(it) : 30}" customHeight="1">${c.join('')}</row>`;
+}
+// Excel's column width (characters) in pixels at 100 %, and the standard's widths of G to K and row height of rows 3 to 5
+const RL_PX = { G: msXPx(70.7109375), H: msXPx(15.7109375), row: 20.1 * 4 / 3 };
+// where a logo goes: centred in its box of rows 3 to 5 (Client the left half of G, Consultant the right half, Main Contractor H:I)
+function rlLogoAnchor(role, w, h) {
+  const box = role === 'client' ? { col: 6, x0: 0, bw: RL_PX.G / 2 } : role === 'consultant' ? { col: 6, x0: RL_PX.G / 2, bw: RL_PX.G / 2 } : { col: 7, x0: 0, bw: RL_PX.H * 2 };
+  const bh = RL_PX.row * 3, pad = 8, k = Math.min(1, (box.bw - 2 * pad) / w, (bh - 2 * pad) / h), W = w * k, H = h * k;
+  let x = box.x0 + (box.bw - W) / 2, y = (bh - H) / 2, col = box.col, row = 2;
+  if (col === 7 && x >= RL_PX.H) { x -= RL_PX.H; col = 8; }
+  while (row < 4 && y >= RL_PX.row) { y -= RL_PX.row; row++; }
+  const e = v => Math.round(v * 9525);
+  return { from: `<xdr:from><xdr:col>${col}</xdr:col><xdr:colOff>${e(x)}</xdr:colOff><xdr:row>${row}</xdr:row><xdr:rowOff>${e(y)}</xdr:rowOff></xdr:from>`, cx: e(W), cy: e(H) };
+}
+const RL_IMG_ROLE = { 'image2.png': 'contractor', 'image3.png': 'client', 'image4.png': 'consultant' };   // image1.png is Oxypro's own logo
+/* model: { kind, title, block: {client, consultant, mepConsultant, mainContractor, mepContractor}, sheets: {MEC: [items], ...},
+            logos: {client, consultant, contractor: {b64, w, h} | null} } -> the workbook as a Uint8Array */
+async function rlFillTemplate(JSZip, tplB64, model) {
+  const zip = await JSZip.loadAsync(tplB64, { base64: true });
+  const read = n => zip.file(n).async('string'), once = (t, a, b, what) => { const i = t.indexOf(a); if (i < 0 || t.indexOf(a, i + a.length) >= 0) throw new Error('The standard file is not as expected (' + what + ').'); return t.slice(0, i) + b + t.slice(i + a.length); };
+  // the project: one shared text for the bar of every sheet, one for the Summary
+  let ss = await read('xl/sharedStrings.xml');
+  ss = once(ss, '<si><t>PROJECT NAME HERE</t></si>', `<si><t xml:space="preserve">${rlXml(model.title)}</t></si>`, 'project name');
+  ss = once(ss, '<si><t xml:space="preserve">PROJECT : </t></si>', `<si><t xml:space="preserve">PROJECT : ${rlXml(model.title)}</t></si>`, 'summary project');
+  zip.file('xl/sharedStrings.xml', ss);
+  let wbx = await read('xl/workbook.xml');
+  // Excel works every formula out again when it opens the file; the values written here are for viewers that do not
+  const setV = (t, ref, v) => t.replace(new RegExp(`(<c r="${ref}"[^>]*>(?:<f[^>]*>[^<]*</f>|<f[^>]*/>))<v>[^<]*</v>`), `$1<v>${v}</v>`);
+  const today = msToday() + 25569, sum = [];
+  const vals = RL_BLOCK.map(([k]) => ': ' + (model.block[k] || ''));
+  for (let i = 0; i < 8; i++) {                      // sheet2..sheet8 the logs, sheet9 the Transmittal Sheet
+    const name = `xl/worksheets/sheet${i + 2}.xml`; let t = await read(name);
+    const cut = t.indexOf('<row r="9"'); if (cut < 0) throw new Error('The standard file is not as expected (sheet head).');
+    let head = t.slice(0, cut);
+    vals.forEach((v, j) => { const r = j + 2; head = head.replace(new RegExp(`<c r="C${r}" s="(\\d+)" t="s"><v>\\d+</v></c>`), (m, s) => rlInline('C' + r, s, v)); });
+    t = head + t.slice(cut);
+    if (i < 7) {
+      const code = RL_CODES[i], items = model.sheets[code] || [], n = Math.max(RL_TPL_ROWS, items.length), last = 11 + n;
+      const a = t.indexOf('<row r="12"'), b = t.indexOf('</sheetData>'); if (a < 0 || b < a) throw new Error('The standard file is not as expected (log rows).');
+      const st = {}; t.slice(a, t.indexOf('</row>', a)).replace(/<c r="([A-N])12" s="(\d+)"/g, (m, col, sid) => { st[col] = sid; return m; });
+      if (Object.keys(st).length !== 14) throw new Error('The standard file is not as expected (log row formats).');
+      const rows = []; for (let k = 0; k < n; k++) rows.push(rlRowXml(12 + k, k + 1, code, items[k] || null, st));
+      t = t.slice(0, a) + rows.join('') + t.slice(b);
+      t = t.replace(/<dimension ref="A1:R\d+"\/>/, `<dimension ref="A1:R${last}"/>`);
+      // the lists and colours of the standard reach at least to the last row
+      t = t.replace(/sqref="(H12:H|L12:M)(\d+)"/g, (m, p, e) => `sqref="${p}${Math.max(+e, last)}"`);
+      const cn = rlCounts(items), row = [cn.A, cn.B, cn.C, cn.D, cn.E, cn.UR, cn.sub]; sum.push(row);
+      'HIJKLMN'.split('').forEach((col, k) => { t = setV(t, col + '10', row[k]); });
+      const used = 11 + items.length;
+      wbx = wbx.replace(new RegExp(`(<definedName name="_xlnm\\.Print_Area" localSheetId="${i + 1}">${code}!\\$A\\$1:\\$N\\$)(\\d+)`), (m, p, e) => p + Math.max(+e, used));
+    }
+    t = setV(t, 'B10', today);
+    zip.file(name, t);
+  }
+  {                                                  // the Summary: one row per log, then the totals
+    let t = setV(await read('xl/worksheets/sheet1.xml'), 'B3', today);
+    const tot = [0, 0, 0, 0, 0, 0, 0, 0];
+    sum.forEach((r, i) => { const v = [r[6], r[0], r[1], r[2], r[3], r[4], r[5], r[2] + r[3]]; 'CDEFGHIJ'.split('').forEach((col, k) => { t = setV(t, col + (6 + i), v[k]); tot[k] += v[k]; }); });
+    'CDEFGHIJ'.split('').forEach((col, k) => { t = setV(t, col + '13', tot[k]); });
+    zip.file('xl/worksheets/sheet1.xml', t);
+  }
+  zip.file('xl/workbook.xml', wbx);
+  // the party logos: the standard's three pictures replaced by the project's (left out when the library has none)
+  const L = model.logos || {};
+  for (const [img, role] of Object.entries(RL_IMG_ROLE)) if (L[role]) zip.file('xl/media/' + img, L[role].b64, { base64: true });
+  for (let i = 2; i <= 9; i++) {
+    const rels = await read(`xl/drawings/_rels/drawing${i}.xml.rels`), map = {};
+    rels.replace(/<Relationship [^>]*>/g, m => { const id = (m.match(/Id="([^"]+)"/) || [])[1], tg = (m.match(/Target="[^"]*\/([^"/]+)"/) || [])[1]; if (id && tg) map[id] = tg; return m; });
+    let d = await read(`xl/drawings/drawing${i}.xml`);
+    d = d.replace(/<xdr:oneCellAnchor>[\s\S]*?<\/xdr:oneCellAnchor>/g, an => {
+      const role = RL_IMG_ROLE[map[(an.match(/r:embed="([^"]+)"/) || [])[1]]]; if (!role) return an;
+      const lg = L[role]; if (!lg) return '';
+      const p = rlLogoAnchor(role, lg.w, lg.h);
+      return an.replace(/<xdr:from>[\s\S]*?<\/xdr:from><xdr:ext cx="\d+" cy="\d+"\/>/, `${p.from}<xdr:ext cx="${p.cx}" cy="${p.cy}"/>`).replace(/<a:xfrm>[\s\S]*?<\/a:xfrm>/, `<a:xfrm><a:off x="0" y="0"/><a:ext cx="${p.cx}" cy="${p.cy}"/></a:xfrm>`);
+    });
+    zip.file(`xl/drawings/drawing${i}.xml`, d);
+  }
+  return zip.generateAsync({ type: 'uint8array', compression: 'DEFLATE', compressionOptions: { level: 6 }, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+}
+
+/* ---------- WIR Log and MIR Log pages (QA/QC menu), made the way the MSRA Log is ---------- */
+const RLV = { kind: 'wir', no: null, log: null, dirty: false, tab: 'SUM', mode: 'view', state: 'idle', err: '', remote: null, unsub: null, rm: null, busy: '', day: '', parts: 0, savingAt: '', pg: 0 };
+const rlK = () => RL_KIND[RLV.kind];
+const rlProj = () => S.projects.get(RLV.no) || { no: RLV.no, name: '' };
+const rlName = () => { const p = rlProj(); return `${p.no} ${p.name || ''}`.trim(); };
+const rlFileBase = () => { const p = rlProj(); return safeName([p.code || p.no, p.name || 'Untitled project', rlK().file, 'Rev ' + ((RLV.log && RLV.log.rev) || '00')].join(' - ')); };
+const rlCol = s => RLV.kind + s;   // wirlogs, wirlogparts, wirlogmeta and the same for mir
+
+function rlMenuItemsHTML(p) {
+  return ['wir', 'mir'].map(k => {
+    const K = RL_KIND[k], has = S.rlMeta && S.rlMeta[k] && S.rlMeta[k].has(p.no);
+    return `<button type="button" class="menu-item" role="menuitem" data-act="${k}log"><span><b>${has ? 'Open' : 'Create'} ${K.name}</b><small>${has ? 'This project\'s' : 'Standard'} ${esc(K.long)} log${has ? '' : ' for this project'}</small></span></button>`;
+  }).join('');
+}
+function rlSetDirty() { if (!RLV.dirty) { RLV.dirty = true; rlRenderActions(); } }
+function rlCloseSub() { if (RLV.unsub) { try { RLV.unsub(); } catch (e) { /* gone */ } RLV.unsub = null; } }
+
+// a saved log: the head in <kind>logs/<project no.>, the rows in parts <kind>logparts/<project no.>_<n>
+async function rlFetch(x, no) {
+  const n = Math.max(0, Math.min(200, +x.parts || 0)), items = [];
+  for (let tries = 0; ; tries++) {
+    items.length = 0; let ok = true;
+    for (let i = 0; i < n; i++) {
+      const s = await DB.collection(rlCol('logparts')).doc(no + '_' + i).get(), d = s.exists ? s.data() : null;
+      if (!d || d.at !== x.updatedAt) { ok = false; break; }
+      items.push(...(d.items || []));
+    }
+    if (ok || tries >= 3) break;
+    await new Promise(r => setTimeout(r, 700));     // another editor is in the middle of saving
+  }
+  return { ...x, items };
+}
+function openRlog(kind, no) {
+  const p = S.projects.get(no); if (!p || !RL_KIND[kind]) return;
+  rlCloseSub();
+  Object.assign(RLV, { kind, no, log: null, dirty: false, tab: 'SUM', mode: 'view', state: 'loading', err: '', remote: null, rm: null, busy: '', day: msFromDay(msToday()), parts: 0, savingAt: '', pg: 0 });
+  S.view = 'rlog'; S.detailOpen = false;
+  $('#view-library').hidden = true; $('#view-rlog').hidden = false; renderSelbar(); renderDetail();
+  window.scrollTo(0, 0);
+  renderRl();
+  if (!DB) { RLV.state = 'new'; renderRl(); return; }
+  let first = true;
+  const mine = () => RLV.no === no && RLV.kind === kind && S.view === 'rlog';
+  RLV.unsub = DB.collection(rlCol('logs')).doc(no).onSnapshot(async snap => {
+    if (!mine()) return;
+    const x = snap.exists ? snap.data() : null;
+    if (first) {
+      first = false;
+      if (!x) { RLV.state = 'new'; return renderRl(); }
+      try { const full = await rlFetch(x, no); if (!mine()) return; rlLoad(full); } catch (e) { if (!mine()) return; RLV.state = 'error'; RLV.err = (e && e.code) || ''; }
+      return renderRl();
+    }
+    if (!x) { if (RLV.state === 'ready' && !RLV.dirty) { RLV.state = 'new'; RLV.log = null; renderRl(); toast(`This ${rlK().name} was deleted by another editor.`); } return; }
+    if (x.updatedAt && ((RLV.log && x.updatedAt === RLV.log.updatedAt) || x.updatedAt === RLV.savingAt)) return;    // our own save
+    let full; try { full = await rlFetch(x, no); } catch (e) { return; }
+    if (!mine()) return;
+    if (!RLV.log || !RLV.dirty) { rlLoad(full); renderRl(); toast(`The ${rlK().name} was updated by another editor.`); }
+    else { RLV.remote = full; rlRenderBody(); }
+  }, err => { if (!mine()) return; RLV.state = 'error'; RLV.err = (err && err.code) || ''; renderRl(); });
+}
+function rlLoad(x) { RLV.log = rlClean(RLV.kind, x, rlProj()); RLV.parts = +x.parts || 0; RLV.dirty = false; RLV.remote = null; RLV.state = 'ready'; }
+function closeRlog(force) {
+  if (!force && RLV.dirty) return rlAskLeave();
+  rlCloseSub(); RLV.no = null; RLV.log = null; RLV.dirty = false;
+  S.view = 'library'; $('#view-rlog').hidden = true; $('#view-library').hidden = false;
+  renderAll(); window.scrollTo(0, 0);
+}
+function rlAskLeave() {
+  const w = msCanSave(), n = rlK().name;
+  openModal(`<div class="dialog dialog-sm">
+    <div class="dialog-head"><h2>Unsaved changes</h2></div>
+    <div class="dialog-body"><p style="margin:0">${w ? `Save the changes to this ${n} in ${MS_WHERE} before going back to the library?` : `Your changes to this ${n} are not saved in the library (only editors can save). Download it with Save as Excel first if you need it.`}</p></div>
+    <div class="dialog-foot"><button type="button" class="btn" data-close>Stay here</button><button type="button" class="btn${w ? '' : ' btn-primary'}" id="rl-leave-discard">Discard changes</button>${w ? '<button type="button" class="btn btn-primary" id="rl-leave-save">Save and go back</button>' : ''}</div>
+  </div>`);
+  $('#rl-leave-discard').addEventListener('click', () => { closeModal(); closeRlog(true); });
+  if (w) $('#rl-leave-save').addEventListener('click', async () => { closeModal(); if (await rlSave()) closeRlog(true); });
+}
+
+/* ---------- rendering ---------- */
+function renderRl() {
+  const p = rlProj();
+  $('#rl-title').textContent = rlK().name;
+  $('#view-rlog').setAttribute('aria-label', rlK().name);
+  $('#rl-proj').textContent = `${p.no}${p.name ? ' · ' + p.name : ''}`;
+  rlRenderActions(); rlRenderBody();
+}
+function rlRenderActions() {
+  const el = $('#rl-actions'); if (!el) return;
+  if (RLV.state !== 'ready') { el.innerHTML = ''; return; }
+  const w = msCanSave(), e = RLV.mode === 'edit';
+  el.innerHTML = `<div class="seg" role="group" aria-label="Mode"><button type="button" aria-pressed="${!e}" data-rl-act="mode-view">View</button><button type="button" aria-pressed="${e}" data-rl-act="mode-edit">Edit</button></div>
+    <button type="button" class="btn" data-rl-act="save-xlsx" title="The standard ${rlK().name} workbook with this log filled in: Summary, the seven discipline logs, the Transmittal Sheet and the hidden guide sheets">Save as Excel</button>
+    ${w ? `<button type="button" class="btn${RLV.dirty ? ' btn-primary' : ''}" data-rl-act="save"${RLV.dirty && !RLV.busy ? '' : ' disabled'}>${RLV.busy === 'save' ? 'Saving…' : RLV.dirty ? (GH ? 'Save in browser' : 'Save to library') : 'Saved'}</button>` : ''}`;
+}
+function rlRenderBody() {
+  const el = $('#rl-body'); if (!el) return;
+  const same = RLV.shown === RLV.kind + RLV.tab + RLV.mode, keep = same && el.querySelector('.ms-scroll'), sx = keep ? keep.scrollLeft : 0, sy = keep ? keep.scrollTop : 0;
+  RLV.shown = RLV.kind + RLV.tab + RLV.mode;
+  const K = rlK();
+  if (RLV.state === 'loading') { el.innerHTML = `<div class="ms-empty"><p>Loading the ${K.name}…</p></div>`; return; }
+  if (RLV.state === 'error') { el.innerHTML = `<div class="ms-empty"><h3>The ${K.name} could not be loaded</h3><p>${esc(RLV.err === 'revoked' ? 'Your access to the library changed. Reload the page.' : 'Check your connection and open it again.')}</p></div>`; return; }
+  if (RLV.state === 'new') { el.innerHTML = rlStartHTML(); return; }
+  const log = RLV.log;
+  const tabs = [['SUM', 'Summary', log.items.length]].concat(RL_DISC.map(d => [d.code, d.code, rlItemsOf(log, d.code).length])).concat([['TRN', 'Transmittal', '']]);
+  el.innerHTML = `${rlNoticeHTML()}
+    <div class="ms-tabs" role="tablist" aria-label="Log sheets">${tabs.map(([k, l, c]) => `<button type="button" role="tab" aria-selected="${RLV.tab === k}" data-rl-tab="${k}" title="${esc(k === 'SUM' ? 'Summary' : k === 'TRN' ? 'Transmittal Sheet: the ' + K.items + ' submitted on a day' : (RL_DISC.find(d => d.code === k) || {}).head)}">${esc(l)}${c !== '' ? `<span class="n">${c}</span>` : ''}</button>`).join('')}</div>
+    <div class="ms-panel ${RLV.mode === 'edit' ? 'editing' : ''}" role="tabpanel">${RLV.tab === 'SUM' ? rlSummaryHTML() : RLV.tab === 'TRN' ? rlTransHTML() : rlSheetHTML(RLV.tab)}</div>`;
+  const sc = el.querySelector('.ms-scroll'); if (sc && keep) { sc.scrollLeft = sx; sc.scrollTop = sy; }
+  el.querySelectorAll('textarea.ms-c').forEach(msGrow);
+}
+function rlNoticeHTML() {
+  if (RLV.remote) return `<div class="ms-notice"><span>Another editor saved this log${RLV.remote.updatedAt ? ' at ' + esc(new Date(RLV.remote.updatedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })) : ''}. Saving now replaces their version with yours.</span><button type="button" class="btn btn-sm" data-rl-act="load-remote">Load their version</button></div>`;
+  if (!msCanSave() && RLV.dirty) return `<div class="ms-notice"><span>Only the library's editors can save. Use Save as Excel to keep your changes in a file.</span></div>`;
+  return '';
+}
+function rlStartHTML() {
+  const K = rlK(), w = msCanSave();
+  return `<div class="ms-start">
+    <h3>Create the ${esc(K.name)} for ${esc(rlName())}</h3>
+    <p class="hint">The log follows the Oxypro standard ${esc(K.name)} workbook: Summary, seven discipline logs (HVAC, Plumbing, Electrical, ELV, Fire Fighting, LPG and MEP), the Transmittal Sheet and the hidden guide sheets. The project bar and block are filled from the library and you can edit them. Save as Excel gives the standard workbook with this log filled in.</p>
+    <div class="ms-start-cards">
+      <button type="button" class="ms-start-card" data-rl-act="start" data-rec="1"><span class="ms-sc-t">Start the ${esc(K.name)}<span class="tag tag-rec">Standard</span></span><span class="ms-sc-d">Starts empty. Add each ${esc(K.item)} to its discipline log as it is raised; the reference numbers follow ${esc(K.pat.replace('{DISC}', 'MEC').replace(/\{N+\}/i, '0001'))} and can be changed.</span></button>
+    </div>
+    ${GH ? '<p class="hint">GitHub edition: the log is saved in this browser on this device. Use Save as Excel to keep or share it.</p>' : w ? '' : '<p class="hint">Only the library\'s editors can save the log to the library. You can still make it and download it with Save as Excel.</p>'}
+  </div>`;
+}
+
+/* the sheet, on the workbook's own columns A to N */
+const RL_PAGE = 50;
+const RL_W = [45, 89, 150, 80, 80, 150, 500, 115, 115, 115, 115, 115, 115, 245];
+const rlColsHTML = extra => `<colgroup>${RL_W.concat(extra || []).map(w => `<col style="width:${w}px">`).join('')}</colgroup>`;
+function rlHeadHTML(disc, title2, c, dateCell) {
+  const log = RLV.log, e = RLV.mode === 'edit', p = rlProj(), names = msLogoNames(p);
+  const proj = e ? `<input class="ms-in ms-in-proj" data-rl-bl="title" value="${esc(log.block.title)}" aria-label="Project" maxlength="400">` : esc(log.block.title);
+  const legend = i => { const [k, t] = MS_LEGEND[i]; return `<td class="t-code st-${msCls(k)}">${k}</td><td colspan="2" class="t-desc">${t}</td>`; };
+  const block = i => {
+    const [k, label] = RL_BLOCK[i];
+    return `<td colspan="2" class="t-lab">${label}</td><td colspan="4" class="t-val">${e ? `<span class="t-ed">:<input class="ms-in" data-rl-bl="${k}" value="${esc(log.block[k])}" aria-label="${label}" maxlength="400"></span>` : ': ' + esc(log.block[k])}</td>`;
+  };
+  const logo = k => { const lg = names[k] && logoOf(names[k]); return lg ? `<img src="${esc(logoUrl(lg.id))}" alt="${esc(names[k])} logo">` : ''; };
+  const rows = [
+    `<tr><td colspan="11" class="t-proj">${proj}</td><td colspan="3" class="t-legh">LEGENDS</td></tr>`,
+    `<tr>${block(0)}<td class="t-ll l">Client | Consultant</td><td colspan="2" class="t-ll">Main Contractor</td><td colspan="2" class="t-ll r">Subcontractor</td>${legend(0)}</tr>`,
+    `<tr>${block(1)}<td rowspan="3" class="t-logo l"><div class="rl-pair"><span>${logo('client')}</span><span>${logo('consultant')}</span></div></td><td colspan="2" rowspan="3" class="t-logo">${logo('contractor')}</td><td colspan="2" rowspan="3" class="t-logo r"><img src="${MS_LOGO}" alt="Oxypro Electromechanical Works LLC"></td>${legend(1)}</tr>`,
+    `<tr>${block(2)}${legend(2)}</tr>`, `<tr>${block(3)}${legend(3)}</tr>`,
+    `<tr>${block(4)}<td colspan="5" rowspan="2" class="t-title rl-big">${esc(title2)}</td>${legend(4)}</tr>`,
+    `<tr><td colspan="2" class="t-lab"></td><td colspan="4" class="t-val"></td>${legend(5)}</tr>`,
+    '<tr class="t-gap"><td colspan="14"></td></tr>',
+    `<tr><td class="t-date l rl-dt"></td><td class="t-date r rl-dt"></td><td colspan="4" rowspan="2" class="t-title">${esc(disc)}</td><td rowspan="2" class="t-title">${esc(title2)}</td>${MS_COUNTED.map(k => `<td class="t-sh st-${msCls(k)}">${k}</td>`).join('')}<th class="t-sh">TOTAL</th></tr>`,
+    `<tr><td class="t-date l rl-db">Date:</td><td class="t-date r rl-db">${dateCell}</td>${MS_COUNTED.map(k => `<td class="t-sh" data-cnt="${k}">${c[k]}</td>`).join('')}<td class="t-sh" data-cnt="sub">${c.sub}</td></tr>`
+  ];
+  return `<table class="ms-top rl-top" style="width:${RL_W.reduce((a, b) => a + b, 0)}px">${rlColsHTML()}<tbody>${rows.join('')}</tbody></table>`;
+}
+const rlHeadCells = () => { const K = rlK(); return ['SN', 'Discipline', 'Reference No.', 'Rev.', 'Level', K.loc, K.desc, 'Planned Submission Date', 'Submitted Date', 'Return Date', 'Review Period\n(in days)', 'Status', 'Final Status', 'Remark']; };
+const rlTheadHTML = e => `<thead><tr>${rlHeadCells().map((l, i) => `<th${i < 3 ? ` class="rf${i + 1}"` : ''}>${esc(l).replace(/\n/g, '<br>')}</th>`).join('')}${e ? '<th class="ms-tools-h">Edit</th>' : ''}</tr></thead>`;
+function rlRowHTML(it, no, idx, list, ro) {
+  const e = RLV.mode === 'edit' && !ro, rv = msReview(it), K = rlK();
+  if (!e) {
+    return `<tr data-id="${it.id}"><td class="c rf1">${no}</td><td class="c rf2">${it.d}</td><td class="c rf3">${esc(it.ref)}</td><td class="c">${esc(it.rev)}</td><td class="c">${esc(it.lvl)}</td><td class="c">${esc(it.loc)}</td><td class="rl-desc">${esc(it.desc)}</td>
+      <td class="c${msDateCls(it)}">${msFmt(it.plan)}</td><td class="c">${msFmt(it.sub)}</td><td class="c">${msFmt(it.ret)}</td><td class="c">${rv}</td>
+      <td class="c st-${msCls(it.st) || 'none'}">${esc(it.st)}</td><td class="c st-${msCls(it.fin) || 'none'}">${esc(it.fin)}</td><td>${esc(it.rem)}</td></tr>`;
+  }
+  const rm = RLV.rm === it.id;
+  return `<tr data-id="${it.id}"><td class="c rf1">${no}</td><td class="c rf2">${it.d}</td>
+    <td class="rf3"><input class="ms-c c" data-k="ref" value="${esc(it.ref)}" aria-label="Reference no." maxlength="120"></td>
+    <td><input class="ms-c c" data-k="rev" value="${esc(it.rev)}" aria-label="Revision" maxlength="10"></td>
+    <td><input class="ms-c c" data-k="lvl" value="${esc(it.lvl)}" aria-label="Level" maxlength="60"></td>
+    <td><textarea class="ms-c c" data-k="loc" rows="1" aria-label="${esc(K.loc.split('\n')[0])}" maxlength="200">${esc(it.loc)}</textarea></td>
+    <td><textarea class="ms-c" data-k="desc" rows="1" aria-label="${esc(K.desc)}" maxlength="600" placeholder="${esc(K.descPh)}">${esc(it.desc)}</textarea></td>
+    <td class="${msDateCls(it).trim()}"><input type="date" class="ms-c${it.plan ? '' : ' is-empty'}" data-k="plan" value="${it.plan}" aria-label="Planned submission date"></td>
+    <td><input type="date" class="ms-c${it.sub ? '' : ' is-empty'}" data-k="sub" value="${it.sub}" aria-label="Submitted date"></td>
+    <td><input type="date" class="ms-c${it.ret ? '' : ' is-empty'}" data-k="ret" value="${it.ret}" aria-label="Return date"></td>
+    <td class="c" data-rv>${rv}</td>
+    <td class="c">${msSelect('st', it)}</td><td class="c">${msSelect('fin', it)}</td>
+    <td><textarea class="ms-c" data-k="rem" rows="1" aria-label="Remark" maxlength="400">${esc(it.rem)}</textarea></td>
+    <td class="ms-tools">${rm
+      ? `<span class="ms-rmq">Remove?</span><button type="button" class="btn btn-sm btn-danger-solid" data-rl-act="rm-yes">Remove</button><button type="button" class="btn btn-sm" data-rl-act="rm-no">Keep</button>`
+      : `<button type="button" class="ms-ib" data-rl-act="up" title="Move up" aria-label="Move up"${idx === 0 ? ' disabled' : ''}>${MS_ICON.up}</button><button type="button" class="ms-ib" data-rl-act="down" title="Move down" aria-label="Move down"${idx === list.length - 1 ? ' disabled' : ''}>${MS_ICON.down}</button><button type="button" class="ms-ib" data-rl-act="dup" title="Add a copy below (next reference number)" aria-label="Add a copy below">+</button><button type="button" class="ms-ib ms-rm" data-rl-act="rm" title="Remove this ${K.item}" aria-label="Remove">${MS_ICON.x}</button>`}</td></tr>`;
+}
+function rlSheetHTML(code) {
+  const log = RLV.log, e = RLV.mode === 'edit', list = rlItemsOf(log, code), c = rlCounts(list), K = rlK(), d = RL_DISC.find(x => x.code === code);
+  const full = list.length >= RL_MAX;
+  // a long log is shown 50 rows at a time (the standard sheet has 50 rows ready)
+  const pages = Math.max(1, Math.ceil(list.length / RL_PAGE)); RLV.pg = Math.max(0, Math.min(pages - 1, RLV.pg));
+  const from = RLV.pg * RL_PAGE, shown = list.slice(from, from + RL_PAGE);
+  const pager = pages > 1 ? `<div class="rl-pager" role="group" aria-label="Rows"><button type="button" class="btn btn-sm" data-rl-act="pg" data-pg="0"${RLV.pg ? '' : ' disabled'}>First</button><button type="button" class="btn btn-sm" data-rl-act="pg" data-pg="${RLV.pg - 1}"${RLV.pg ? '' : ' disabled'}>Previous</button><span>Rows ${from + 1} to ${from + shown.length} of ${list.length}</span><button type="button" class="btn btn-sm" data-rl-act="pg" data-pg="${RLV.pg + 1}"${RLV.pg < pages - 1 ? '' : ' disabled'}>Next</button><button type="button" class="btn btn-sm" data-rl-act="pg" data-pg="${pages - 1}"${RLV.pg < pages - 1 ? '' : ' disabled'}>Last</button></div>` : '';
+  return `${pager}<div class="ms-scroll"><div class="ms-paper">
+    ${rlHeadHTML(d.head, K.title + ' LOG', c, esc(msFmtLong(msFromDay(msToday()))))}
+    ${e ? `<div class="ms-bl-add rl-tools"><label class="ms-rev rl-pat">Reference numbering <input class="ms-in" data-rl-pat value="${esc(log.pat)}" maxlength="80" aria-label="Reference numbering" title="{DISC} is the discipline code of the sheet and {NNNN} the running number"></label><label class="ms-rev">Log revision <input class="ms-in" data-rl-rev value="${esc(log.rev)}" maxlength="10" aria-label="Log revision"></label><button type="button" class="btn btn-ghost btn-sm" data-rl-act="bl-reset" title="Fill the project bar and the block again from the library's project details">Refill from the library</button></div>` : ''}
+    <table class="ms-log rl-log" data-code="${code}">${rlColsHTML(e ? [132] : null)}${rlTheadHTML(e)}
+      <tbody>${shown.map((it, i) => rlRowHTML(it, from + i + 1, from + i, list)).join('')}
+      ${!list.length && !e ? `<tr class="ms-none"><td colspan="14">No ${K.items} in this log yet. Switch to Edit to add them.</td></tr>` : ''}
+      ${e ? `<tr class="ms-addrow"><td colspan="14"><button type="button" class="btn btn-ghost btn-sm" data-rl-act="add"${full ? ' disabled' : ''}>+ Add ${K.item}</button>${full ? ` <span class="hint">The standard workbook reads up to ${RL_MAX} rows in a log.</span>` : ''}</td><td class="ms-tools"></td></tr>` : ''}</tbody>
+    </table></div></div>`;
+}
+function rlSummaryHTML() {
+  const log = RLV.log, w = msCanSave(), K = rlK();
+  const rows = RL_DISC.map(d => ({ code: d.code, label: `${K.short} - ${d.sum}`, c: rlCounts(rlItemsOf(log, d.code)) })), tot = rlCounts(log.items);
+  const cell = v => `<td class="c">${v}</td>`;
+  const vals = c => [c.sub, c.A, c.B, c.C, c.D, c.E, c.UR, c.re];
+  const noFin = log.items.filter(it => !it.fin || it.fin === 'n/a').length;
+  return `<div class="ms-scroll ms-scroll-sum"><div class="ms-paper ms-paper-sum">
+    <div class="ms-sum-head"><div><div class="ms-h-title">PROJECT : ${esc(log.block.title)}</div><div class="ms-h-sub">${esc(K.title)} SUMMARY</div><div class="ms-date"><b>DATE:</b> ${esc(msFmtSlash(msFromDay(msToday())))}</div></div><div class="ms-sum-logo"><img src="${MS_LOGO}" alt="Oxypro"></div></div>
+    <table class="ms-sum"><thead><tr><th>SN</th><th>${esc(K.long)}</th><th>Total Submitted</th>${['A', 'B', 'C', 'D', 'E'].map(k => `<th class="st-${k}">${k}' Status</th>`).join('')}<th class="st-UR">Under Review</th><th>To Be Re-submitted<br>(C+D)</th><th>Remarks</th></tr></thead>
+    <tbody>${rows.map((r, i) => `<tr><td class="c">${i + 1}</td><td><button type="button" class="ms-link" data-rl-tab="${r.code}">${esc(r.label)}</button></td>${vals(r.c).map(cell).join('')}<td></td></tr>`).join('')}
+    <tr class="ms-sum-tot"><td colspan="2" class="c">TOTAL</td>${vals(tot).map((v, i) => `<td class="c${i >= 1 && i <= 6 ? ' st-' + ['A', 'B', 'C', 'D', 'E', 'UR'][i - 1] : ''}">${v}</td>`).join('')}<td></td></tr></tbody></table>
+  </div></div>
+  <div class="ms-facts">
+    <p>${log.items.length} ${log.items.length === 1 ? K.item : K.items} in the log. ${tot.sub} with a final status, ${tot.A + tot.B} approved (A or B).${noFin ? ` ${noFin} without a final status (not counted in the summary, as in the workbook).` : ''}${tot.overdue ? ` <b class="ms-red">${tot.overdue} overdue</b> (planned date passed, not submitted).` : ''}${tot.soon ? ` ${tot.soon} due within 7 days.` : ''}</p>
+    <p class="hint">${log.updatedAt ? `Saved in ${MS_WHERE} ${esc(new Date(log.updatedAt).toLocaleString([], { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' }))}.` : `Not saved in ${MS_WHERE} yet.`}</p>
+    ${w && log.updatedAt ? (RLV.rm === 'LOG' ? `<div class="confirm"><span>Delete the ${K.name} of ${esc(rlName())} from ${MS_WHERE}? This cannot be undone. Download it first with Save as Excel if you may need it.</span><div class="btns"><button type="button" class="btn btn-sm btn-danger-solid" data-rl-act="del-yes">Delete log</button><button type="button" class="btn btn-sm" data-rl-act="rm-no">Cancel</button></div></div>` : '<div><button type="button" class="btn btn-sm btn-ghost btn-danger" data-rl-act="del">Delete this log</button></div>') : ''}
+  </div>`;
+}
+// the Transmittal Sheet: the requests submitted on the chosen day, from every discipline log (the workbook lists the day typed in its cell B10)
+function rlTransHTML() {
+  const log = RLV.log, K = rlK(), list = rlOnDay(log, RLV.day), c = rlCounts(list);
+  return `<div class="rl-daybar"><label>Transmittal date <input type="date" class="inp rl-day" data-rl-day value="${esc(RLV.day)}"></label><span class="hint">${list.length} ${list.length === 1 ? K.item : K.items} submitted on this day</span></div>
+    <div class="ms-scroll"><div class="ms-paper">
+    ${rlHeadHTML(K.title, 'TRANSMITTAL SHEET', c, esc(msFmtLong(RLV.day)))}
+    <table class="ms-log rl-log">${rlColsHTML()}${rlTheadHTML(false)}
+      <tbody>${list.map((it, i) => rlRowHTML(it, i + 1, i, list, true)).join('') || `<tr class="ms-none"><td colspan="14">No ${K.items} with ${RLV.day ? 'a Submitted Date of ' + esc(msFmtLong(RLV.day)) : 'that date'}. Choose another date above.</td></tr>`}</tbody>
+    </table></div></div>
+    <p class="hint rl-note">The Transmittal Sheet lists the ${K.items} whose Submitted Date is the chosen day. In the Excel file the same sheet shows the day typed in its cell B10 (today when the file opens).</p>`;
+}
+
+/* ---------- edits ---------- */
+const rlFind = id => RLV.log.items.find(it => it.id === id);
+function rlRefreshCounts() {
+  if (!RL_CODES.includes(RLV.tab)) return;
+  const c = rlCounts(rlItemsOf(RLV.log, RLV.tab));
+  document.querySelectorAll('#rl-body [data-cnt]').forEach(td => { td.textContent = c[td.dataset.cnt]; });
+}
+function rlOnInput(e) {
+  const t = e.target, log = RLV.log; if (!log) return;
+  if (t.hasAttribute('data-rl-day')) { RLV.day = msIso(t.value); if (RLV.day || !t.value) rlRenderBody(); return; }
+  if (t.matches('textarea.ms-c')) msGrow(t);
+  if (t.type === 'date') t.classList.toggle('is-empty', !t.value);
+  if (t.dataset.rlBl) { log.block[t.dataset.rlBl] = t.value; rlSetDirty(); return; }
+  if (t.hasAttribute('data-rl-rev')) { log.rev = t.value.trim().slice(0, 10); rlSetDirty(); return; }
+  if (t.hasAttribute('data-rl-pat')) { log.pat = t.value.trim().slice(0, 80); rlSetDirty(); return; }
+  const k = t.dataset.k, tr = t.closest('tr[data-id]'); if (!k || !tr) return;
+  const it = rlFind(tr.dataset.id); if (!it) return;
+  if (k === 'st' || k === 'fin') { it[k] = msStatus(t.value); t.className = `ms-c ms-stsel st-${msCls(it[k]) || 'none'}`; rlRefreshCounts(); }
+  else if (k === 'plan' || k === 'sub' || k === 'ret') {
+    it[k] = msIso(t.value);
+    const rv = tr.querySelector('[data-rv]'); if (rv) rv.textContent = msReview(it);
+    const pc = tr.querySelector('[data-k="plan"]'); if (pc) pc.parentElement.className = msDateCls(it).trim();
+  } else it[k] = t.value;
+  rlSetDirty();
+}
+function rlAddItem(code, after) {
+  const log = RLV.log, it = rlBlankItem(code, rlNextRef(log, code));
+  if (after) { Object.assign(it, { lvl: after.lvl, loc: after.loc, desc: after.desc, plan: after.plan }); log.items.splice(log.items.indexOf(after) + 1, 0, it); }
+  else { const i = log.items.map(o => o.d === code).lastIndexOf(true); if (i >= 0) log.items.splice(i + 1, 0, it); else log.items.push(it); }
+  rlSetDirty(); return it;
+}
+function rlMove(id, dir) {
+  const log = RLV.log, it = rlFind(id); if (!it) return;
+  const same = log.items.map((o, i) => [o, i]).filter(([o]) => o.d === it.d);
+  const p = same.findIndex(([o]) => o === it), q = p + dir; if (q < 0 || q >= same.length) return;
+  const a = same[p][1], b = same[q][1]; [log.items[a], log.items[b]] = [log.items[b], log.items[a]];
+  RLV.pg = Math.floor(q / RL_PAGE); rlSetDirty(); rlRenderBody();
+  const btn = document.querySelector(`#rl-body tr[data-id="${id}"] [data-rl-act="${dir < 0 ? 'up' : 'down'}"]`); if (btn && !btn.disabled) btn.focus();
+}
+async function rlOnClick(e) {
+  const tab = e.target.closest('[data-rl-tab]'); if (tab) { const was = tab.getAttribute('role') === 'tab'; RLV.tab = tab.dataset.rlTab; RLV.rm = null; RLV.pg = 0; rlRenderBody(); const sel = document.querySelector('#rl-body [role="tab"][aria-selected="true"]'); if (sel && was) sel.focus(); return; }
+  const b = e.target.closest('[data-rl-act]'); if (!b || b.disabled) return;
+  const act = b.dataset.rlAct, tr = b.closest('tr'), log = RLV.log, K = rlK();
+  const focusRow = (it, sel) => { RLV.pg = Math.floor(rlItemsOf(log, it.d).indexOf(it) / RL_PAGE); rlRenderBody(); const x = document.querySelector(`#rl-body tr[data-id="${it.id}"] ${sel}`); if (x) { x.focus(); x.scrollIntoView({ block: 'nearest' }); } };
+  switch (act) {
+    case 'back': return closeRlog();
+    case 'start': return rlStart();
+    case 'mode-view': RLV.mode = 'view'; RLV.rm = null; rlRenderActions(); return rlRenderBody();
+    case 'mode-edit': RLV.mode = 'edit'; if (RLV.tab === 'SUM') RLV.tab = 'MEC'; rlRenderActions(); return rlRenderBody();
+    case 'pg': RLV.pg = +b.dataset.pg || 0; RLV.rm = null; rlRenderBody(); { const sc = document.querySelector('#rl-body .ms-scroll'); if (sc) sc.scrollTop = 0; } return;
+    case 'save': return rlSave();
+    case 'save-xlsx': return rlRun(b, 'Preparing the Excel file…', rlSaveXlsx);
+    case 'load-remote': if (RLV.remote) { rlLoad(RLV.remote); renderRl(); } return;
+    case 'bl-reset': log.block = rlDefaultBlock(rlProj()); rlSetDirty(); rlRenderBody(); toast('Project bar and block filled from the library'); return;
+    case 'add': return focusRow(rlAddItem(RLV.tab), '[data-k="lvl"]');
+    case 'dup': { const src = rlFind(tr.dataset.id); if (src && rlItemsOf(log, src.d).length < RL_MAX) focusRow(rlAddItem(src.d, src), '[data-k="lvl"]'); return; }
+    case 'up': case 'down': return rlMove(tr.dataset.id, act === 'up' ? -1 : 1);
+    case 'rm': RLV.rm = tr.dataset.id; rlRenderBody(); { const y = document.querySelector('#rl-body [data-rl-act="rm-yes"]'); if (y) y.focus(); } return;
+    case 'rm-no': RLV.rm = null; return rlRenderBody();
+    case 'rm-yes': { const i = log.items.findIndex(it => it.id === RLV.rm); if (i >= 0) { const t = log.items[i].ref; log.items.splice(i, 1); rlSetDirty(); toast(`Removed: ${t || K.item}`); } RLV.rm = null; return rlRenderBody(); }
+    case 'del': RLV.rm = 'LOG'; return rlRenderBody();
+    case 'del-yes': return rlDelete();
+  }
+}
+async function rlRun(btn, label, fn) {
+  if (RLV.busy) return; RLV.busy = 'file'; btn.disabled = true; toast(label, 60000);
+  try { await fn(); } catch (err) { toast('The file could not be made: ' + ((err && err.message) || err), 7000); }
+  finally { RLV.busy = ''; rlRenderActions(); }
+}
+
+/* ---------- start, save, delete ---------- */
+function rlStart() {
+  RLV.log = rlNewLog(RLV.kind, rlProj());
+  RLV.parts = 0; RLV.dirty = true; RLV.state = 'ready'; RLV.tab = 'MEC'; RLV.mode = 'edit';
+  renderRl();
+  toast(`${rlK().name} started. Add the ${rlK().items}, then ${GH ? 'Save in browser' : 'Save to library'}.`, 5000);
+}
+async function rlSave() {
+  if (!msCanSave() || !RLV.log || RLV.busy) return false;
+  const log = RLV.log, no = RLV.no, now = new Date().toISOString(), K = rlK();
+  // rows in parts small enough for one stored document each
+  const parts = []; let cur = [], size = 0;
+  for (const it of log.items) { const s = JSON.stringify(it).length * 1.1 + 2; if (cur.length && (cur.length >= RL_PART || size + s > 170000)) { parts.push(cur); cur = []; size = 0; } cur.push(it); size += s; }
+  if (cur.length) parts.push(cur);
+  if (parts.length > 200) { toast('The log is too large to save in the library.', 7000); return false; }
+  RLV.busy = 'save'; RLV.savingAt = now; rlRenderActions();
+  try {
+    const P = DB.collection(rlCol('logparts'));
+    for (let i = 0; i < parts.length; i++) await P.doc(no + '_' + i).set(JSON.parse(JSON.stringify({ no, i, at: now, items: parts[i] })));
+    await DB.collection(rlCol('logs')).doc(no).set(JSON.parse(JSON.stringify({ no, kind: RLV.kind, v: 1, rev: log.rev, pat: log.pat, block: log.block, parts: parts.length, n: log.items.length, updatedAt: now, createdAt: log.createdAt || now })));
+    for (let i = parts.length; i < RLV.parts; i++) { try { await P.doc(no + '_' + i).delete(); } catch (e) { /* an unused part left behind */ } }
+    log.updatedAt = now; log.createdAt = log.createdAt || now; RLV.parts = parts.length;
+    await DB.collection(rlCol('logmeta')).doc(no).set({ no, n: log.items.length, updatedAt: now });
+    RLV.dirty = false; RLV.remote = null;
+    toast(`${K.name} saved in ${MS_WHERE}`);
+    return true;
+  } catch (e) { toast(writeError(e), 6000); return false; }
+  finally { RLV.busy = ''; rlRenderActions(); if (RLV.tab === 'SUM') rlRenderBody(); else { const n = $('#rl-body .ms-notice'); if (n && !RLV.remote) n.remove(); } }
+}
+async function rlDelete() {
+  if (!msCanSave()) return;
+  const no = RLV.no, K = rlK();
+  try {
+    await DB.collection(rlCol('logs')).doc(no).delete();
+    await DB.collection(rlCol('logmeta')).doc(no).delete();
+    for (let i = 0; i < RLV.parts; i++) { try { await DB.collection(rlCol('logparts')).doc(no + '_' + i).delete(); } catch (e) { /* left behind */ } }
+    toast(`The ${K.name} of ${rlName()} was deleted from ${MS_WHERE}`);
+    RLV.dirty = false; closeRlog(true);
+  } catch (e) { toast(writeError(e), 6000); }
+}
+/* the Excel file: the standard workbook (kept beside the page as rlog-wir.js / rlog-mir.js) with this log filled in */
+async function rlSaveXlsx() {
+  const kind = RLV.kind, log = RLV.log, p = rlProj();
+  await Promise.all([loadScript(RL_LIBS.jszip), loadScript(`rlog-${kind}.js`)]);
+  const tpl = window.__RLOG_TPL && window.__RLOG_TPL[kind]; if (!tpl || !window.JSZip) throw new Error('the standard workbook could not be loaded');
+  const lg = await msLogos(p), logos = {};
+  for (const k of ['client', 'consultant', 'contractor']) logos[k] = lg[k] ? { b64: lg[k].data.split(',')[1], w: lg[k].w, h: lg[k].h } : null;
+  const sheets = {}; for (const d of RL_CODES) sheets[d] = rlItemsOf(log, d);
+  const u8 = await rlFillTemplate(window.JSZip, tpl, { kind, title: log.block.title, block: log.block, sheets, logos });
+  await saveFile(rlFileBase() + '.xlsx', new Blob([u8], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+}
+
+function bindRlog() {
+  const v = $('#view-rlog');
+  v.addEventListener('click', rlOnClick);
+  v.addEventListener('input', rlOnInput);
+  v.addEventListener('keydown', e => {
+    const tab = e.target.closest('[role="tab"]');
+    if (tab && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+      const all = [...document.querySelectorAll('#rl-body [role="tab"]')], i = all.indexOf(tab), n = all[(i + (e.key === 'ArrowRight' ? 1 : -1) + all.length) % all.length];
+      e.preventDefault(); n.click(); const s = document.querySelector(`#rl-body [data-rl-tab="${n.dataset.rlTab}"]`); if (s) s.focus();
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's' && S.view === 'rlog') { e.preventDefault(); if (RLV.dirty && msCanSave()) rlSave(); }
+  });
+}
+
 
 /* ---------- boot ---------- */
 async function boot() {
@@ -5043,7 +5626,7 @@ async function boot() {
     e.firstElementChild.innerHTML = `<span><b>GitHub edition</b> · projects and photos as of ${esc(SNAP_DATE)} · read-only; MSRA Logs are saved in this browser</span><a href="${CLAUDE_URL}" target="_blank" rel="noopener">Open the live library in Claude</a>`;
     $('#version').textContent += ' · GitHub edition';
   }
-  bindLibrary(); bindPres(); bindShow(); bindGlobal(); bindView(); bindMsra(); renderAll();
+  bindLibrary(); bindPres(); bindShow(); bindGlobal(); bindView(); bindMsra(); bindRlog(); renderAll();
   const C = window.claude;
   if (!C || typeof C.use !== 'function') { S.dbState = 'unavailable'; renderAll(); return; }
   C.use('downloads').then(d => { S.downloads = d; }).catch(() => {});
@@ -5071,6 +5654,10 @@ async function boot() {
   DB.collection('mslogmeta').onSnapshot(snap => {
     const m = new Map(); snap.docs.forEach(d => { if (d.exists) m.set(d.id, d.data()); });
     S.msMeta = m; if (S.view === 'library') renderDetail();
+  }, () => {});
+  for (const k of ['wir', 'mir']) DB.collection(k + 'logmeta').onSnapshot(snap => {
+    const m = new Map(); snap.docs.forEach(d => { if (d.exists) m.set(d.id, d.data()); });
+    S.rlMeta[k] = m; if (S.view === 'library') renderDetail();
   }, () => {});
   DB.doc('settings/columns').onSnapshot(snap => {
     const d = snap.exists ? snap.data() : null;

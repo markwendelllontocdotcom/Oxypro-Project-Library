@@ -17,6 +17,15 @@ for k,v in {'__MSRA_STD__':ma['std'],'__MSRA_LOGO__':ma['logo']}.items():
 for k,v in {'/*__MSRA_JS__*/':msjs,'/*__MSRA_CSS__*/':open(os.path.join(here,'src','msra','msra.css')).read()}.items():
     assert s.count(k)==1, k
     s=s.replace(k,v)
+# WIR Log and MIR Log (src/rlog): the page code, and the standard workbooks as scripts beside the page (loaded when a file is made)
+rljs='\n'.join(open(os.path.join(here,'src','rlog',f)).read() for f in ['core.js','xlsx.js','ui.js'])
+for k,v in {'/*__RLOG_JS__*/':rljs,'/*__RLOG_CSS__*/':open(os.path.join(here,'src','rlog','rlog.css')).read()}.items():
+    assert s.count(k)==1, k
+    s=s.replace(k,v)
+import base64
+RLOG={}
+for k in ['wir','mir']:
+    RLOG['rlog-%s.js'%k]='window.__RLOG_TPL=window.__RLOG_TPL||{};window.__RLOG_TPL.%s="%s";\n'%(k,base64.b64encode(open(os.path.join(here,'build','rlog',k+'.xlsx'),'rb').read()).decode())
 # the MSRA Generator's standard list and default settings (Generate MSRA), from its repository data
 std=open(os.path.join(here,'build','msra-gen-std.json')).read().replace('</','<\\/')
 assert s.count('__MSRA_GEN_STD__')==1, '__MSRA_GEN_STD__'
@@ -25,6 +34,8 @@ os.makedirs(os.path.join(here,'dist'),exist_ok=True)
 out=os.path.join(here,'dist','Oxypro Project Library.html')
 open(out,'w').write(s)
 print(out, round(len(s)/1024),'KB')
+for f,t in RLOG.items():
+    open(os.path.join(here,'dist',f),'w').write(t); print('dist/'+f, round(len(t)/1024),'KB')
 # the PQ Generator page (Claude edition only): build/pq-generator.html is the PQ Generator build (1.0.5 or later)
 pq=os.path.join(here,'build','pq-generator.html')
 if os.path.exists(pq):
@@ -58,7 +69,7 @@ if os.path.exists(snap_path):
     import re
     ver=re.search(r"APP_VERSION = '([^']+)'",s).group(1)
     GH_SITE='https://markwendelllontocdotcom.github.io/Oxypro-Project-Library/'
-    DESC='Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP and Method Statement Logs) and HSE Plans.'
+    DESC='Oxypro Electromechanical project library: project details and photos, presentation sheets, QA/QC (PQP, Method Statement, WIR and MIR Logs) and HSE Plans.'
     def meta_head(icons, url):
         return (f'<link rel="icon" href="{icons}favicon.ico?v={ver}" sizes="any">\n<link rel="apple-touch-icon" href="{icons}apple-touch-icon.png?v={ver}">\n'
                 f'<meta name="theme-color" content="#D81F27">\n<meta name="description" content="{DESC}">\n'
@@ -75,6 +86,7 @@ if os.path.exists(snap_path):
     site=os.path.join(here,'docs'); os.makedirs(os.path.join(site,'photos'),exist_ok=True)   # GitHub Pages serves main /docs
     open(os.path.join(site,'index.html'),'w').write(page)
     open(os.path.join(site,'.nojekyll'),'w').write('')
+    for f,t in RLOG.items(): open(os.path.join(site,f),'w').write(t)
     # the start page at the repository root (GitHub Pages publishes main /): sends visitors to docs/ with the hash
     open(os.path.join(here,'index.html'),'w').write('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n'
         '<title>Oxypro Project Library</title>\n'+meta_head('docs/', GH_SITE)+

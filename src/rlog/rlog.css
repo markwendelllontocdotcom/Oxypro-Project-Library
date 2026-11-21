@@ -1,0 +1,21 @@
+/* ---------- WIR Log and MIR Log (the MSRA Log's styles, plus these) ---------- */
+#view-rlog .band-in{max-width:none}
+.rl-pair{display:flex;align-items:center;justify-content:space-around;gap:14px}
+.rl-pair span{flex:1 1 0;min-width:0;text-align:center}
+.rl-top .rl-big{font-size:19px}
+.rl-top .t-date.rl-dt{border-bottom:0}
+.rl-top .t-date.rl-db{border-top:0}
+.rl-log thead th{height:54px;white-space:normal}
+.rl-log .rl-desc{white-space:pre-wrap}
+.rl-tools .rl-pat .ms-in{width:270px}
+.rl-daybar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-bottom:10px;font-size:14px}
+.rl-daybar label{display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.rl-daybar .rl-day{width:auto;min-height:36px}
+.rl-pager{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-bottom:8px;font-size:13.5px}
+.rl-pager span{margin:0 6px;color:var(--fg-2);font-weight:600}
+.rl-note{margin:8px 0 0;max-width:900px}
+@media (min-width:1000px){
+  .rl-log .rf1,.rl-log .rf2,.rl-log .rf3{position:sticky;z-index:1;background:#FFFFFF}
+  .rl-log .rf1{left:0}.rl-log .rf2{left:45px}.rl-log .rf3{left:134px;box-shadow:2px 0 0 rgba(0,0,0,.12)}
+  .rl-log thead .rf1,.rl-log thead .rf2,.rl-log thead .rf3{z-index:4;background:#F8CBAD}
+}
