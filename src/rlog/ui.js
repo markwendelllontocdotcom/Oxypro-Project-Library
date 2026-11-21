@@ -151,7 +151,7 @@ function rlHeadHTML(disc, title2, c, dateCell) {
   ];
   return `<table class="ms-top rl-top" style="width:${RL_W.reduce((a, b) => a + b, 0)}px">${rlColsHTML()}<tbody>${rows.join('')}</tbody></table>`;
 }
-const rlHeadCells = () => { const K = rlK(); return ['SN', 'Discipline', 'Reference No.', 'Rev.', 'Level', K.loc, K.desc, 'Planned Submission Date', 'Submitted Date', 'Return Date', 'Review Period\n(in days)', 'Status', 'Final Status', 'Remark']; };
+const rlHeadCells = () => { const K = rlK(); return ['SN', 'Discipline', 'Reference No.', 'Rev. No.', 'Level', K.loc, K.desc, 'Planned Submission Date', 'Submitted Date', 'Return Date', 'Review Period\n(in days)', 'Status', 'Final Status', 'Remark']; };
 const rlTheadHTML = e => `<thead><tr>${rlHeadCells().map((l, i) => `<th${i < 3 ? ` class="rf${i + 1}"` : ''}>${esc(l).replace(/\n/g, '<br>')}</th>`).join('')}${e ? '<th class="ms-tools-h">Edit</th>' : ''}</tr></thead>`;
 function rlRowHTML(it, no, idx, list, ro) {
   const e = RLV.mode === 'edit' && !ro, rv = msReview(it), K = rlK();
