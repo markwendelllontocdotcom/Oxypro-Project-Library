@@ -149,7 +149,7 @@ function rlNcHeadHTML(disc, title2, c, dateCell) {
   const logo = k => { const lg = names[k] && logoOf(names[k]); return lg ? `<img src="${esc(logoUrl(lg.id))}" alt="${esc(names[k])} logo">` : ''; };
   const rows = [
     `<tr><td colspan="14" class="t-proj">${proj}</td></tr>`,
-    `<tr>${block(0)}<td class="t-ll l">Client | Consultant</td><td colspan="3" class="t-ll">Main Contractor</td><td colspan="3" class="t-ll r">Subcontractor</td><td colspan="3" class="t-legh">LEGENDS</td></tr>`,
+    `<tr>${block(0)}<td class="t-ll l"><div class="rl-pair rl-pair-lab"><span>Client</span><span>Consultant</span></div></td><td colspan="3" class="t-ll">Main Contractor</td><td colspan="3" class="t-ll r">Subcontractor</td><td colspan="3" class="t-legh">LEGENDS</td></tr>`,
     `<tr>${block(1)}<td rowspan="3" class="t-logo l"><div class="rl-pair"><span>${logo('client')}</span><span>${logo('consultant')}</span></div></td><td colspan="3" rowspan="3" class="t-logo">${logo('contractor')}</td><td colspan="3" rowspan="3" class="t-logo r"><img src="${MS_LOGO}" alt="Oxypro Electromechanical Works LLC"></td>${legend(0)}</tr>`,
     `<tr>${block(2)}${legend(1)}</tr>`, `<tr>${block(3)}${legend(2)}</tr>`,
     `<tr>${block(4)}<td colspan="7" class="t-title rl-big">${esc(title2)}</td>${legend(3)}</tr>`,

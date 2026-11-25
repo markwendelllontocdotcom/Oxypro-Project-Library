@@ -18,8 +18,8 @@ const RL_LAY = {
   wir: { n: 14, last: 'N', ref: 'C', rev: 'D', lvl: 'E', loc: 'F', desc: 'G', plan: 'H', sub: 'I', ret: 'J', rv: 'K', st: 'L', fin: 'M', rem: 'N', logo: 6, hdr: 11, logs: 7, rows: 50, cw: 2 },
   mir: { n: 12, last: 'L', ref: 'C', rev: 'D', lvl: '', loc: '', desc: 'E', plan: 'F', sub: 'G', ret: 'H', rv: 'I', st: 'J', fin: 'K', rem: 'L', logo: 4, hdr: 11, logs: 7, rows: 50, cw: 2 },
   // NCR and SOR: headings in row 10, eight logs, the Main Contractor box three columns wide; the standard has 50 (NCR) and 300 (SOR) rows ready
-  ncr: { n: 14, last: 'N', nc: true, logo: 4, hdr: 10, logs: 8, rows: 50, cw: 3 },
-  sor: { n: 14, last: 'N', nc: true, logo: 4, hdr: 10, logs: 8, rows: 300, cw: 3 }
+  ncr: { n: 14, last: 'N', nc: true, logo: 4, hdr: 10, logs: 8, rows: 50, cw: 3, gap: 60 },
+  sor: { n: 14, last: 'N', nc: true, logo: 4, hdr: 10, logs: 8, rows: 300, cw: 3, gap: 60 }
 };
 const rlLetters = n => 'ABCDEFGHIJKLMN'.slice(0, n).split('');
 // st: the standard's own cell formats of a log row, read from its row 12 (they differ between the WIR and the MIR workbook)
@@ -64,10 +64,13 @@ const RL_PX = { G: msXPx(70.7109375), H: msXPx(15.7109375), row: 20.1 * 4 / 3 };
 // where a logo goes: centred in its box of rows 3 to 5 (Client the left half of the description column, Consultant the right half,
 // Main Contractor the cw columns after it: two, or three in the NCR and SOR workbooks); c0 = that column's number counted from 0
 // (G in the WIR workbook, E in the others)
-function rlLogoAnchor(role, w, h, c0, cw) {
+// gap (NCR and SOR, user's sample of 25 Nov 2026): the Client and the Consultant logo keep that many pixels clear between them
+// and 10 from the edges of the column, so the two never run into each other
+function rlLogoAnchor(role, w, h, c0, cw, gap) {
   cw = cw || 2;
-  const box = role === 'client' ? { col: c0, x0: 0, bw: RL_PX.G / 2 } : role === 'consultant' ? { col: c0, x0: RL_PX.G / 2, bw: RL_PX.G / 2 } : { col: c0 + 1, x0: 0, bw: RL_PX.H * cw };
-  const bh = RL_PX.row * 3, pad = 8, k = Math.min(1, (box.bw - 2 * pad) / w, (bh - 2 * pad) / h), W = w * k, H = h * k;
+  const half = RL_PX.G / 2, sw = gap ? (RL_PX.G - gap - 20) / 2 : 0;
+  const box = role === 'client' ? (gap ? { col: c0, x0: 10, bw: sw, px: 0 } : { col: c0, x0: 0, bw: half }) : role === 'consultant' ? (gap ? { col: c0, x0: 10 + sw + gap, bw: sw, px: 0 } : { col: c0, x0: half, bw: half }) : { col: c0 + 1, x0: 0, bw: RL_PX.H * cw };
+  const bh = RL_PX.row * 3, pad = 8, px = box.px == null ? pad : box.px, k = Math.min(1, (box.bw - 2 * px) / w, (bh - 2 * pad) / h), W = w * k, H = h * k;
   let x = box.x0 + (box.bw - W) / 2, y = (bh - H) / 2, col = box.col, row = 2;
   if (col === c0 + 1) while (col < c0 + cw && x >= RL_PX.H) { x -= RL_PX.H; col++; }
   while (row < 4 && y >= RL_PX.row) { y -= RL_PX.row; row++; }
@@ -142,7 +145,7 @@ async function rlFillTemplate(JSZip, tplB64, model) {
     d = d.replace(/<xdr:oneCellAnchor>[\s\S]*?<\/xdr:oneCellAnchor>/g, an => {
       const role = RL_IMG_ROLE[map[(an.match(/r:embed="([^"]+)"/) || [])[1]]]; if (!role) return an;
       const lg = L[role]; if (!lg) return '';
-      const p = rlLogoAnchor(role, lg.w, lg.h, Y.logo, Y.cw);
+      const p = rlLogoAnchor(role, lg.w, lg.h, Y.logo, Y.cw, Y.gap);
       return an.replace(/<xdr:from>[\s\S]*?<\/xdr:from><xdr:ext cx="\d+" cy="\d+"\/>/, `${p.from}<xdr:ext cx="${p.cx}" cy="${p.cy}"/>`).replace(/<a:xfrm>[\s\S]*?<\/a:xfrm>/, `<a:xfrm><a:off x="0" y="0"/><a:ext cx="${p.cx}" cy="${p.cy}"/></a:xfrm>`);
     });
     zip.file(`xl/drawings/drawing${i}.xml`, d);

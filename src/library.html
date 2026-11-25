@@ -637,7 +637,7 @@ a.btn[aria-disabled]{opacity:.6;cursor:progress}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.20.0 (25 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.20.1 (25 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -701,7 +701,7 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.20.0';
+const APP_VERSION = '1.20.1';
 const APP_DATE = '25 Nov 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
@@ -3349,6 +3349,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.20.1', '25 Nov 2026', 'NCR Log and SOR Log: the Client and the Consultant logo have a clear space between them, on the page and in the Excel file.'],
   ['1.20.0', '25 Nov 2026', 'New under QA/QC: NCR Log and SOR Log for every project, made from the standard workbooks (Summary, eight discipline logs with HSE, Transmittal Sheet, hidden guide sheets). Save as Excel gives the standard workbook filled in.'],
   ['1.19.1', '25 Nov 2026', 'WIR Log and MIR Log: the Return Date column is headed Returned Date on the page and in the Excel file.'],
   ['1.19.0', '21 Nov 2026', 'Oxypro colour theme in the View menu, beside Light, Dark and Auto: the charcoal and red of the Oxypro logo.'],

@@ -719,6 +719,9 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 .rl-ncsum thead th.st-OPEN{background:#FF0000}.rl-ncsum thead th.st-CLOSED{background:#92D050}.rl-ncsum thead th.st-RESUBMIT{background:#C00000;color:#FFFFFF}.rl-ncsum thead th.st-UR{background:#FFFF00}
 .rl-ncsum .ms-sum-tot td.st-OPEN{background:#FF0000}.rl-ncsum .ms-sum-tot td.st-CLOSED{background:#92D050}.rl-ncsum .ms-sum-tot td.st-RESUBMIT{background:#C00000;color:#FFFFFF}
 .rl-sumnote{margin:8px 0 0;font-size:11.5px;font-style:italic;color:#000000}
+/* NCR and SOR: the Client and the Consultant logo with a clear space between them (user's sample, 25 Nov 2026) */
+.rl-nc .rl-pair{gap:60px;padding:0 10px;justify-content:space-between}
+.rl-nc .rl-pair-lab{padding:0 10px}
 
 </style>
 
@@ -847,7 +850,7 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.20.0 (25 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.20.1 (25 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -911,7 +914,7 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.20.0';
+const APP_VERSION = '1.20.1';
 const APP_DATE = '25 Nov 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
@@ -3559,6 +3562,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.20.1', '25 Nov 2026', 'NCR Log and SOR Log: the Client and the Consultant logo have a clear space between them, on the page and in the Excel file.'],
   ['1.20.0', '25 Nov 2026', 'New under QA/QC: NCR Log and SOR Log for every project, made from the standard workbooks (Summary, eight discipline logs with HSE, Transmittal Sheet, hidden guide sheets). Save as Excel gives the standard workbook filled in.'],
   ['1.19.1', '25 Nov 2026', 'WIR Log and MIR Log: the Return Date column is headed Returned Date on the page and in the Excel file.'],
   ['1.19.0', '21 Nov 2026', 'Oxypro colour theme in the View menu, beside Light, Dark and Auto: the charcoal and red of the Oxypro logo.'],
@@ -5149,8 +5153,8 @@ const RL_LAY = {
   wir: { n: 14, last: 'N', ref: 'C', rev: 'D', lvl: 'E', loc: 'F', desc: 'G', plan: 'H', sub: 'I', ret: 'J', rv: 'K', st: 'L', fin: 'M', rem: 'N', logo: 6, hdr: 11, logs: 7, rows: 50, cw: 2 },
   mir: { n: 12, last: 'L', ref: 'C', rev: 'D', lvl: '', loc: '', desc: 'E', plan: 'F', sub: 'G', ret: 'H', rv: 'I', st: 'J', fin: 'K', rem: 'L', logo: 4, hdr: 11, logs: 7, rows: 50, cw: 2 },
   // NCR and SOR: headings in row 10, eight logs, the Main Contractor box three columns wide; the standard has 50 (NCR) and 300 (SOR) rows ready
-  ncr: { n: 14, last: 'N', nc: true, logo: 4, hdr: 10, logs: 8, rows: 50, cw: 3 },
-  sor: { n: 14, last: 'N', nc: true, logo: 4, hdr: 10, logs: 8, rows: 300, cw: 3 }
+  ncr: { n: 14, last: 'N', nc: true, logo: 4, hdr: 10, logs: 8, rows: 50, cw: 3, gap: 60 },
+  sor: { n: 14, last: 'N', nc: true, logo: 4, hdr: 10, logs: 8, rows: 300, cw: 3, gap: 60 }
 };
 const rlLetters = n => 'ABCDEFGHIJKLMN'.slice(0, n).split('');
 // st: the standard's own cell formats of a log row, read from its row 12 (they differ between the WIR and the MIR workbook)
@@ -5195,10 +5199,13 @@ const RL_PX = { G: msXPx(70.7109375), H: msXPx(15.7109375), row: 20.1 * 4 / 3 };
 // where a logo goes: centred in its box of rows 3 to 5 (Client the left half of the description column, Consultant the right half,
 // Main Contractor the cw columns after it: two, or three in the NCR and SOR workbooks); c0 = that column's number counted from 0
 // (G in the WIR workbook, E in the others)
-function rlLogoAnchor(role, w, h, c0, cw) {
+// gap (NCR and SOR, user's sample of 25 Nov 2026): the Client and the Consultant logo keep that many pixels clear between them
+// and 10 from the edges of the column, so the two never run into each other
+function rlLogoAnchor(role, w, h, c0, cw, gap) {
   cw = cw || 2;
-  const box = role === 'client' ? { col: c0, x0: 0, bw: RL_PX.G / 2 } : role === 'consultant' ? { col: c0, x0: RL_PX.G / 2, bw: RL_PX.G / 2 } : { col: c0 + 1, x0: 0, bw: RL_PX.H * cw };
-  const bh = RL_PX.row * 3, pad = 8, k = Math.min(1, (box.bw - 2 * pad) / w, (bh - 2 * pad) / h), W = w * k, H = h * k;
+  const half = RL_PX.G / 2, sw = gap ? (RL_PX.G - gap - 20) / 2 : 0;
+  const box = role === 'client' ? (gap ? { col: c0, x0: 10, bw: sw, px: 0 } : { col: c0, x0: 0, bw: half }) : role === 'consultant' ? (gap ? { col: c0, x0: 10 + sw + gap, bw: sw, px: 0 } : { col: c0, x0: half, bw: half }) : { col: c0 + 1, x0: 0, bw: RL_PX.H * cw };
+  const bh = RL_PX.row * 3, pad = 8, px = box.px == null ? pad : box.px, k = Math.min(1, (box.bw - 2 * px) / w, (bh - 2 * pad) / h), W = w * k, H = h * k;
   let x = box.x0 + (box.bw - W) / 2, y = (bh - H) / 2, col = box.col, row = 2;
   if (col === c0 + 1) while (col < c0 + cw && x >= RL_PX.H) { x -= RL_PX.H; col++; }
   while (row < 4 && y >= RL_PX.row) { y -= RL_PX.row; row++; }
@@ -5273,7 +5280,7 @@ async function rlFillTemplate(JSZip, tplB64, model) {
     d = d.replace(/<xdr:oneCellAnchor>[\s\S]*?<\/xdr:oneCellAnchor>/g, an => {
       const role = RL_IMG_ROLE[map[(an.match(/r:embed="([^"]+)"/) || [])[1]]]; if (!role) return an;
       const lg = L[role]; if (!lg) return '';
-      const p = rlLogoAnchor(role, lg.w, lg.h, Y.logo, Y.cw);
+      const p = rlLogoAnchor(role, lg.w, lg.h, Y.logo, Y.cw, Y.gap);
       return an.replace(/<xdr:from>[\s\S]*?<\/xdr:from><xdr:ext cx="\d+" cy="\d+"\/>/, `${p.from}<xdr:ext cx="${p.cx}" cy="${p.cy}"/>`).replace(/<a:xfrm>[\s\S]*?<\/a:xfrm>/, `<a:xfrm><a:off x="0" y="0"/><a:ext cx="${p.cx}" cy="${p.cy}"/></a:xfrm>`);
     });
     zip.file(`xl/drawings/drawing${i}.xml`, d);
@@ -5432,7 +5439,7 @@ function rlNcHeadHTML(disc, title2, c, dateCell) {
   const logo = k => { const lg = names[k] && logoOf(names[k]); return lg ? `<img src="${esc(logoUrl(lg.id))}" alt="${esc(names[k])} logo">` : ''; };
   const rows = [
     `<tr><td colspan="14" class="t-proj">${proj}</td></tr>`,
-    `<tr>${block(0)}<td class="t-ll l">Client | Consultant</td><td colspan="3" class="t-ll">Main Contractor</td><td colspan="3" class="t-ll r">Subcontractor</td><td colspan="3" class="t-legh">LEGENDS</td></tr>`,
+    `<tr>${block(0)}<td class="t-ll l"><div class="rl-pair rl-pair-lab"><span>Client</span><span>Consultant</span></div></td><td colspan="3" class="t-ll">Main Contractor</td><td colspan="3" class="t-ll r">Subcontractor</td><td colspan="3" class="t-legh">LEGENDS</td></tr>`,
     `<tr>${block(1)}<td rowspan="3" class="t-logo l"><div class="rl-pair"><span>${logo('client')}</span><span>${logo('consultant')}</span></div></td><td colspan="3" rowspan="3" class="t-logo">${logo('contractor')}</td><td colspan="3" rowspan="3" class="t-logo r"><img src="${MS_LOGO}" alt="Oxypro Electromechanical Works LLC"></td>${legend(0)}</tr>`,
     `<tr>${block(2)}${legend(1)}</tr>`, `<tr>${block(3)}${legend(2)}</tr>`,
     `<tr>${block(4)}<td colspan="7" class="t-title rl-big">${esc(title2)}</td>${legend(3)}</tr>`,
