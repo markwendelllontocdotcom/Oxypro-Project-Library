@@ -1,13 +1,17 @@
-/* ---------- WIR Log and MIR Log pages (QA/QC menu), made the way the MSRA Log is ---------- */
+/* ---------- WIR, MIR, NCR and SOR Log pages (QA/QC menu), made the way the MSRA Log is ---------- */
 const RLV = { kind: 'wir', no: null, log: null, dirty: false, tab: 'SUM', mode: 'view', state: 'idle', err: '', remote: null, unsub: null, rm: null, busy: '', day: '', parts: 0, savingAt: '', pg: 0 };
 const rlK = () => RL_KIND[RLV.kind];
 const rlProj = () => S.projects.get(RLV.no) || { no: RLV.no, name: '' };
 const rlName = () => { const p = rlProj(); return `${p.no} ${p.name || ''}`.trim(); };
 const rlFileBase = () => { const p = rlProj(); return safeName([p.code || p.no, p.name || 'Untitled project', rlK().file, 'Rev ' + ((RLV.log && RLV.log.rev) || '00')].join(' - ')); };
-const rlCol = s => RLV.kind + s;   // wirlogs, wirlogparts, wirlogmeta and the same for mir
+const rlCol = s => RLV.kind + s;   // wirlogs, wirlogparts, wirlogmeta and the same for mir, ncr and sor
+const rlNc = () => rlIsNc(RLV.kind);
+const rlAllow = () => (RLV.log && RLV.log.allow != null ? RLV.log.allow : RL_NC_ALLOW);
+const rlCnt = list => rlCounts(list, RLV.kind, rlAllow());
+const rlNLogs = () => rlNc() ? 'eight' : 'seven';
 
 function rlMenuItemsHTML(p) {
-  return ['wir', 'mir'].map(k => {
+  return RL_KINDS.map(k => {
     const K = RL_KIND[k], has = S.rlMeta && S.rlMeta[k] && S.rlMeta[k].has(p.no);
     return `<button type="button" class="menu-item" role="menuitem" data-act="${k}log"><span><b>${has ? 'Open' : 'Create'} ${K.name}</b><small>${has ? 'This project\'s' : 'Standard'} ${esc(K.long)} log${has ? '' : ' for this project'}</small></span></button>`;
   }).join('');
@@ -89,7 +93,7 @@ function rlRenderActions() {
   if (RLV.state !== 'ready') { el.innerHTML = ''; return; }
   const w = msCanSave(), e = RLV.mode === 'edit';
   el.innerHTML = `<div class="seg" role="group" aria-label="Mode"><button type="button" aria-pressed="${!e}" data-rl-act="mode-view">View</button><button type="button" aria-pressed="${e}" data-rl-act="mode-edit">Edit</button></div>
-    <button type="button" class="btn" data-rl-act="save-xlsx" title="The standard ${rlK().name} workbook with this log filled in: Summary, the seven discipline logs, the Transmittal Sheet and the hidden guide sheets">Save as Excel</button>
+    <button type="button" class="btn" data-rl-act="save-xlsx" title="The standard ${rlK().name} workbook with this log filled in: Summary, the ${rlNLogs()} discipline logs, the Transmittal Sheet and the hidden guide sheets">Save as Excel</button>
     ${w ? `<button type="button" class="btn${RLV.dirty ? ' btn-primary' : ''}" data-rl-act="save"${RLV.dirty && !RLV.busy ? '' : ' disabled'}>${RLV.busy === 'save' ? 'Saving…' : RLV.dirty ? (GH ? 'Save in browser' : 'Save to library') : 'Saved'}</button>` : ''}`;
 }
 function rlRenderBody() {
@@ -101,9 +105,9 @@ function rlRenderBody() {
   if (RLV.state === 'error') { el.innerHTML = `<div class="ms-empty"><h3>The ${K.name} could not be loaded</h3><p>${esc(RLV.err === 'revoked' ? 'Your access to the library changed. Reload the page.' : 'Check your connection and open it again.')}</p></div>`; return; }
   if (RLV.state === 'new') { el.innerHTML = rlStartHTML(); return; }
   const log = RLV.log;
-  const tabs = [['SUM', 'Summary', log.items.length]].concat(RL_DISC.map(d => [d.code, d.code, rlItemsOf(log, d.code).length])).concat([['TRN', 'Transmittal', '']]);
+  const tabs = [['SUM', 'Summary', log.items.length]].concat(rlDiscs(RLV.kind).map(d => [d.code, d.code, rlItemsOf(log, d.code).length])).concat([['TRN', 'Transmittal', '']]);
   el.innerHTML = `${rlNoticeHTML()}
-    <div class="ms-tabs" role="tablist" aria-label="Log sheets">${tabs.map(([k, l, c]) => `<button type="button" role="tab" aria-selected="${RLV.tab === k}" data-rl-tab="${k}" title="${esc(k === 'SUM' ? 'Summary' : k === 'TRN' ? 'Transmittal Sheet: the ' + K.items + ' submitted on a day' : (RL_DISC.find(d => d.code === k) || {}).head)}">${esc(l)}${c !== '' ? `<span class="n">${c}</span>` : ''}</button>`).join('')}</div>
+    <div class="ms-tabs" role="tablist" aria-label="Log sheets">${tabs.map(([k, l, c]) => `<button type="button" role="tab" aria-selected="${RLV.tab === k}" data-rl-tab="${k}" title="${esc(k === 'SUM' ? 'Summary' : k === 'TRN' ? 'Transmittal Sheet: the ' + K.items + (K.nc ? ' closed out on a day' : ' submitted on a day') : (rlDiscs(RLV.kind).find(d => d.code === k) || {}).head)}">${esc(l)}${c !== '' ? `<span class="n">${c}</span>` : ''}</button>`).join('')}</div>
     <div class="ms-panel ${RLV.mode === 'edit' ? 'editing' : ''}" role="tabpanel">${RLV.tab === 'SUM' ? rlSummaryHTML() : RLV.tab === 'TRN' ? rlTransHTML() : rlSheetHTML(RLV.tab)}</div>`;
   const sc = el.querySelector('.ms-scroll'); if (sc && keep) { sc.scrollLeft = sx; sc.scrollTop = sy; }
   el.querySelectorAll('textarea.ms-c').forEach(msGrow);
@@ -117,9 +121,9 @@ function rlStartHTML() {
   const K = rlK(), w = msCanSave();
   return `<div class="ms-start">
     <h3>Create the ${esc(K.name)} for ${esc(rlName())}</h3>
-    <p class="hint">The log follows the Oxypro standard ${esc(K.name)} workbook: Summary, seven discipline logs (HVAC, Plumbing, Electrical, ELV, Fire Fighting, LPG and MEP), the Transmittal Sheet and the hidden guide sheets. The project bar and block are filled from the library and you can edit them. Save as Excel gives the standard workbook with this log filled in.</p>
+    <p class="hint">The log follows the Oxypro standard ${esc(K.name)} workbook: Summary, ${rlNLogs()} discipline logs (HVAC, Plumbing, Electrical, ELV, Fire Fighting, LPG${K.nc ? ', MEP and HSE' : ' and MEP'}), the Transmittal Sheet and the hidden guide sheets. The project bar and block are filled from the library and you can edit them. Save as Excel gives the standard workbook with this log filled in.</p>
     <div class="ms-start-cards">
-      <button type="button" class="ms-start-card" data-rl-act="start" data-rec="1"><span class="ms-sc-t">Start the ${esc(K.name)}<span class="tag tag-rec">Standard</span></span><span class="ms-sc-d">Starts empty. Add each ${esc(K.item)} to its discipline log as it is raised; the reference numbers follow ${esc(K.pat.replace('{DISC}', 'MEC').replace(/\{N+\}/i, '0001'))} and can be changed.</span></button>
+      <button type="button" class="ms-start-card" data-rl-act="start" data-rec="1"><span class="ms-sc-t">Start the ${esc(K.name)}<span class="tag tag-rec">Standard</span></span><span class="ms-sc-d">Starts empty. Add each ${esc(K.item)} to its discipline log as it is raised; the reference numbers follow ${esc(rlRefParts(rlDefaultPat(RLV.kind, rlProj()), 'MEC').pre)}${K.nc ? '001' : '0001'} and can be changed.</span></button>
     </div>
     ${GH ? '<p class="hint">GitHub edition: the log is saved in this browser on this device. Use Save as Excel to keep or share it.</p>' : w ? '' : '<p class="hint">Only the library\'s editors can save the log to the library. You can still make it and download it with Save as Excel.</p>'}
   </div>`;
@@ -129,10 +133,34 @@ function rlStartHTML() {
 const RL_PAGE = 50;
 // the WIR sheet has columns A to N; the MIR sheet has no Level and no Location (user, 21 Nov 2026), so A to L with a wider Reference No.
 const rlLL = () => !!RL_LAY[RLV.kind].lvl;   // Level and Location columns
-const rlW = () => rlLL() ? [45, 89, 150, 80, 80, 150, 500, 115, 115, 115, 115, 115, 115, 245] : [45, 89, 205, 80, 500, 115, 115, 115, 115, 115, 115, 245];
+// the NCR and SOR sheets have A to N: description in E, then eight columns of dates, days and statuses
+const rlW = () => rlNc() ? [45, 89, 205, 80, 500, 115, 115, 115, 115, 115, 115, 115, 115, 245] : rlLL() ? [45, 89, 150, 80, 80, 150, 500, 115, 115, 115, 115, 115, 115, 245] : [45, 89, 205, 80, 500, 115, 115, 115, 115, 115, 115, 245];
 const rlNC = () => rlW().length;
 const rlColsHTML = extra => `<colgroup>${rlW().concat(extra || []).map(w => `<col style="width:${w}px">`).join('')}</colgroup>`;
+// the head of an NCR / SOR sheet, as rows 1 to 9 of the workbook
+function rlNcHeadHTML(disc, title2, c, dateCell) {
+  const log = RLV.log, e = RLV.mode === 'edit', p = rlProj(), names = msLogoNames(p), K = rlK();
+  const proj = e ? `<input class="ms-in ms-in-proj" data-rl-bl="title" value="${esc(log.block.title)}" aria-label="Project" maxlength="400">` : esc(log.block.title);
+  const legend = i => { const [k, t] = K.legend[i]; return `<td class="t-code st-${k}">${k}</td><td colspan="2" class="t-desc">${esc(t)}</td>`; };
+  const block = i => {
+    const [k, label] = RL_BLOCK[i];
+    return `<td colspan="2" class="t-lab">${label}</td><td colspan="2" class="t-val">${e ? `<span class="t-ed">:<input class="ms-in" data-rl-bl="${k}" value="${esc(log.block[k])}" aria-label="${label}" maxlength="400"></span>` : ': ' + esc(log.block[k])}</td>`;
+  };
+  const logo = k => { const lg = names[k] && logoOf(names[k]); return lg ? `<img src="${esc(logoUrl(lg.id))}" alt="${esc(names[k])} logo">` : ''; };
+  const rows = [
+    `<tr><td colspan="14" class="t-proj">${proj}</td></tr>`,
+    `<tr>${block(0)}<td class="t-ll l">Client | Consultant</td><td colspan="3" class="t-ll">Main Contractor</td><td colspan="3" class="t-ll r">Subcontractor</td><td colspan="3" class="t-legh">LEGENDS</td></tr>`,
+    `<tr>${block(1)}<td rowspan="3" class="t-logo l"><div class="rl-pair"><span>${logo('client')}</span><span>${logo('consultant')}</span></div></td><td colspan="3" rowspan="3" class="t-logo">${logo('contractor')}</td><td colspan="3" rowspan="3" class="t-logo r"><img src="${MS_LOGO}" alt="Oxypro Electromechanical Works LLC"></td>${legend(0)}</tr>`,
+    `<tr>${block(2)}${legend(1)}</tr>`, `<tr>${block(3)}${legend(2)}</tr>`,
+    `<tr>${block(4)}<td colspan="7" class="t-title rl-big">${esc(title2)}</td>${legend(3)}</tr>`,
+    `<tr class="t-gap"><td colspan="14"></td></tr>`,
+    `<tr><td class="t-date l rl-dt"></td><td class="t-date r rl-dt"></td><td colspan="6" rowspan="2" class="t-title">${esc(disc)}</td><th class="t-sh">STATUS</th>${RL_NC_STATUS.map(k => `<td class="t-sh st-${k}">${k}</td>`).join('')}<th class="t-sh">TOTAL</th></tr>`,
+    `<tr><td class="t-date l rl-db">Date:</td><td class="t-date r rl-db">${dateCell}</td><th class="t-sh">QUANTITY</th>${RL_NC_STATUS.map(k => `<td class="t-sh" data-cnt="${k}">${c[k]}</td>`).join('')}<td class="t-sh" data-cnt="sub">${c.sub}</td></tr>`
+  ];
+  return `<table class="ms-top rl-top rl-nc" style="width:${rlW().reduce((a, b) => a + b, 0)}px">${rlColsHTML()}<tbody>${rows.join('')}</tbody></table>`;
+}
 function rlHeadHTML(disc, title2, c, dateCell) {
+  if (rlNc()) return rlNcHeadHTML(disc, title2, c, dateCell);
   const log = RLV.log, e = RLV.mode === 'edit', p = rlProj(), names = msLogoNames(p);
   const proj = e ? `<input class="ms-in ms-in-proj" data-rl-bl="title" value="${esc(log.block.title)}" aria-label="Project" maxlength="400">` : esc(log.block.title);
   const legend = i => { const [k, t] = MS_LEGEND[i]; return `<td class="t-code st-${msCls(k)}">${k}</td><td colspan="2" class="t-desc">${t}</td>`; };
@@ -154,16 +182,40 @@ function rlHeadHTML(disc, title2, c, dateCell) {
   ];
   return `<table class="ms-top rl-top" style="width:${rlW().reduce((a, b) => a + b, 0)}px">${rlColsHTML()}<tbody>${rows.join('')}</tbody></table>`;
 }
-const rlHeadCells = () => { const K = rlK(); return ['SN', 'Discipline', 'Reference No.', 'Rev. No.'].concat(rlLL() ? ['Level', K.loc] : []).concat([K.desc, 'Planned Submission Date', 'Submitted Date', 'Returned Date', 'Review Period\n(in days)', 'Status', 'Final Status', 'Remark']); };
+const RL_NC_HEAD = ['Received Date', 'Target\nClose-out Date', 'Close-out Date', 'Close-out\nElapsed Days', 'Consultant Response Date', 'Consultant\'s Response\nElapsed Days'];
+const rlHeadCells = () => { const K = rlK(); if (K.nc) return ['SN', 'Discipline', 'Reference No.', 'Rev. No.', K.desc].concat(RL_NC_HEAD, ['Status', 'Final Status', 'Remark']); return ['SN', 'Discipline', 'Reference No.', 'Rev. No.'].concat(rlLL() ? ['Level', K.loc] : []).concat([K.desc, 'Planned Submission Date', 'Submitted Date', 'Returned Date', 'Review Period\n(in days)', 'Status', 'Final Status', 'Remark']); };
 const rlTheadHTML = e => `<thead><tr>${rlHeadCells().map((l, i) => `<th${i < 3 ? ` class="rf${i + 1}"` : ''}>${esc(l).replace(/\n/g, '<br>')}</th>`).join('')}${e ? '<th class="ms-tools-h">Edit</th>' : ''}</tr></thead>`;
+// NCR / SOR: the target date is red when it has passed and the report is still OPEN or to be RESUBMITted (the Summary's Overdue)
+const rlNcOver = it => { const tg = msDay(rlTarget(it, rlAllow())); return tg != null && tg < msToday() && (it.fin === 'OPEN' || it.fin === 'RESUBMIT') ? ' ms-od' : ''; };
+const rlNcSelect = (k, it) => `<select class="ms-c ms-stsel st-${it[k] || 'none'}" data-k="${k}" aria-label="${k === 'st' ? 'Status' : 'Final status'}"><option value=""></option>${RL_NC_STATUS.map(s => `<option${it[k] === s ? ' selected' : ''}>${s}</option>`).join('')}</select>`;
+const rlRowTools = (it, idx, list, K) => RLV.rm === it.id
+  ? `<span class="ms-rmq">Remove?</span><button type="button" class="btn btn-sm btn-danger-solid" data-rl-act="rm-yes">Remove</button><button type="button" class="btn btn-sm" data-rl-act="rm-no">Keep</button>`
+  : `<button type="button" class="ms-ib" data-rl-act="up" title="Move up" aria-label="Move up"${idx === 0 ? ' disabled' : ''}>${MS_ICON.up}</button><button type="button" class="ms-ib" data-rl-act="down" title="Move down" aria-label="Move down"${idx === list.length - 1 ? ' disabled' : ''}>${MS_ICON.down}</button><button type="button" class="ms-ib" data-rl-act="dup" title="Add a copy below (next reference number)" aria-label="Add a copy below">+</button><button type="button" class="ms-ib ms-rm" data-rl-act="rm" title="Remove this ${K.item}" aria-label="Remove">${MS_ICON.x}</button>`;
+function rlNcRowHTML(it, no, idx, list, ro) {
+  const e = RLV.mode === 'edit' && !ro, K = rlK(), tg = msFmt(rlTarget(it, rlAllow())), el = rlElapsed(it), rd = rlRespDays(it);
+  if (!e) {
+    return `<tr data-id="${it.id}"><td class="c rf1">${no}</td><td class="c rf2">${it.d}</td><td class="c rf3">${esc(it.ref)}</td><td class="c">${esc(it.rev)}</td><td class="rl-desc">${esc(it.desc)}</td>
+      <td class="c">${msFmt(it.rec)}</td><td class="c${rlNcOver(it)}">${tg}</td><td class="c">${msFmt(it.close)}</td><td class="c">${el}</td><td class="c">${msFmt(it.resp)}</td><td class="c">${rd}</td>
+      <td class="c st-${it.st || 'none'}">${esc(it.st)}</td><td class="c st-${it.fin || 'none'}">${esc(it.fin)}</td><td>${esc(it.rem)}</td></tr>`;
+  }
+  const dt = (k, label) => `<td><input type="date" class="ms-c${it[k] ? '' : ' is-empty'}" data-k="${k}" value="${it[k]}" aria-label="${label}"></td>`;
+  return `<tr data-id="${it.id}"><td class="c rf1">${no}</td><td class="c rf2">${it.d}</td>
+    <td class="rf3"><input class="ms-c c" data-k="ref" value="${esc(it.ref)}" aria-label="Reference no." maxlength="120"></td>
+    <td><input class="ms-c c" data-k="rev" value="${esc(it.rev)}" aria-label="Revision" maxlength="10"></td>
+    <td><textarea class="ms-c" data-k="desc" rows="1" aria-label="${esc(K.desc)}" maxlength="600" placeholder="${esc(K.descPh)}">${esc(it.desc)}</textarea></td>
+    ${dt('rec', 'Received date')}<td class="c${rlNcOver(it)}" data-tg>${tg}</td>${dt('close', 'Close-out date')}<td class="c" data-el>${el}</td>${dt('resp', 'Consultant response date')}<td class="c" data-rd>${rd}</td>
+    <td class="c">${rlNcSelect('st', it)}</td><td class="c">${rlNcSelect('fin', it)}</td>
+    <td><textarea class="ms-c" data-k="rem" rows="1" aria-label="Remark" maxlength="400">${esc(it.rem)}</textarea></td>
+    <td class="ms-tools">${rlRowTools(it, idx, list, K)}</td></tr>`;
+}
 function rlRowHTML(it, no, idx, list, ro) {
+  if (rlNc()) return rlNcRowHTML(it, no, idx, list, ro);
   const e = RLV.mode === 'edit' && !ro, rv = msReview(it), K = rlK();
   if (!e) {
     return `<tr data-id="${it.id}"><td class="c rf1">${no}</td><td class="c rf2">${it.d}</td><td class="c rf3">${esc(it.ref)}</td><td class="c">${esc(it.rev)}</td>${rlLL() ? `<td class="c">${esc(it.lvl)}</td>` : ''}${rlLL() ? `<td class="c">${esc(it.loc)}</td>` : ''}<td class="rl-desc">${esc(it.desc)}</td>
       <td class="c${msDateCls(it)}">${msFmt(it.plan)}</td><td class="c">${msFmt(it.sub)}</td><td class="c">${msFmt(it.ret)}</td><td class="c">${rv}</td>
       <td class="c st-${msCls(it.st) || 'none'}">${esc(it.st)}</td><td class="c st-${msCls(it.fin) || 'none'}">${esc(it.fin)}</td><td>${esc(it.rem)}</td></tr>`;
   }
-  const rm = RLV.rm === it.id;
   return `<tr data-id="${it.id}"><td class="c rf1">${no}</td><td class="c rf2">${it.d}</td>
     <td class="rf3"><input class="ms-c c" data-k="ref" value="${esc(it.ref)}" aria-label="Reference no." maxlength="120"></td>
     <td><input class="ms-c c" data-k="rev" value="${esc(it.rev)}" aria-label="Revision" maxlength="10"></td>
@@ -175,29 +227,53 @@ function rlRowHTML(it, no, idx, list, ro) {
     <td class="c" data-rv>${rv}</td>
     <td class="c">${msSelect('st', it)}</td><td class="c">${msSelect('fin', it)}</td>
     <td><textarea class="ms-c" data-k="rem" rows="1" aria-label="Remark" maxlength="400">${esc(it.rem)}</textarea></td>
-    <td class="ms-tools">${rm
-      ? `<span class="ms-rmq">Remove?</span><button type="button" class="btn btn-sm btn-danger-solid" data-rl-act="rm-yes">Remove</button><button type="button" class="btn btn-sm" data-rl-act="rm-no">Keep</button>`
-      : `<button type="button" class="ms-ib" data-rl-act="up" title="Move up" aria-label="Move up"${idx === 0 ? ' disabled' : ''}>${MS_ICON.up}</button><button type="button" class="ms-ib" data-rl-act="down" title="Move down" aria-label="Move down"${idx === list.length - 1 ? ' disabled' : ''}>${MS_ICON.down}</button><button type="button" class="ms-ib" data-rl-act="dup" title="Add a copy below (next reference number)" aria-label="Add a copy below">+</button><button type="button" class="ms-ib ms-rm" data-rl-act="rm" title="Remove this ${K.item}" aria-label="Remove">${MS_ICON.x}</button>`}</td></tr>`;
+    <td class="ms-tools">${rlRowTools(it, idx, list, K)}</td></tr>`;
 }
 function rlSheetHTML(code) {
-  const log = RLV.log, e = RLV.mode === 'edit', list = rlItemsOf(log, code), c = rlCounts(list), K = rlK(), d = RL_DISC.find(x => x.code === code);
+  const log = RLV.log, e = RLV.mode === 'edit', list = rlItemsOf(log, code), c = rlCnt(list), K = rlK(), d = rlDiscs(RLV.kind).find(x => x.code === code);
   const full = list.length >= RL_MAX;
   // a long log is shown 50 rows at a time (the standard sheet has 50 rows ready)
   const pages = Math.max(1, Math.ceil(list.length / RL_PAGE)); RLV.pg = Math.max(0, Math.min(pages - 1, RLV.pg));
   const from = RLV.pg * RL_PAGE, shown = list.slice(from, from + RL_PAGE);
   const pager = pages > 1 ? `<div class="rl-pager" role="group" aria-label="Rows"><button type="button" class="btn btn-sm" data-rl-act="pg" data-pg="0"${RLV.pg ? '' : ' disabled'}>First</button><button type="button" class="btn btn-sm" data-rl-act="pg" data-pg="${RLV.pg - 1}"${RLV.pg ? '' : ' disabled'}>Previous</button><span>Rows ${from + 1} to ${from + shown.length} of ${list.length}</span><button type="button" class="btn btn-sm" data-rl-act="pg" data-pg="${RLV.pg + 1}"${RLV.pg < pages - 1 ? '' : ' disabled'}>Next</button><button type="button" class="btn btn-sm" data-rl-act="pg" data-pg="${pages - 1}"${RLV.pg < pages - 1 ? '' : ' disabled'}>Last</button></div>` : '';
   return `${pager}<div class="ms-scroll"><div class="ms-paper">
-    ${rlHeadHTML(d.head, K.title + ' LOG', c, esc(msFmtLong(msFromDay(msToday()))))}
-    ${e ? `<div class="ms-bl-add rl-tools"><label class="ms-rev rl-pat">Reference numbering <input class="ms-in" data-rl-pat value="${esc(log.pat)}" maxlength="80" aria-label="Reference numbering" title="{DISC} is the discipline code of the sheet and {NNNN} the running number"></label><label class="ms-rev">Log revision <input class="ms-in" data-rl-rev value="${esc(log.rev)}" maxlength="10" aria-label="Log revision"></label><button type="button" class="btn btn-ghost btn-sm" data-rl-act="bl-reset" title="Fill the project bar and the block again from the library's project details">Refill from the library</button></div>` : ''}
+    ${rlHeadHTML(K.nc ? K.title + ' - ' + d.head : d.head, K.title + ' LOG', c, esc(msFmtLong(msFromDay(msToday()))))}
+    ${e ? `<div class="ms-bl-add rl-tools"><label class="ms-rev rl-pat">Reference numbering <input class="ms-in" data-rl-pat value="${esc(log.pat)}" maxlength="80" aria-label="Reference numbering" title="{DISC} is the discipline code of the sheet and {NNNN} the running number"></label>${K.nc ? `<label class="ms-rev" title="Days from the Received Date to the Target Close-out Date (cell J3 of the Summary sheet)">Close-out allowance (days) <input class="ms-in" type="number" min="0" max="365" step="1" data-rl-allow value="${rlAllow()}" aria-label="Target close-out allowance in days"></label>` : ''}<label class="ms-rev">Log revision <input class="ms-in" data-rl-rev value="${esc(log.rev)}" maxlength="10" aria-label="Log revision"></label><button type="button" class="btn btn-ghost btn-sm" data-rl-act="bl-reset" title="Fill the project bar and the block again from the library's project details">Refill from the library</button></div>` : ''}
     <table class="ms-log rl-log" data-code="${code}">${rlColsHTML(e ? [132] : null)}${rlTheadHTML(e)}
       <tbody>${shown.map((it, i) => rlRowHTML(it, from + i + 1, from + i, list)).join('')}
       ${!list.length && !e ? `<tr class="ms-none"><td colspan="${rlNC()}">No ${K.items} in this log yet. Switch to Edit to add them.</td></tr>` : ''}
       ${e ? `<tr class="ms-addrow"><td colspan="${rlNC()}"><button type="button" class="btn btn-ghost btn-sm" data-rl-act="add"${full ? ' disabled' : ''}>+ Add ${K.item}</button>${full ? ` <span class="hint">The standard workbook reads up to ${RL_MAX} rows in a log.</span>` : ''}</td><td class="ms-tools"></td></tr>` : ''}</tbody>
     </table></div></div>`;
 }
+function rlSumFootHTML(K, w, log) {
+  return `<p class="hint">${log.updatedAt ? `Saved in ${MS_WHERE} ${esc(new Date(log.updatedAt).toLocaleString([], { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' }))}.` : `Not saved in ${MS_WHERE} yet.`}</p>
+    ${w && log.updatedAt ? (RLV.rm === 'LOG' ? `<div class="confirm"><span>Delete the ${K.name} of ${esc(rlName())} from ${MS_WHERE}? This cannot be undone. Download it first with Save as Excel if you may need it.</span><div class="btns"><button type="button" class="btn btn-sm btn-danger-solid" data-rl-act="del-yes">Delete log</button><button type="button" class="btn btn-sm" data-rl-act="rm-no">Cancel</button></div></div>` : '<div><button type="button" class="btn btn-sm btn-ghost btn-danger" data-rl-act="del">Delete this log</button></div>') : ''}`;
+}
+// the Summary of an NCR / SOR log: Total Raised, the four statuses, Overdue, Closure % and the average days to close
+function rlNcSummaryHTML() {
+  const log = RLV.log, w = msCanSave(), K = rlK(), discs = rlDiscs(RLV.kind);
+  const rows = discs.map(d => ({ code: d.code, label: `${K.short} - ${d.sum}`, c: rlCnt(rlItemsOf(log, d.code)) })), tot = rlCnt(log.items);
+  const avgAll = rows.reduce((a, r) => a + r.c.avg, 0) / rows.length;     // as the workbook: the average of the eight averages
+  const pct = v => (Math.round(v * 1000) / 10) + '%', one = v => String(Math.round(v * 10) / 10);
+  const vals = (c, avg) => [c.sub, c.OPEN, c.CLOSED, c.RESUBMIT, c.UR, c.overdue, pct(c.closure), one(avg)];
+  const cell = v => `<td class="c">${v}</td>`;
+  const noFin = log.items.filter(it => !it.fin).length;
+  return `<div class="ms-scroll ms-scroll-sum"><div class="ms-paper ms-paper-sum">
+    <div class="ms-sum-head"><div><div class="ms-h-title">PROJECT : ${esc(log.block.title)}</div><div class="ms-h-sub">${esc(K.title)} SUMMARY</div><div class="ms-date"><b>DATE:</b> ${esc(msFmtSlash(msFromDay(msToday())))} &nbsp; <b>Target close-out allowance (days):</b> ${rlAllow()}</div></div><div class="ms-sum-logo"><img src="${MS_LOGO}" alt="Oxypro"></div></div>
+    <table class="ms-sum rl-ncsum"><thead><tr><th>SN</th><th>${esc(K.long)}</th><th>Total Raised</th>${RL_NC_STATUS.map(k => `<th class="st-${k}">${k}</th>`).join('')}<th>Overdue</th><th>Closure %</th><th>Avg Days to Close</th><th>Remarks</th></tr></thead>
+    <tbody>${rows.map((r, i) => `<tr><td class="c">${i + 1}</td><td><button type="button" class="ms-link" data-rl-tab="${r.code}">${esc(r.label)}</button></td>${vals(r.c, r.c.avg).map(cell).join('')}<td></td></tr>`).join('')}
+    <tr class="ms-sum-tot"><td colspan="2" class="c">TOTAL</td>${vals(tot, avgAll).map((v, i) => `<td class="c${i >= 1 && i <= 4 ? ' st-' + RL_NC_STATUS[i - 1] : ''}">${v}</td>`).join('')}<td></td></tr></tbody></table>
+    <p class="rl-sumnote">Overdue = OPEN or RESUBMIT ${K.items} past their Target Close-out Date. Closure % = CLOSED / Total Raised. Counts use each log's Final Status.</p>
+  </div></div>
+  <div class="ms-facts">
+    <p>${log.items.length} ${log.items.length === 1 ? K.item : K.items} in the log. ${tot.CLOSED} closed, ${tot.OPEN + tot.RESUBMIT} open or to be resubmitted, ${tot.UR} under review.${noFin ? ` ${noFin} without a final status (not counted in the summary, as in the workbook).` : ''}${tot.overdue ? ` <b class="ms-red">${tot.overdue} overdue</b> (target close-out date passed).` : ''}</p>
+    ${rlSumFootHTML(K, w, log)}
+  </div>`;
+}
 function rlSummaryHTML() {
+  if (rlNc()) return rlNcSummaryHTML();
   const log = RLV.log, w = msCanSave(), K = rlK();
-  const rows = RL_DISC.map(d => ({ code: d.code, label: `${K.short} - ${d.sum}`, c: rlCounts(rlItemsOf(log, d.code)) })), tot = rlCounts(log.items);
+  const rows = RL_DISC.map(d => ({ code: d.code, label: `${K.short} - ${d.sum}`, c: rlCnt(rlItemsOf(log, d.code)) })), tot = rlCnt(log.items);
   const cell = v => `<td class="c">${v}</td>`;
   const vals = c => [c.sub, c.A, c.B, c.C, c.D, c.E, c.UR, c.re];
   const noFin = log.items.filter(it => !it.fin || it.fin === 'n/a').length;
@@ -209,27 +285,27 @@ function rlSummaryHTML() {
   </div></div>
   <div class="ms-facts">
     <p>${log.items.length} ${log.items.length === 1 ? K.item : K.items} in the log. ${tot.sub} with a final status, ${tot.A + tot.B} approved (A or B).${noFin ? ` ${noFin} without a final status (not counted in the summary, as in the workbook).` : ''}${tot.overdue ? ` <b class="ms-red">${tot.overdue} overdue</b> (planned date passed, not submitted).` : ''}${tot.soon ? ` ${tot.soon} due within 7 days.` : ''}</p>
-    <p class="hint">${log.updatedAt ? `Saved in ${MS_WHERE} ${esc(new Date(log.updatedAt).toLocaleString([], { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' }))}.` : `Not saved in ${MS_WHERE} yet.`}</p>
-    ${w && log.updatedAt ? (RLV.rm === 'LOG' ? `<div class="confirm"><span>Delete the ${K.name} of ${esc(rlName())} from ${MS_WHERE}? This cannot be undone. Download it first with Save as Excel if you may need it.</span><div class="btns"><button type="button" class="btn btn-sm btn-danger-solid" data-rl-act="del-yes">Delete log</button><button type="button" class="btn btn-sm" data-rl-act="rm-no">Cancel</button></div></div>` : '<div><button type="button" class="btn btn-sm btn-ghost btn-danger" data-rl-act="del">Delete this log</button></div>') : ''}
+    ${rlSumFootHTML(K, w, log)}
   </div>`;
 }
-// the Transmittal Sheet: the requests submitted on the chosen day, from every discipline log (the workbook lists the day typed in its cell B10)
+// the Transmittal Sheet: the requests submitted (NCR / SOR: the reports closed out) on the chosen day, from every discipline log
+// (the workbook lists the day typed in its date cell: B10, or B9 in the NCR and SOR workbooks)
 function rlTransHTML() {
-  const log = RLV.log, K = rlK(), list = rlOnDay(log, RLV.day), c = rlCounts(list);
-  return `<div class="rl-daybar"><label>Transmittal date <input type="date" class="inp rl-day" data-rl-day value="${esc(RLV.day)}"></label><span class="hint">${list.length} ${list.length === 1 ? K.item : K.items} submitted on this day</span></div>
+  const log = RLV.log, K = rlK(), list = rlOnDay(log, RLV.day), c = rlCnt(list), what = K.nc ? 'Close-out Date' : 'Submitted Date', cellB = K.nc ? 'B9' : 'B10';
+  return `<div class="rl-daybar"><label>Transmittal date <input type="date" class="inp rl-day" data-rl-day value="${esc(RLV.day)}"></label><span class="hint">${list.length} ${list.length === 1 ? K.item : K.items} ${K.nc ? 'closed out' : 'submitted'} on this day</span></div>
     <div class="ms-scroll"><div class="ms-paper">
     ${rlHeadHTML(K.title, 'TRANSMITTAL SHEET', c, esc(msFmtLong(RLV.day)))}
     <table class="ms-log rl-log">${rlColsHTML()}${rlTheadHTML(false)}
-      <tbody>${list.map((it, i) => rlRowHTML(it, i + 1, i, list, true)).join('') || `<tr class="ms-none"><td colspan="${rlNC()}">No ${K.items} with ${RLV.day ? 'a Submitted Date of ' + esc(msFmtLong(RLV.day)) : 'that date'}. Choose another date above.</td></tr>`}</tbody>
+      <tbody>${list.map((it, i) => rlRowHTML(it, i + 1, i, list, true)).join('') || `<tr class="ms-none"><td colspan="${rlNC()}">No ${K.items} with ${RLV.day ? 'a ' + what + ' of ' + esc(msFmtLong(RLV.day)) : 'that date'}. Choose another date above.</td></tr>`}</tbody>
     </table></div></div>
-    <p class="hint rl-note">The Transmittal Sheet lists the ${K.items} whose Submitted Date is the chosen day. In the Excel file the same sheet shows the day typed in its cell B10 (today when the file opens).</p>`;
+    <p class="hint rl-note">The Transmittal Sheet lists the ${K.items} whose ${what} is the chosen day${K.nc ? ' (' + RL_NC_TRN + ' at most, as in the workbook)' : ''}. In the Excel file the same sheet shows the day typed in its cell ${cellB} (today when the file opens).</p>`;
 }
 
 /* ---------- edits ---------- */
 const rlFind = id => RLV.log.items.find(it => it.id === id);
 function rlRefreshCounts() {
-  if (!RL_CODES.includes(RLV.tab)) return;
-  const c = rlCounts(rlItemsOf(RLV.log, RLV.tab));
+  if (!rlCodes(RLV.kind).includes(RLV.tab)) return;
+  const c = rlCnt(rlItemsOf(RLV.log, RLV.tab));
   document.querySelectorAll('#rl-body [data-cnt]').forEach(td => { td.textContent = c[td.dataset.cnt]; });
 }
 function rlOnInput(e) {
@@ -240,8 +316,25 @@ function rlOnInput(e) {
   if (t.dataset.rlBl) { log.block[t.dataset.rlBl] = t.value; rlSetDirty(); return; }
   if (t.hasAttribute('data-rl-rev')) { log.rev = t.value.trim().slice(0, 10); rlSetDirty(); return; }
   if (t.hasAttribute('data-rl-pat')) { log.pat = t.value.trim().slice(0, 80); rlSetDirty(); return; }
+  if (t.hasAttribute('data-rl-allow')) {           // the target dates of the rows on screen follow at once
+    const a = parseInt(t.value, 10); if (!(a >= 0 && a <= 365)) return;
+    log.allow = a; rlSetDirty();
+    document.querySelectorAll('#rl-body tr[data-id]').forEach(tr => { const it = rlFind(tr.dataset.id), tg = tr.querySelector('[data-tg]'); if (it && tg) { tg.textContent = msFmt(rlTarget(it, a)); tg.className = 'c' + rlNcOver(it); } });
+    return;
+  }
   const k = t.dataset.k, tr = t.closest('tr[data-id]'); if (!k || !tr) return;
   const it = rlFind(tr.dataset.id); if (!it) return;
+  if (rlNc()) {
+    if (k === 'st' || k === 'fin') { it[k] = rlNcStatus(t.value); t.className = `ms-c ms-stsel st-${it[k] || 'none'}`; rlRefreshCounts(); }
+    else if (k === 'rec' || k === 'close' || k === 'resp') it[k] = msIso(t.value);
+    else it[k] = t.value;
+    if (k !== 'ref' && k !== 'rev' && k !== 'desc' && k !== 'rem') {
+      const set = (sel, v) => { const c = tr.querySelector(sel); if (c) c.textContent = v; };
+      set('[data-tg]', msFmt(rlTarget(it, rlAllow()))); set('[data-el]', rlElapsed(it)); set('[data-rd]', rlRespDays(it));
+      const tg = tr.querySelector('[data-tg]'); if (tg) tg.className = 'c' + rlNcOver(it);
+    }
+    return rlSetDirty();
+  }
   if (k === 'st' || k === 'fin') { it[k] = msStatus(t.value); t.className = `ms-c ms-stsel st-${msCls(it[k]) || 'none'}`; rlRefreshCounts(); }
   else if (k === 'plan' || k === 'sub' || k === 'ret') {
     it[k] = msIso(t.value);
@@ -251,8 +344,8 @@ function rlOnInput(e) {
   rlSetDirty();
 }
 function rlAddItem(code, after) {
-  const log = RLV.log, it = rlBlankItem(code, rlNextRef(log, code));
-  if (after) { Object.assign(it, { lvl: after.lvl, loc: after.loc, desc: after.desc, plan: after.plan }); log.items.splice(log.items.indexOf(after) + 1, 0, it); }
+  const log = RLV.log, it = rlBlankItem(code, rlNextRef(log, code), RLV.kind);
+  if (after) { Object.assign(it, rlNc() ? { desc: after.desc, rec: after.rec } : { lvl: after.lvl, loc: after.loc, desc: after.desc, plan: after.plan }); log.items.splice(log.items.indexOf(after) + 1, 0, it); }
   else { const i = log.items.map(o => o.d === code).lastIndexOf(true); if (i >= 0) log.items.splice(i + 1, 0, it); else log.items.push(it); }
   rlSetDirty(); return it;
 }
@@ -314,7 +407,7 @@ async function rlSave() {
   try {
     const P = DB.collection(rlCol('logparts'));
     for (let i = 0; i < parts.length; i++) await P.doc(no + '_' + i).set(JSON.parse(JSON.stringify({ no, i, at: now, items: parts[i] })));
-    await DB.collection(rlCol('logs')).doc(no).set(JSON.parse(JSON.stringify({ no, kind: RLV.kind, v: 1, rev: log.rev, pat: log.pat, block: log.block, parts: parts.length, n: log.items.length, updatedAt: now, createdAt: log.createdAt || now })));
+    await DB.collection(rlCol('logs')).doc(no).set(JSON.parse(JSON.stringify({ no, kind: RLV.kind, v: 1, rev: log.rev, pat: log.pat, block: log.block, ...(rlNc() ? { allow: rlAllow() } : {}), parts: parts.length, n: log.items.length, updatedAt: now, createdAt: log.createdAt || now })));
     for (let i = parts.length; i < RLV.parts; i++) { try { await P.doc(no + '_' + i).delete(); } catch (e) { /* an unused part left behind */ } }
     log.updatedAt = now; log.createdAt = log.createdAt || now; RLV.parts = parts.length;
     await DB.collection(rlCol('logmeta')).doc(no).set({ no, n: log.items.length, updatedAt: now });
@@ -335,15 +428,15 @@ async function rlDelete() {
     RLV.dirty = false; closeRlog(true);
   } catch (e) { toast(writeError(e), 6000); }
 }
-/* the Excel file: the standard workbook (kept beside the page as rlog-wir.js / rlog-mir.js) with this log filled in */
+/* the Excel file: the standard workbook (kept beside the page as rlog-wir.js, rlog-mir.js, rlog-ncr.js, rlog-sor.js) with this log filled in */
 async function rlSaveXlsx() {
   const kind = RLV.kind, log = RLV.log, p = rlProj();
   await Promise.all([loadScript(RL_LIBS.jszip), loadScript(`rlog-${kind}.js`)]);
   const tpl = window.__RLOG_TPL && window.__RLOG_TPL[kind]; if (!tpl || !window.JSZip) throw new Error('the standard workbook could not be loaded');
   const lg = await msLogos(p), logos = {};
   for (const k of ['client', 'consultant', 'contractor']) logos[k] = lg[k] ? { b64: lg[k].data.split(',')[1], w: lg[k].w, h: lg[k].h } : null;
-  const sheets = {}; for (const d of RL_CODES) sheets[d] = rlItemsOf(log, d);
-  const u8 = await rlFillTemplate(window.JSZip, tpl, { kind, title: log.block.title, block: log.block, sheets, logos });
+  const sheets = {}; for (const d of rlCodes(kind)) sheets[d] = rlItemsOf(log, d);
+  const u8 = await rlFillTemplate(window.JSZip, tpl, { kind, title: log.block.title, block: log.block, sheets, logos, allow: log.allow });
   await saveFile(rlFileBase() + '.xlsx', new Blob([u8], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
 }
 

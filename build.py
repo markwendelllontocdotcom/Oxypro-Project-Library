@@ -24,7 +24,7 @@ for k,v in {'/*__RLOG_JS__*/':rljs,'/*__RLOG_CSS__*/':open(os.path.join(here,'sr
     s=s.replace(k,v)
 import base64
 RLOG={}
-for k in ['wir','mir']:
+for k in ['wir','mir','ncr','sor']:
     RLOG['rlog-%s.js'%k]='window.__RLOG_TPL=window.__RLOG_TPL||{};window.__RLOG_TPL.%s="%s";\n'%(k,base64.b64encode(open(os.path.join(here,'build','rlog',k+'.xlsx'),'rb').read()).decode())
 # the MSRA Generator's standard list and default settings (Generate MSRA), from its repository data
 std=open(os.path.join(here,'build','msra-gen-std.json')).read().replace('</','<\\/')

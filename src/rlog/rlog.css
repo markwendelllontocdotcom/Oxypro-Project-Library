@@ -1,4 +1,4 @@
-/* ---------- WIR Log and MIR Log (the MSRA Log's styles, plus these) ---------- */
+/* ---------- WIR, MIR, NCR and SOR Log (the MSRA Log's styles, plus these) ---------- */
 #view-rlog .band-in{max-width:none}
 .rl-pair{display:flex;align-items:center;justify-content:space-around;gap:14px}
 .rl-pair span{flex:1 1 0;min-width:0;text-align:center}
@@ -19,3 +19,13 @@
   .rl-log .rf1{left:0}.rl-log .rf2{left:45px}.rl-log .rf3{left:134px;box-shadow:2px 0 0 rgba(0,0,0,.12)}
   .rl-log thead .rf1,.rl-log thead .rf2,.rl-log thead .rf3{z-index:4;background:#F8CBAD}
 }
+.rl-tools input[data-rl-allow]{width:72px}
+/* NCR and SOR: the four statuses in the workbook's colours */
+.st-OPEN{background:#FF0000}.st-CLOSED{background:#92D050}.st-RESUBMIT{background:#C00000;color:#FFFFFF}
+.ms-log td.st-OPEN,.ms-log td.st-CLOSED,.ms-log td.st-RESUBMIT{font-weight:700}
+.ms-stsel.st-RESUBMIT option{color:#000000;background:#FFFFFF}
+.rl-nc .t-code{font-size:13px}
+.rl-nc .t-val{overflow-wrap:anywhere}
+.rl-ncsum thead th.st-OPEN{background:#FF0000}.rl-ncsum thead th.st-CLOSED{background:#92D050}.rl-ncsum thead th.st-RESUBMIT{background:#C00000;color:#FFFFFF}.rl-ncsum thead th.st-UR{background:#FFFF00}
+.rl-ncsum .ms-sum-tot td.st-OPEN{background:#FF0000}.rl-ncsum .ms-sum-tot td.st-CLOSED{background:#92D050}.rl-ncsum .ms-sum-tot td.st-RESUBMIT{background:#C00000;color:#FFFFFF}
+.rl-sumnote{margin:8px 0 0;font-size:11.5px;font-style:italic;color:#000000}
