@@ -837,7 +837,7 @@ input[type="date"].ms-c{padding:3px 2px;font-size:11.5px;color-scheme:light}
 <footer class="foot">
   <div class="band-in">
     Developed by Mark Lontoc | Dubai, United Arab Emirates | © 2026 MLWorks. All rights reserved.<br>
-    <span id="version">Version 1.19.0 (21 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
+    <span id="version">Version 1.19.1 (25 Nov 2026)</span> · <button type="button" class="linkbtn" id="foot-about" aria-haspopup="dialog">About this app</button>
   </div>
 </footer>
 
@@ -901,8 +901,8 @@ const LIBS = {
 };
 const EMIRATES = { DXB: 'Dubai', AUH: 'Abu Dhabi', SHJ: 'Sharjah', AJM: 'Ajman', RAK: 'Ras Al Khaimah', FUJ: 'Fujairah', UAQ: 'Umm Al Quwain' };
 const SLOT_NAMES = ['Main photo', 'Photo 2', 'Photo 3', 'Photo 4', 'Photo 5'];
-const APP_VERSION = '1.19.0';
-const APP_DATE = '21 Nov 2026';   // shown in the footer and in About
+const APP_VERSION = '1.19.1';
+const APP_DATE = '25 Nov 2026';   // shown in the footer and in About
 /* which edition runs: Claude (shared database) or the GitHub edition (static website, see runtime.js) */
 const GH = window.__OPL_EDITION === 'github';
 const SNAP_DATE = String(window.__OPL_SNAPSHOT || '');
@@ -3547,6 +3547,7 @@ function bindView() {
 }
 /* ---------- About ---------- */
 const ABOUT_CHANGES = [
+  ['1.19.1', '25 Nov 2026', 'WIR Log and MIR Log: the Return Date column is headed Returned Date on the page and in the Excel file.'],
   ['1.19.0', '21 Nov 2026', 'Oxypro colour theme in the View menu, beside Light, Dark and Auto: the charcoal and red of the Oxypro logo.'],
   ['1.18.2', '21 Nov 2026', 'MIR Log without the Level and Delivery / Storage Location columns, which do not apply to material inspections: on the page and in the Excel file (seven logs and the Transmittal Sheet), with the formulas, lists and logos moved to suit.'],
   ['1.18.1', '21 Nov 2026', 'WIR Log and MIR Log: the revision column is headed Rev. No. on the page and in the Excel file.'],
@@ -5147,6 +5148,8 @@ async function rlFillTemplate(JSZip, tplB64, model) {
     t = head + t.slice(cut);
     // user, 21 Nov 2026: the revision column is headed "Rev. No." (the standard has "Rev."); the hidden MS Master List keeps its own heading
     { let ok = false; t = t.replace(/<c r="D11" s="(\d+)" t="s"><v>\d+<\/v><\/c>/, (m, sid) => { ok = true; return rlInline('D11', sid, 'Rev. No.'); }); if (!ok) throw new Error('The standard file is not as expected (Rev. heading).'); }
+    // user, 25 Nov 2026: the return date column is headed "Returned Date" (the standard has "Return Date")
+    { let ok = false; t = t.replace(new RegExp(`<c r="${Y.ret}11" s="(\\d+)" t="s"><v>\\d+</v></c>`), (m, sid) => { ok = true; return rlInline(Y.ret + '11', sid, 'Returned Date'); }); if (!ok) throw new Error('The standard file is not as expected (Return Date heading).'); }
     if (i < 7) {
       const code = RL_CODES[i], items = model.sheets[code] || [], n = Math.max(RL_TPL_ROWS, items.length), last = 11 + n;
       const a = t.indexOf('<row r="12"'), b = t.indexOf('</sheetData>'); if (a < 0 || b < a) throw new Error('The standard file is not as expected (log rows).');
@@ -5347,7 +5350,7 @@ function rlHeadHTML(disc, title2, c, dateCell) {
   ];
   return `<table class="ms-top rl-top" style="width:${rlW().reduce((a, b) => a + b, 0)}px">${rlColsHTML()}<tbody>${rows.join('')}</tbody></table>`;
 }
-const rlHeadCells = () => { const K = rlK(); return ['SN', 'Discipline', 'Reference No.', 'Rev. No.'].concat(rlLL() ? ['Level', K.loc] : []).concat([K.desc, 'Planned Submission Date', 'Submitted Date', 'Return Date', 'Review Period\n(in days)', 'Status', 'Final Status', 'Remark']); };
+const rlHeadCells = () => { const K = rlK(); return ['SN', 'Discipline', 'Reference No.', 'Rev. No.'].concat(rlLL() ? ['Level', K.loc] : []).concat([K.desc, 'Planned Submission Date', 'Submitted Date', 'Returned Date', 'Review Period\n(in days)', 'Status', 'Final Status', 'Remark']); };
 const rlTheadHTML = e => `<thead><tr>${rlHeadCells().map((l, i) => `<th${i < 3 ? ` class="rf${i + 1}"` : ''}>${esc(l).replace(/\n/g, '<br>')}</th>`).join('')}${e ? '<th class="ms-tools-h">Edit</th>' : ''}</tr></thead>`;
 function rlRowHTML(it, no, idx, list, ro) {
   const e = RLV.mode === 'edit' && !ro, rv = msReview(it), K = rlK();
@@ -5364,7 +5367,7 @@ function rlRowHTML(it, no, idx, list, ro) {
     <td><textarea class="ms-c" data-k="desc" rows="1" aria-label="${esc(K.desc)}" maxlength="600" placeholder="${esc(K.descPh)}">${esc(it.desc)}</textarea></td>
     <td class="${msDateCls(it).trim()}"><input type="date" class="ms-c${it.plan ? '' : ' is-empty'}" data-k="plan" value="${it.plan}" aria-label="Planned submission date"></td>
     <td><input type="date" class="ms-c${it.sub ? '' : ' is-empty'}" data-k="sub" value="${it.sub}" aria-label="Submitted date"></td>
-    <td><input type="date" class="ms-c${it.ret ? '' : ' is-empty'}" data-k="ret" value="${it.ret}" aria-label="Return date"></td>
+    <td><input type="date" class="ms-c${it.ret ? '' : ' is-empty'}" data-k="ret" value="${it.ret}" aria-label="Returned date"></td>
     <td class="c" data-rv>${rv}</td>
     <td class="c">${msSelect('st', it)}</td><td class="c">${msSelect('fin', it)}</td>
     <td><textarea class="ms-c" data-k="rem" rows="1" aria-label="Remark" maxlength="400">${esc(it.rem)}</textarea></td>

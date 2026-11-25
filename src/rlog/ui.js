@@ -154,7 +154,7 @@ function rlHeadHTML(disc, title2, c, dateCell) {
   ];
   return `<table class="ms-top rl-top" style="width:${rlW().reduce((a, b) => a + b, 0)}px">${rlColsHTML()}<tbody>${rows.join('')}</tbody></table>`;
 }
-const rlHeadCells = () => { const K = rlK(); return ['SN', 'Discipline', 'Reference No.', 'Rev. No.'].concat(rlLL() ? ['Level', K.loc] : []).concat([K.desc, 'Planned Submission Date', 'Submitted Date', 'Return Date', 'Review Period\n(in days)', 'Status', 'Final Status', 'Remark']); };
+const rlHeadCells = () => { const K = rlK(); return ['SN', 'Discipline', 'Reference No.', 'Rev. No.'].concat(rlLL() ? ['Level', K.loc] : []).concat([K.desc, 'Planned Submission Date', 'Submitted Date', 'Returned Date', 'Review Period\n(in days)', 'Status', 'Final Status', 'Remark']); };
 const rlTheadHTML = e => `<thead><tr>${rlHeadCells().map((l, i) => `<th${i < 3 ? ` class="rf${i + 1}"` : ''}>${esc(l).replace(/\n/g, '<br>')}</th>`).join('')}${e ? '<th class="ms-tools-h">Edit</th>' : ''}</tr></thead>`;
 function rlRowHTML(it, no, idx, list, ro) {
   const e = RLV.mode === 'edit' && !ro, rv = msReview(it), K = rlK();
@@ -171,7 +171,7 @@ function rlRowHTML(it, no, idx, list, ro) {
     <td><textarea class="ms-c" data-k="desc" rows="1" aria-label="${esc(K.desc)}" maxlength="600" placeholder="${esc(K.descPh)}">${esc(it.desc)}</textarea></td>
     <td class="${msDateCls(it).trim()}"><input type="date" class="ms-c${it.plan ? '' : ' is-empty'}" data-k="plan" value="${it.plan}" aria-label="Planned submission date"></td>
     <td><input type="date" class="ms-c${it.sub ? '' : ' is-empty'}" data-k="sub" value="${it.sub}" aria-label="Submitted date"></td>
-    <td><input type="date" class="ms-c${it.ret ? '' : ' is-empty'}" data-k="ret" value="${it.ret}" aria-label="Return date"></td>
+    <td><input type="date" class="ms-c${it.ret ? '' : ' is-empty'}" data-k="ret" value="${it.ret}" aria-label="Returned date"></td>
     <td class="c" data-rv>${rv}</td>
     <td class="c">${msSelect('st', it)}</td><td class="c">${msSelect('fin', it)}</td>
     <td><textarea class="ms-c" data-k="rem" rows="1" aria-label="Remark" maxlength="400">${esc(it.rem)}</textarea></td>

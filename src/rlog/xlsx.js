@@ -74,6 +74,8 @@ async function rlFillTemplate(JSZip, tplB64, model) {
     t = head + t.slice(cut);
     // user, 21 Nov 2026: the revision column is headed "Rev. No." (the standard has "Rev."); the hidden MS Master List keeps its own heading
     { let ok = false; t = t.replace(/<c r="D11" s="(\d+)" t="s"><v>\d+<\/v><\/c>/, (m, sid) => { ok = true; return rlInline('D11', sid, 'Rev. No.'); }); if (!ok) throw new Error('The standard file is not as expected (Rev. heading).'); }
+    // user, 25 Nov 2026: the return date column is headed "Returned Date" (the standard has "Return Date")
+    { let ok = false; t = t.replace(new RegExp(`<c r="${Y.ret}11" s="(\\d+)" t="s"><v>\\d+</v></c>`), (m, sid) => { ok = true; return rlInline(Y.ret + '11', sid, 'Returned Date'); }); if (!ok) throw new Error('The standard file is not as expected (Return Date heading).'); }
     if (i < 7) {
       const code = RL_CODES[i], items = model.sheets[code] || [], n = Math.max(RL_TPL_ROWS, items.length), last = 11 + n;
       const a = t.indexOf('<row r="12"'), b = t.indexOf('</sheetData>'); if (a < 0 || b < a) throw new Error('The standard file is not as expected (log rows).');
